@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
@@ -121,10 +122,10 @@ export default function Home() {
                     <Typography 
                       variant="h6" 
                       align="center" 
-                      color="red"
+                      color="green"
                       sx={{fontWeight: 'bold'}}
                     >
-                      COMMING SOON
+                      OPEN
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -154,10 +155,10 @@ export default function Home() {
                     <Typography 
                       variant="h6" 
                       align="center" 
-                      color="red"
+                      color="green"
                       sx={{fontWeight: 'bold'}}
                     >
-                      COMMING SOON
+                      OPEN
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -187,10 +188,10 @@ export default function Home() {
                     <Typography 
                       variant="h6" 
                       align="center" 
-                      color="red"
+                      color="green"
                       sx={{fontWeight: 'bold'}}
                     >
-                      COMMING SOON
+                      OPEN
                     </Typography>
                   </CardContent>
                 </CardActionArea>
