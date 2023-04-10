@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Gym {
+  id    Int    @id @default(autoincrement())
+  name  String
+  status  GymStatus @default(OPEN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  descripton  LongText @db.LongText
+  status  TaskStatus @default(OPEN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TaskStatus {
+  NEW
+  STARTED
+  FINISHED
+}
+
+enum GymStatus {
+  OPEN
+  COMMING_SOON
+}
