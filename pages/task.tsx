@@ -33,7 +33,7 @@ export default function Task() {
           <CardContent>
             <Typography 
               gutterBottom 
-              variant="body 1" 
+              variant="body1" 
               component="div"
             >
               Nunc eu sollicitudin ex. Nunc tortor quam, interdum nec molestie eget, fringilla sit amet nunc. Praesent facilisis ipsum in nunc feugiat accumsan. Vestibulum viverra eros id odio vulputate, sed semper libero scelerisque. Aenean et eros enim. Aenean laoreet, augue non congue feugiat, nulla sapien mollis nisi, in tempor nulla lectus sit amet ex. Nulla vitae posuere lectus, porttitor placerat ex. Donec malesuada rhoncus enim non semper. Praesent tempor est a urna pharetra tempor. In iaculis, diam non aliquet pharetra, libero dui lacinia ante, ut tempus dui sem at felis.

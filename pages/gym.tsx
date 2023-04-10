@@ -44,10 +44,10 @@ export default function Gym() {
         }}
       >
         <Grid container spacing={2} 
-            justify="flex-end"
-            alignItems="center"
             sx={{
-              pb: 5
+              pb: 5,
+              justify: "flex-end",
+              alignItems: "center"
             }}
         >
           <Grid xs={8}>
@@ -68,7 +68,7 @@ export default function Gym() {
                     </Link>
                     <Typography 
                       gutterBottom 
-                      variant="body 1" 
+                      variant="body1" 
                       component="div"
                     >
                       Pellentesque ac dapibus eros. Aliquam placerat finibus augue, quis aliquam neque pellentesque quis. Ut ligula justo, aliquam ac euismod vel, ultricies quis ante. Nam dictum consequat aliquet. Quisque ornare quam tellus, vitae aliquet leo aliquam in. Mauris semper orci augue, vitae pharetra augue iaculis eget.
@@ -97,7 +97,7 @@ export default function Gym() {
                     </Link>
                     <Typography 
                       gutterBottom 
-                      variant="body 1" 
+                      variant="body1" 
                       component="div"
                     >
                       Pellentesque ac dapibus eros. Aliquam placerat finibus augue, quis aliquam neque pellentesque quis. Ut ligula justo, aliquam ac euismod vel, ultricies quis ante. Nam dictum consequat aliquet. Quisque ornare quam tellus, vitae aliquet leo aliquam in. Mauris semper orci augue, vitae pharetra augue iaculis eget.
@@ -124,7 +124,7 @@ export default function Gym() {
                     </Link>
                     <Typography 
                       gutterBottom 
-                      variant="body 1" 
+                      variant="body1" 
                       component="div"
                     >
                       Pellentesque ac dapibus eros. Aliquam placerat finibus augue, quis aliquam neque pellentesque quis. Ut ligula justo, aliquam ac euismod vel, ultricies quis ante. Nam dictum consequat aliquet. Quisque ornare quam tellus, vitae aliquet leo aliquam in. Mauris semper orci augue, vitae pharetra augue iaculis eget.
@@ -155,19 +155,25 @@ export default function Gym() {
                   {generate(
                     <ListItem>
                       <Grid container spacing={2} 
-                          justify="flex-end"
-                          alignItems="center"
+                          sx={{
+                            justify: "flex-end",
+                            alignItems: "center"
+                          }}
                       >
                         <Grid xs={8}>
                           <ListItemText
-                            align="center"
+                            sx={{
+                              align: "center"
+                            }}
                           >
                             <h3>MONTHLY USERS</h3>
                           </ListItemText>
                         </Grid>
                         <Grid xs={4}>
                           <ListItemText
-                            align="center"
+                            sx={{
+                              align: "center"
+                            }}
                           >
                             <h3>359</h3>
                           </ListItemText>
