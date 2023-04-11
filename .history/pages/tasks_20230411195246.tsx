@@ -96,7 +96,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
         <Typography variant="h1" color={purple['A400']} gutterBottom>
           Welcome to your gym!
         </Typography>
-        <Typography variant="h3" color="common.white" gutterBottom>
+        <Typography variant="h3" color="error" gutterBottom>
           PIPERA Metaverse Gym
         </Typography>
       </Box>

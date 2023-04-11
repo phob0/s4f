@@ -44,10 +44,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
         <Box sx={{ 
             flexGrow: 1,
-            mt: 15
+            mt: 20
           }}
         >
-          <Grid container spacing={2} sx={{ mb: 5 }}>
+          <Grid container spacing={2}>
           {gyms.map((gym, key) => (
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>

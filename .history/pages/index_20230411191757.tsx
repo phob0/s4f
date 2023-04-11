@@ -31,7 +31,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     <Container maxWidth="xl">
         <Box
           sx={{
-            mt: 20
+            mt: 25
           }}
         >
           <Typography variant="h1" color={purple['A400']} gutterBottom>
@@ -44,10 +44,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
         <Box sx={{ 
             flexGrow: 1,
-            mt: 15
+            mt: 20
           }}
         >
-          <Grid container spacing={2} sx={{ mb: 5 }}>
+          <Grid container spacing={2}>
           {gyms.map((gym, key) => (
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>

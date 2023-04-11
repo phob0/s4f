@@ -47,7 +47,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 15
           }}
         >
-          <Grid container spacing={2} sx={{ mb: 5 }}>
+          <Grid container spacing={2}>
           {gyms.map((gym, key) => (
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>

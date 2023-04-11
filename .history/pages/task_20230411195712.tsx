@@ -28,7 +28,11 @@ const Task:NextPage<Task> = ({ task }) =>  {
 
   return (
     <Container maxWidth="xl">
-      <Box>
+      <Box
+        sx={{
+          mt: 1
+        }}
+      >
         <Typography variant="h1" color={purple['A400']} gutterBottom>
           { task.name }
         </Typography>
@@ -39,7 +43,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
 
       <Box sx={{ 
           flexGrow: 1,
-          mt: 10,
+          mt: 15,
           mb: 5,
           px: 30
         }}

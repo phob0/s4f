@@ -11,6 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
           body > div:first-child,
           div#__next,
           div#__next > div {
+            height: 100%;
             display: flex;
             flex-direction: column;
             min-height: 100vh;

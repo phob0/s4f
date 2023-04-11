@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Badge from '@mui/material/Badge';
 import WalletIcon from '@mui/icons-material/Wallet';
 import IconButton from '@mui/material/IconButton';
-import Link from 'next/link'
+// import logo from '../public/s4f-classic.png';
 
 export default function NavBar() {
   return (
@@ -16,18 +16,14 @@ export default function NavBar() {
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/">
-              <Box
-                component="img"
-                sx={{ 
-                  height: 40,
-                  margin: 3 
-                }}
-                src="/s4f-classic.png"
-              />
-            </Link>  
-          </Typography>
+          <Box
+            component="img"
+            sx={{ 
+              height: 40,
+              margin: 3 
+            }}
+            src="/s4f-classic.png"
+          />
           <Button sx={{ color: "white" }} endIcon={<WalletIcon />}>
             Connect to your wallet
           </Button>
