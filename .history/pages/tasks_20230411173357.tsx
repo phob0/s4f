@@ -209,7 +209,7 @@ export default Tasks
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // READ all Tasks from gym from DB
-  const id = Number(context.query.gym)
+  const id = parseInt(context.query.gym)
 
   const tasks = await prisma?.task.findMany({
     where: {

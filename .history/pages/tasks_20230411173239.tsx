@@ -115,7 +115,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
           <Grid xs={8}>
             <Grid container spacing={2}>
             {tasks.map((task, key) => (
-              <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
+              <Grid key={key} item xs display="flex" justifyContent="center" alignItems="center">
                 <Card sx={{ width: 250 }}>
                   <CardContent>
                     <Link 
@@ -209,7 +209,7 @@ export default Tasks
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // READ all Tasks from gym from DB
-  const id = Number(context.query.gym)
+  const id: NextPage<GymID> = parseInt(context.query.gym)
 
   const tasks = await prisma?.task.findMany({
     where: {

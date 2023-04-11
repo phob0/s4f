@@ -14,7 +14,7 @@ import { GetServerSideProps } from 'next'
 // Array interface
 interface Gym {
   gyms: {
-    id: number
+    id: string
     name: string
     status: string
   }[]
@@ -48,7 +48,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         >
           <Grid container spacing={2}>
           {gyms.map((gym, key) => (
-            <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
+            <Grid key={key} item xs display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>
                 <Link 
                   style={{ textDecoration: 'none' }}

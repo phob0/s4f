@@ -72,11 +72,11 @@ export default Task
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // READ all Tasks from gym from DB
-  const id = Number(context.query.id)
+  const id = context.query.id
 
   const task = await prisma?.task.findUnique({
     where: {
-      id: id,
+      id: parseInt(id),
     },
     select: {
       id: true,
