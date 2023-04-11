@@ -140,7 +140,8 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                     </Typography>
                   </CardContent>
                   <CardActions style={{justifyContent: 'center'}}>
-                      {TaskButtonStatus(task)}
+                      {/* <TaskButtonStatus status={task.status} updateStatus={updateTaskStatus} /> */}
+
                   </CardActions>
                   {/* <CardActions style={{justifyContent: 'center'}}>
                       <Alert variant="filled" severity="success">Task is done</Alert>

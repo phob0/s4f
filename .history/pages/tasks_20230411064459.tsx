@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { NextPage } from 'next'
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
@@ -16,7 +16,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
-import { useRouter } from 'next/router'
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
@@ -26,6 +25,22 @@ function generate(element: React.ReactElement) {
   );
 }
 
+function TaskButtonStatus(props) {
+  const status = props.status
+
+  if (status === "NEW") {
+    return <Button variant="contained" color="secondary">
+            Start
+          </Button>
+  } else if (status === "STARTED") {
+    return <Button variant="contained" color="error">
+            End Task
+          </Button>
+  } else {
+    return <Alert variant="filled" severity="success">Task is done</Alert>
+  }
+}
+
 interface GymID {
   gymID: {
     id: string
@@ -33,12 +48,6 @@ interface GymID {
 }
 
 interface Task {
-  id: string
-  name: string
-  description: string
-  status: string
-}
-interface Tasks {
   tasks: {
     id: string
     name: string
@@ -47,31 +56,9 @@ interface Tasks {
   }[]
 }
 
-const Tasks: NextPage<Tasks> = ({ tasks }) => {
-  const router = useRouter()
-  
-  const refreshData = () => {
-    router.replace(router.asPath)
-  }
-
-  const TaskButtonStatus = (props) => {
-    const status = props.status
-  
-    if (status === "NEW") {
-      return <Button variant="contained" color="secondary" onClick={() => updateTaskStatus(props)}>
-              Start
-            </Button>
-    } else if (status === "STARTED") {
-      return <Button variant="contained" color="error" onClick={() => updateTaskStatus(props)}>
-              End Task
-            </Button>
-    } else {
-      return <Alert variant="filled" severity="success">Task is done</Alert>
-    }
-  }
-
-  const updateTaskStatus = async (task: Task) => {
-    fetch(`api/task/${task.id}`, {
+const Tasks:NextPage<Task> = ({ tasks }) => {
+  async function updateTaskStatus(task) {
+    fetch(`api/note/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
         status: task.status
@@ -82,7 +69,6 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
       method: 'PUT'
     }).then(() => {
       refreshData()
-    })
   }
 
   return (
@@ -140,7 +126,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                     </Typography>
                   </CardContent>
                   <CardActions style={{justifyContent: 'center'}}>
-                      {TaskButtonStatus(task)}
+                      <TaskButtonStatus status={task.status} />
                   </CardActions>
                   {/* <CardActions style={{justifyContent: 'center'}}>
                       <Alert variant="filled" severity="success">Task is done</Alert>

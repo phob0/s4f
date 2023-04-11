@@ -35,7 +35,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
         <Typography variant="h1" color="primary" gutterBottom>
           { task.name }
         </Typography>
-        <Typography variant="h3" color={ handleColorStatus(task.status) } gutterBottom>
+        <Typography variant="h3" color="error" gutterBottom>
           { task.status }
         </Typography>
       </Box>

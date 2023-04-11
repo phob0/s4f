@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { NextPage } from 'next'
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
@@ -24,6 +24,22 @@ function generate(element: React.ReactElement) {
       key: value,
     }),
   );
+}
+
+function TaskButtonStatus(props, updateStatus) {
+  const status = props.status
+
+  if (status === "NEW") {
+    return <Button variant="contained" color="secondary" onClick={updateStatus(props)}>
+            Start
+          </Button>
+  } else if (status === "STARTED") {
+    return <Button variant="contained" color="error" onClick={updateStatus(props)}>
+            End Task
+          </Button>
+  } else {
+    return <Alert variant="filled" severity="success">Task is done</Alert>
+  }
 }
 
 interface GymID {
@@ -54,23 +70,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     router.replace(router.asPath)
   }
 
-  const TaskButtonStatus = (props) => {
-    const status = props.status
-  
-    if (status === "NEW") {
-      return <Button variant="contained" color="secondary" onClick={() => updateTaskStatus(props)}>
-              Start
-            </Button>
-    } else if (status === "STARTED") {
-      return <Button variant="contained" color="error" onClick={() => updateTaskStatus(props)}>
-              End Task
-            </Button>
-    } else {
-      return <Alert variant="filled" severity="success">Task is done</Alert>
-    }
-  }
-
-  const updateTaskStatus = async (task: Task) => {
+  async function updateTaskStatus(task: Task) {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
@@ -140,7 +140,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                     </Typography>
                   </CardContent>
                   <CardActions style={{justifyContent: 'center'}}>
-                      {TaskButtonStatus(task)}
+                      <TaskButtonStatus status={task.status} updateStatus={updateTaskStatus(task)} />
                   </CardActions>
                   {/* <CardActions style={{justifyContent: 'center'}}>
                       <Alert variant="filled" severity="success">Task is done</Alert>
