@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'

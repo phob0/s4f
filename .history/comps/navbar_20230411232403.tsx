@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
+import Badge from '@mui/material/Badge';
 import WalletIcon from '@mui/icons-material/Wallet';
 import IconButton from '@mui/material/IconButton';
 import Link from 'next/link'
@@ -19,14 +21,7 @@ export default function NavBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {
               router.route !== "/" ? (
-                <IconButton sx={{ 
-                  color: 'white', 
-                  backgroundColor: '#ab47bc',
-                  "&:hover": { 
-                    color: "#ab47bc",
-                    backgroundColor: "white" 
-                  } 
-                }} onClick={() => router.back()}>
+                <IconButton sx={{ color: 'white', backgroundColor: '#ab47bc' }} onClick={() => router.back()}>
                   <ArrowBackIcon />
                 </IconButton>    
               ) : ( null )

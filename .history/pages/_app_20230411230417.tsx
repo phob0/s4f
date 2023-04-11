@@ -11,7 +11,9 @@ export default function App({ Component, pageProps }: AppProps) {
           body > div:first-child,
           div#__next,
           div#__next > div {
-            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            min-height: 50vh;
           }
         `}</style>
         <Component {...pageProps} />
