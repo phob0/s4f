@@ -52,10 +52,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               <Card sx={{ width: 250 }}>
                 <Link 
                   style={{ textDecoration: 'none' }}
-                  href={{
-                    pathname: '/tasks',
-                    query: { gym: gym.id } 
-                  }}
+                  href="/gym"
                 >
                   <CardContent>
                     <Typography 

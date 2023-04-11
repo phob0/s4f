@@ -30,10 +30,10 @@ const Task:NextPage<Task> = ({ task }) =>  {
         }}
       >
         <Typography variant="h1" color="primary" gutterBottom>
-          { task.name }
+          TASK 1
         </Typography>
         <Typography variant="h3" color="error" gutterBottom>
-          { task.status }
+          INCOMPLETE
         </Typography>
       </Box>
 

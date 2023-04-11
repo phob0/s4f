@@ -53,8 +53,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 <Link 
                   style={{ textDecoration: 'none' }}
                   href={{
-                    pathname: '/tasks',
-                    query: { gym: gym.id } 
+                    pathname: '/gym',
+                    query: gym.id 
                   }}
                 >
                   <CardContent>

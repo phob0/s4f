@@ -51,11 +51,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <Grid item xs display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>
                 <Link 
-                  style={{ textDecoration: 'none' }}
-                  href={{
-                    pathname: '/tasks',
-                    query: { gym: gym.id } 
-                  }}
+                  style={{ textDecoration: 'none', visited: '#000' }}
+                  href="/gym"
                 >
                   <CardContent>
                     <Typography 

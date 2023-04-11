@@ -50,13 +50,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           {gyms.map((gym) => (
             <Grid item xs display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>
-                <Link 
-                  style={{ textDecoration: 'none' }}
-                  href={{
-                    pathname: '/tasks',
-                    query: { gym: gym.id } 
-                  }}
-                >
+                <Link href="/gym">
                   <CardContent>
                     <Typography 
                       gutterBottom 

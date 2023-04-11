@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import type { NextPage } from 'next'
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -50,13 +49,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           {gyms.map((gym) => (
             <Grid item xs display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>
-                <Link 
-                  style={{ textDecoration: 'none' }}
-                  href={{
-                    pathname: '/tasks',
-                    query: { gym: gym.id } 
-                  }}
-                >
+                <CardActionArea href="/gym">
                   <CardContent>
                     <Typography 
                       gutterBottom 
@@ -84,7 +77,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       {gym.status}
                     </Typography>
                   </CardContent>
-                </Link>
+                </CardActionArea>
               </Card>
             </Grid>
           ))}

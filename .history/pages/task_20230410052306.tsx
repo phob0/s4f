@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -7,21 +6,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import { prisma } from '../lib/prisma'
-import { GetServerSideProps } from 'next'
 
-interface Task {
-  task: {
-    id: string
-    name: string
-    description: string
-    status: string
-  }
-}
-
-const Task:NextPage<Task> = ({ task }) =>  {
-  console.log(task)
-
+export default function Task() {
   return (
     <Container maxWidth="xl">
       <Box
@@ -30,10 +16,10 @@ const Task:NextPage<Task> = ({ task }) =>  {
         }}
       >
         <Typography variant="h1" color="primary" gutterBottom>
-          { task.name }
+          TASK 1
         </Typography>
         <Typography variant="h3" color="error" gutterBottom>
-          { task.status }
+          INCOMPLETE
         </Typography>
       </Box>
 
@@ -50,7 +36,9 @@ const Task:NextPage<Task> = ({ task }) =>  {
               variant="body1" 
               component="div"
             >
-              { task.description }  
+              Nunc eu sollicitudin ex. Nunc tortor quam, interdum nec molestie eget, fringilla sit amet nunc. Praesent facilisis ipsum in nunc feugiat accumsan. Vestibulum viverra eros id odio vulputate, sed semper libero scelerisque. Aenean et eros enim. Aenean laoreet, augue non congue feugiat, nulla sapien mollis nisi, in tempor nulla lectus sit amet ex. Nulla vitae posuere lectus, porttitor placerat ex. Donec malesuada rhoncus enim non semper. Praesent tempor est a urna pharetra tempor. In iaculis, diam non aliquet pharetra, libero dui lacinia ante, ut tempus dui sem at felis.
+
+Aenean ut nisl dictum lacus pharetra molestie vitae a nisl. Donec bibendum purus ut dolor bibendum rutrum. Aliquam iaculis velit sed feugiat consequat. Mauris dictum urna vitae risus commodo consequat. Duis lobortis libero et commodo gravida. Vivamus auctor sapien vel enim venenatis, a egestas dolor lacinia. Ut erat ex, cursus et vehicula at, venenatis sed mi. Praesent eleifend erat eget magna feugiat luctus. Proin finibus auctor risus luctus tempor. Cras dolor ligula, hendrerit ac suscipit eget, venenatis non lectus. Duis non mi ut felis viverra pulvinar.
             </Typography>
           </CardContent>
           <CardActions style={{justifyContent: 'center'}}>
@@ -63,29 +51,4 @@ const Task:NextPage<Task> = ({ task }) =>  {
 
     </Container>
   )
-}
-
-export default Task
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  // READ all Tasks from gym from DB
-  const id = context.query.id
-
-  const task = await prisma?.task.findUnique({
-    where: {
-      id: parseInt(id),
-    },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      status: true,
-    }
-  })
-
-  return {
-    props: {
-      task
-    }
-  }
 }
