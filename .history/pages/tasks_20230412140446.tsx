@@ -54,19 +54,6 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     router.replace(router.asPath)
   }
 
-
-  let isComplete = true
-
-  tasks.forEach((el)=>{
-    if (el.status !== "FINISHED") {
-      isComplete = false
-      
-      return false
-    }
-  })
-
-  console.log(isComplete)
-
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
@@ -126,38 +113,9 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
             }}
         >
           <Grid xs={8}>
-          { isComplete ? (
-              <Grid container spacing={2} p={2}>
-              <Grid md={12}>
-                <Card>
-                  <CardContent>
-                  <Typography 
-                        gutterBottom 
-                        variant="body1" 
-                        component="div"
-                      >
-                        Great job! You have completed all your tasks! It's time to claim your rewards and enjoy the fruits of your hard work.
-                      </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid md={12} mt={2}>
-                <CardActions sx={{ justifyContent: "center" }}>
-                  <Button size="large" variant="contained" sx={{
-                    backgroundColor: '#ffeb3b',
-                    color: '#000',
-                    '&:hover': {
-                      backgroundColor: '#f57f17',
-                    }
-                  }}>CLAIM REWARD</Button>
-                </CardActions>
-              </Grid>
-              </Grid>
-          ) : null }
-
             <Grid container spacing={2}>
             {tasks.map((task, key) => (
-              <Grid key={key} xs item alignItems="center">
+              <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
                 <Card sx={{ width: 250 }}>
                   <CardContent>
                     <Link 
@@ -190,6 +148,10 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                 </Card>
               </Grid>
             ))}  
+            </Grid>
+            <Grid container spacing={2}>
+              dadada
+            </Grid>
             </Grid>
           </Grid>
           <Grid xs={4}>

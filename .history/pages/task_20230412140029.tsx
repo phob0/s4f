@@ -55,7 +55,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     }
   }
 
-  const updateTaskStatus = async (task: PropTask) => {
+  const updateTaskStatus = async (task: Task) => {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,

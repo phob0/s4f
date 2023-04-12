@@ -9,8 +9,6 @@ import Button from '@mui/material/Button';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
-import { useRouter } from 'next/router'
-import Alert from '@mui/material/Alert';
 
 interface Task {
   task: {
@@ -21,25 +19,13 @@ interface Task {
   }
 }
 
-interface PropTask {
-  id: number
-  name: string
-  description: string
-  status: string
-}
-
 const Task:NextPage<Task> = ({ task }) =>  {
-  const router = useRouter()
-  
-  const refreshData = () => {
-    router.replace(router.asPath)
-  }
 
   function handleColorStatus(status: string) {
     return status === "NEW" ? "red" : status === "STARTED" ? "yellow" : "green"
   }
 
-  const TaskButtonStatus = (props: PropTask) => {
+  const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
     if (status === "NEW") {
@@ -55,7 +41,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     }
   }
 
-  const updateTaskStatus = async (task: PropTask) => {
+  const updateTaskStatus = async (task: Task) => {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,

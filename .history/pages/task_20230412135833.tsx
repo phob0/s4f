@@ -10,18 +10,8 @@ import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
 import { useRouter } from 'next/router'
-import Alert from '@mui/material/Alert';
 
 interface Task {
-  task: {
-    id: number
-    name: string
-    description: string
-    status: string
-  }
-}
-
-interface PropTask {
   id: number
   name: string
   description: string
@@ -39,7 +29,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     return status === "NEW" ? "red" : status === "STARTED" ? "yellow" : "green"
   }
 
-  const TaskButtonStatus = (props: PropTask) => {
+  const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
     if (status === "NEW") {
@@ -55,7 +45,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     }
   }
 
-  const updateTaskStatus = async (task: PropTask) => {
+  const updateTaskStatus = async (task: Task) => {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
