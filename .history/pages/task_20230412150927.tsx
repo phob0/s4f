@@ -11,7 +11,6 @@ import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
 import { useRouter } from 'next/router'
 import Alert from '@mui/material/Alert';
-import Grid from '@mui/material/Grid';
 
 interface Task {
   task: {
@@ -84,8 +83,6 @@ const Task:NextPage<Task> = ({ task }) =>  {
 
       <Grid container spacing={2} 
             sx={{
-              mt: 10,
-              px: 10,
               pb: 5,
               justify: "flex-end",
               alignItems: "center"

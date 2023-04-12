@@ -136,7 +136,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                         variant="body1" 
                         component="div"
                       >
-                        Great job! You have completed all your tasks! It`&apos;`s time to claim your rewards and enjoy the fruits of your hard work.
+                        Great job! You have completed all your tasks! It`'`s time to claim your rewards and enjoy the fruits of your hard work.
                       </Typography>
                   </CardContent>
                 </Card>
