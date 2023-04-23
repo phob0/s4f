@@ -46,9 +46,7 @@ model TasksOnUsers {
   userID     Int // relation scalar field (used in the `@relation` attribute above)
   task   Task @relation(fields: [taskID], references: [id])
   taskID Int // relation scalar field (used in the `@relation` attribute above)
-  done    Boolean    @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  assignedAt DateTime @default(now())
 }
 
 enum TaskStatus {
