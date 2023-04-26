@@ -18,24 +18,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import dynamic from "next/dynamic";
-
-const WalletConnectLoginContainer = dynamic(
-  async () => {
-   return (await import("@multiversx/sdk-dapp/UI/walletConnect/WalletConnectLoginContainer")).WalletConnectLoginContainer;
-  },
-  { ssr: false }
-);
-
-import WalletConnectProvider from "@multiversx/sdk-wallet-connect-provider";
-
-// const WalletConnectProvider = dynamic(
-//   async () => {
-//    return (await import("@multiversx/sdk-wallet-connect-provider")).WalletConnectProvider;
-//   },
-//   { ssr: false }
-// );
-
 export default function NavBar() {
   const router = useRouter();
 
