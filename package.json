@@ -18,6 +18,7 @@
     "@mui/material": "^5.11.16",
     "@multiversx/sdk-core": "^12.2.0",
     "@prisma/client": "^4.12.0",
+    "@types/qrcode": "^1.5.0",
     "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
     "@useelven/core": "^0.2.1",
