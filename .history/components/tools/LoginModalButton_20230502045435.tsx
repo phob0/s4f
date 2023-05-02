@@ -34,9 +34,9 @@ const useModal = () => {
   };
 };
 
-const LoginModalButton: FC<LoginModalButtonProps> = memo(({
-  // onClose,
-  // onOpen,
+export const LoginModalButton: FC<LoginModalButtonProps> = memo(({
+  onClose,
+  onOpen,
 }) => {
   // If you need the auth signature and token pas your unique token in useLogin
   // all auth providers will return the signature, it will be saved in localstorage and global state
@@ -119,7 +119,7 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   return (
     <>
       {isLoggedIn ? (
-        <Button onClick={() => {logout}}>
+        <Button onClick={ logout } >
           Disconnect
           </Button>
       ) : (
@@ -180,7 +180,3 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     </>
   );
 });
-
-LoginModalButton.displayName = 'LoginModalButton';
-
-export default LoginModalButton;

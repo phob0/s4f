@@ -119,7 +119,7 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   return (
     <>
       {isLoggedIn ? (
-        <Button onClick={() => {logout}}>
+        <Button onClick={ logout } >
           Disconnect
           </Button>
       ) : (

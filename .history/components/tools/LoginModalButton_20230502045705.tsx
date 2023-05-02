@@ -34,7 +34,7 @@ const useModal = () => {
   };
 };
 
-const LoginModalButton: FC<LoginModalButtonProps> = memo(({
+export const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   // onClose,
   // onOpen,
 }) => {
@@ -119,7 +119,7 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   return (
     <>
       {isLoggedIn ? (
-        <Button onClick={() => {logout}}>
+        <Button onClick={ logout } >
           Disconnect
           </Button>
       ) : (
@@ -180,7 +180,3 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     </>
   );
 });
-
-LoginModalButton.displayName = 'LoginModalButton';
-
-export default LoginModalButton;
