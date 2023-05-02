@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Gym {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  status  GymStatus @default(OPEN)
+  tasks Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  description  String @db.LongText
+  status  TaskStatus @default(NEW)
+  gymID  Int
+  gym      Gym    @relation(fields: [gymID], references: [id])
+  users TasksOnUsers[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  address String @db.VarChar(255)
+  accessToken String @db.VarChar(255)
+  refreshToken String @db.VarChar(255)
+  tasks TasksOnUsers[]
+}
+
+model TasksOnUsers {
+  @@id([userID, taskID])
+
+  user       User     @relation(fields: [userID], references: [id])
+  userID     Int // relation scalar field (used in the `@relation` attribute above)
+  task   Task @relation(fields: [taskID], references: [id])
+  taskID Int // relation scalar field (used in the `@relation` attribute above)
+  done    Boolean    @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TaskStatus {
+  NEW
+  STARTED
+  FINISHED
+}
+
+enum GymStatus {
+  OPEN
+  COMMING_SOON
+}
