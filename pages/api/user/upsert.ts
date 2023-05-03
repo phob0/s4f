@@ -7,22 +7,22 @@ export default async function handler(
 ) {
   const {address, signature, expiresAt} = req.body
 
-//   const user = await prisma.user.upsert({
-//     where: {
-//       address: address
-//     },
-//     update: {
-//       signature: signature,
-//       expiresAt: expiresAt
-//     },
-//     create: {
-//       address: address,
-//       signature: signature,
-//       expiresAt: expiresAt
-//     },
-//   })
+  const user = await prisma.user.upsert({
+    where: {
+      address: address
+    },
+    update: {
+      signature: signature,
+      expiresAt: expiresAt
+    },
+    create: {
+      address: address,
+      signature: signature,
+      expiresAt: expiresAt
+    },
+  })
     
 
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, user: user });
  
 }

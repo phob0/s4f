@@ -66,6 +66,9 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
 
   useEffectOnlyOnUpdate(() => {
     if (isLoggedIn) {
+      if (localStorage.user__account == undefined) {
+        upsertAccount();
+      }
       close();
     }
   }, [isLoggedIn]);
@@ -74,24 +77,27 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     setLoggingInState('error', '');
   };
 
+  const addUserAccountID = (user:any) => {
+    localStorage.setItem("user__account", JSON.stringify(user));
+  }
+
   const upsertAccount = async () => {
     const payload = {
       address: JSON.parse(localStorage.useElven_dapp__account).address,
       signature: JSON.parse(localStorage.useElven_dapp__loginInfo).signature,
-      expiresAt: JSON.parse(localStorage.useElven_dapp__loginInfo).expires
+      expiresAt: new Date(JSON.parse(localStorage.useElven_dapp__loginInfo).expires).toISOString()
     }
 
-    console.log(payload)
-
-    // fetch(`api/user/upsert`, {
-    //   body: JSON.stringify(payload),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   method: 'POST'
-    // }).then(() => {
-    //   // refreshData()
-    // })
+    await fetch(`api/user/upsert`, {
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST'
+    }).then((response) => response.json())
+    .then((responseJSON) => {
+       addUserAccountID(responseJSON.user)
+    });
   }
 
   const [loginMethod, setLoginMethod] = useState<LoginMethodsEnum>();
@@ -103,6 +109,11 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     },
     [login]
   );
+
+  const handleLogout = useCallback(() => {
+    logout();
+    localStorage.removeItem("user__account");
+  }, []);
 
   const handleLedgerAccountsList = useCallback(() => {
     setLoginMethod(LoginMethodsEnum.ledger);
@@ -119,7 +130,7 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   return (
     <>
       {isLoggedIn ? (
-        <Button onClick={() => {logout}}>
+        <Button onClick={handleLogout}>
           Disconnect
           </Button>
       ) : (

@@ -37,6 +37,7 @@ model User {
   signature String @db.VarChar(255)
   expiresAt DateTime @default(now())
   tasks TasksOnUsers[]
+  @@unique([address])
 }
 
 model TasksOnUsers {
