@@ -6,13 +6,32 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const taskID = req.query.id
-  const {status, id} = req.body
-    
-  const task = await prisma.task.update({
-    where: { id: Number(taskID) },
-    data: {
+  const userID = req.body.userID
+  const status = (req.body.status === "NEW" ? "STARTED" : req.body.status === "STARTED" ? "FINISHED" : "NEW")
+
+  await prisma.tasksOnUsers.upsert({
+    where: {
+      userID_taskID: {
+        userID: Number(userID),
+        taskID: Number(taskID)
+      }
+    },
+    update: {
       status: (status === "NEW" ? "STARTED" : status === "STARTED" ? "FINISHED" : "NEW")
-    }
+    },
+    create: {
+      userID: Number(userID),
+      taskID: Number(taskID),
+      status: (status === "NEW" ? "STARTED" : status === "STARTED" ? "FINISHED" : "NEW")
+    },
   })
+
+  // const task = await prisma.task.update({
+  //   where: { id: Number(taskID) },
+  //   data: {
+  //     status: (status === "NEW" ? "STARTED" : status === "STARTED" ? "FINISHED" : "NEW")
+  //   }
+  // })
+
   res.status(200).json({ message: 'Task updated' })
 }

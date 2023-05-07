@@ -29,6 +29,8 @@ const nextConfig = {
       dirs: ['components', 'config', 'hooks', 'pages', 'store', 'types', 'utils'],
     },
   };
+
+  const { withSuperjson } = require('next-superjson');
   
-  module.exports = nextConfig;
+  module.exports = withSuperjson()(nextConfig);
   

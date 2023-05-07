@@ -3,6 +3,7 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { useLogin, useAccount } from '@useelven/core';
 
 interface CustomHeaders extends Headers {
   referer?: string[];
@@ -14,12 +15,23 @@ interface CustomNextRequest extends NextRequest {
 
 export function middleware(req: CustomNextRequest) {
   const res = NextResponse.next();
+  
 
+  if (req.nextUrl.pathname === '/tasks') {
+    console.log('path')
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+
+  /** 
+   * For API calls to MULTIVERSX
+   * 
   if (!process.env.NEXT_PUBLIC_MULTIVERSX_API) return res;
-
+  
+  
   if (req.nextUrl.pathname.startsWith(process.env.NEXT_PUBLIC_MULTIVERSX_API)) {
     const definedHost = process.env.API_ALLOWED_DAPP_HOST;
-
+    
     if (!definedHost) return res;
 
     const referer = req.headers.get('referer');
@@ -29,6 +41,14 @@ export function middleware(req: CustomNextRequest) {
         new URL('/api/dapp-api-access-denied', req.url)
       );
     }
+
     return res;
   }
+
+  */
+
 }
+
+export const config = {
+  matcher: ['/tasks', '/task'],
+};

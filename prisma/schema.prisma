@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,45 +8,50 @@ datasource db {
 }
 
 model Gym {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(255)
-  status  GymStatus @default(OPEN)
-  tasks Task[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  status    GymStatus @default(OPEN)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tasks     Task[]
 }
 
 model Task {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(255)
-  description  String @db.LongText
-  status  TaskStatus @default(NEW)
-  gymID  Int
-  gym      Gym    @relation(fields: [gymID], references: [id])
-  users TasksOnUsers[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int            @id @default(autoincrement())
+  name        String         @db.VarChar(255)
+  description String         @db.LongText
+  status      TaskStatus     @default(NEW)
+  gymID       Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  gym         Gym            @relation(fields: [gymID], references: [id])
+  users       TasksOnUsers[]
+
+  @@index([gymID], map: "Task_gymID_fkey")
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  address String @db.VarChar(255)
-  signature String @db.VarChar(255)
-  expiresAt DateTime @default(now())
-  tasks TasksOnUsers[]
-  @@unique([address])
+  id        Int            @id @default(autoincrement())
+  address   String         @unique @db.VarChar(255)
+  expiresAt DateTime       @default(now())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  signature String         @db.VarChar(255)
+  tasks     TasksOnUsers[]
 }
 
 model TasksOnUsers {
-  @@id([userID, taskID])
+  id        Int        @id @default(autoincrement())
+  userID    Int
+  taskID    Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  status    TaskStatus @default(NEW)
+  task      Task       @relation(fields: [taskID], references: [id])
+  user      User       @relation(fields: [userID], references: [id])
 
-  user       User     @relation(fields: [userID], references: [id])
-  userID     Int // relation scalar field (used in the `@relation` attribute above)
-  task   Task @relation(fields: [taskID], references: [id])
-  taskID Int // relation scalar field (used in the `@relation` attribute above)
-  done    Boolean    @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([taskID], map: "TasksOnUsers_taskID_fkey")
+  @@index([userID], map: "TasksOnUsers_userID_fkey")
 }
 
 enum TaskStatus {

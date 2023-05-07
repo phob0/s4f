@@ -85,6 +85,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
+        userID: JSON.parse(localStorage.user__account).id,
         status: task.status
       }),
       headers: {
@@ -251,15 +252,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // READ all Tasks from gym from DB
   const id = Number(context.query.gym)
 
-  const tasks = await prisma?.task.findMany({
+  let tasks = await prisma?.task.findMany({
     where: {
       gymID: id,
     },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      status: true,
+    include: {
+      users: true
     }
   })
 

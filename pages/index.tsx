@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
+import { useLogin, useAccount } from '@useelven/core';
 
 // Array interface
 interface Gym {
@@ -20,6 +21,12 @@ interface Gym {
 }
 
 const Home: NextPage<Gym> = ({ gyms }) =>  {
+
+  const {
+    isLoggedIn
+  } = useLogin({ token: process.env.NEXT_PUBLIC_LOGIN_TOKEN });
+
+  const { address } = useAccount();
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
@@ -50,12 +57,15 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
               <Card sx={{ width: 250 }}>
                 {
-                  gym.status === "OPEN" ? (
+                  gym.status === "OPEN" && isLoggedIn ? (
                     <Link 
                       style={{ textDecoration: 'none' }}
                       href={{
                         pathname: '/tasks',
-                        query: { gym: gym.id } 
+                        query: { 
+                          gym: gym.id,
+                          to: address 
+                        } 
                       }}
                     >
                       <CardContent>

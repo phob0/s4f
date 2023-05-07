@@ -9,7 +9,7 @@ import {
   Stack,
   Box
 } from '@mui/material';
-import { FC, useState, useCallback, memo } from 'react';
+import { FC, useState, useCallback, memo, useEffect } from 'react';
 import { useLogin, useLoginInfo, useLogout, LoginMethodsEnum, useAccount } from '@useelven/core';
 import { WalletConnectQRCode } from './WalletConnectQRCode';
 import { WalletConnectPairings } from './WalletConnectPairings';
@@ -64,7 +64,7 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     closeModal: close,
   } = useModal();
 
-  useEffectOnlyOnUpdate(() => {
+  useEffect(() => {
     if (isLoggedIn) {
       if (localStorage.user__account == undefined) {
         upsertAccount();
@@ -83,11 +83,11 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
 
   const upsertAccount = async () => {
     const payload = {
-      address: JSON.parse(localStorage.useElven_dapp__account).address,
-      signature: JSON.parse(localStorage.useElven_dapp__loginInfo).signature,
-      expiresAt: new Date(JSON.parse(localStorage.useElven_dapp__loginInfo).expires).toISOString()
+      address: address,
+      signature: signature,
+      expiresAt: new Date(expires).toISOString()
     }
-
+    
     await fetch(`api/user/upsert`, {
       body: JSON.stringify(payload),
       headers: {
@@ -105,13 +105,16 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   const handleLogin = useCallback(
     (type: LoginMethodsEnum, ledgerAccountsIndex?: number) => () => {
       setLoginMethod(type);
-      login(type, ledgerAccountsIndex);
+      login(type, ledgerAccountsIndex).then(()=>{
+        
+      })
     },
     [login]
   );
 
   const handleLogout = useCallback(() => {
     logout();
+    console.log();
     localStorage.removeItem("user__account");
   }, []);
 
