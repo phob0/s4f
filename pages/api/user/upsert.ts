@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from "../../../lib/prisma"
-
+// TODO deprecate soon because login endpoint is created
 interface TasksUsers {
   userID: number,
   taskID: number

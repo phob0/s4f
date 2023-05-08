@@ -9,17 +9,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
+
 import LoginModalButton from './tools/LoginModalButton';
 
-export default function NavBar() {
+import useUser from "../lib/useUser";
+
+const NavBar = () => {
   const router = useRouter();
 
   return (
@@ -61,3 +56,5 @@ export default function NavBar() {
     </Box>
   )
 }
+
+export default NavBar;

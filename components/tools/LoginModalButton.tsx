@@ -16,6 +16,9 @@ import { WalletConnectPairings } from './WalletConnectPairings';
 import { useEffectOnlyOnUpdate } from '../../hooks/useEffectOnlyOnUpdate';
 import { getLoginMethodDeviceName } from '../../utils/getSigningDeviceName';
 
+
+import useUser from "../../lib/useUser";
+
 interface LoginModalButtonProps {
   onClose?: () => void;
   onOpen?: () => void;
@@ -34,13 +37,22 @@ const useModal = () => {
   };
 };
 
-const LoginModalButton: FC<LoginModalButtonProps> = memo(({
+type UserSession = {
+  isLoggedIn: boolean;
+  address: string;
+};
+
+const LoginModalButton = memo(({
   // onClose,
-  // onOpen,
+  // onOpen
 }) => {
   // If you need the auth signature and token pas your unique token in useLogin
   // all auth providers will return the signature, it will be saved in localstorage and global state
   // For the demo purposes here is a dummy token
+  const { user, mutateUser } = useUser();
+
+  console.log(user)
+
   const {
     login,
     isLoggedIn,
@@ -65,10 +77,8 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
   } = useModal();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (localStorage.user__account == undefined) {
-        upsertAccount();
-      }
+    if (isLoggedIn && user?.isLoggedIn == false) {
+      upsertAccount();
       close();
     }
   }, [isLoggedIn]);
@@ -77,27 +87,21 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     setLoggingInState('error', '');
   };
 
-  const addUserAccountID = (user:any) => {
-    localStorage.setItem("user__account", JSON.stringify(user));
-  }
-
   const upsertAccount = async () => {
+
     const payload = {
       address: address,
       signature: signature,
       expiresAt: new Date(expires).toISOString()
     }
     
-    await fetch(`api/user/upsert`, {
+    await fetch(`api/login`, {
       body: JSON.stringify(payload),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST'
-    }).then((response) => response.json())
-    .then((responseJSON) => {
-       addUserAccountID(responseJSON.user)
-    });
+    })
   }
 
   const [loginMethod, setLoginMethod] = useState<LoginMethodsEnum>();
@@ -112,11 +116,11 @@ const LoginModalButton: FC<LoginModalButtonProps> = memo(({
     [login]
   );
 
-  const handleLogout = useCallback(() => {
-    logout();
-    console.log();
-    localStorage.removeItem("user__account");
-  }, []);
+  const handleLogout = () => {
+    logout().then(async () => {
+      await fetch("/api/logout", { method: "POST" })
+    });
+  };
 
   const handleLedgerAccountsList = useCallback(() => {
     setLoginMethod(LoginMethodsEnum.ledger);

@@ -8,7 +8,7 @@ export default async function handler(
   const taskID = req.query.id
   const userID = req.body.userID
   const status = (req.body.status === "NEW" ? "STARTED" : req.body.status === "STARTED" ? "FINISHED" : "NEW")
-
+  // TODO rewrite this
   await prisma.tasksOnUsers.upsert({
     where: {
       userID_taskID: {

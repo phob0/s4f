@@ -3,51 +3,36 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { useLogin, useAccount } from '@useelven/core';
+import { getIronSession } from "iron-session/edge";
+import { sessionOptions } from "./lib/session";
 
-interface CustomHeaders extends Headers {
-  referer?: string[];
-}
-
-interface CustomNextRequest extends NextRequest {
-  headers: CustomHeaders;
-}
-
-export function middleware(req: CustomNextRequest) {
+export const middleware = async (req: NextRequest) => {
   const res = NextResponse.next();
-  
+  const session = await getIronSession(req, res, sessionOptions);
+
+  // do anything with session here:
+  const { user } = session;
+
+  // like mutate user:
+  // user.something = someOtherThing;
+  // or:
+  // session.user = someoneElse;
+
+  // uncomment next line to commit changes:
+  // await session.save();
+  // or maybe you want to destroy session:
+  // await session.destroy();
 
   if (req.nextUrl.pathname === '/tasks') {
-    console.log('path')
-    return NextResponse.redirect(new URL('/', req.url))
-  }
-
-
-  /** 
-   * For API calls to MULTIVERSX
-   * 
-  if (!process.env.NEXT_PUBLIC_MULTIVERSX_API) return res;
-  
-  
-  if (req.nextUrl.pathname.startsWith(process.env.NEXT_PUBLIC_MULTIVERSX_API)) {
-    const definedHost = process.env.API_ALLOWED_DAPP_HOST;
-    
-    if (!definedHost) return res;
-
-    const referer = req.headers.get('referer');
-
-    if (!referer?.includes(definedHost)) {
-      return NextResponse.redirect(
-        new URL('/api/dapp-api-access-denied', req.url)
-      );
+    if (user?.isLoggedIn) {
+      return res;
+    } else {
+      return NextResponse.redirect(new URL('/', req.url))  
     }
-
-    return res;
   }
 
-  */
+};
 
-}
 
 export const config = {
   matcher: ['/tasks', '/task'],
