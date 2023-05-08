@@ -13,6 +13,10 @@ import { useRouter } from 'next/router'
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 
+import useUser from "../lib/useUser";
+
+import { withSessionSsr } from "../lib/session";
+
 interface Task {
   task: {
     id: number
@@ -21,6 +25,13 @@ interface Task {
     status: string
   }
 }
+
+type PropTaskType = {
+  id: number;
+  name: string;
+  description: string;
+  status: string;
+};
 
 interface PropTask {
   id: number
@@ -31,6 +42,8 @@ interface PropTask {
 
 const Task:NextPage<Task> = ({ task }) =>  {
   const router = useRouter()
+
+  const { user, mutateUser } = useUser();
   
   const refreshData = () => {
     router.replace(router.asPath)
@@ -60,6 +73,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
+        userID: user?.id,
         status: task.status
       }),
       headers: {
@@ -115,25 +129,38 @@ const Task:NextPage<Task> = ({ task }) =>  {
 
 export default Task
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  // READ all Tasks from gym from DB
-  const id = Number(context.query.id)
+export const getServerSideProps = withSessionSsr(
+  async function GetServerSidePropsContext( { req, query } ) {
+    const user = req.session.user;
 
-  const task = await prisma?.task.findUnique({
-    where: {
-      id: id,
-    },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      status: true,
+    let taskUser = await prisma?.user.findUnique({
+      where: {
+        id: Number(user?.id)
+      },
+      include: {
+        tasks: {
+          where: {
+            id: Number(query.id)
+          },
+          include: {
+            task: true
+          }
+        }
+      }
+    })
+    
+    const task = {
+      id: Number(taskUser?.tasks[0].taskID),
+      name: taskUser?.tasks[0].task.name,
+      description: taskUser?.tasks[0].task.description,
+      status: taskUser?.tasks[0].status
     }
-  })
 
-  return {
-    props: {
-      task
+    return {
+      props: {
+        task
+      }
     }
-  }
-}
+  },
+)
+

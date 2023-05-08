@@ -15,7 +15,7 @@ import { WalletConnectQRCode } from './WalletConnectQRCode';
 import { WalletConnectPairings } from './WalletConnectPairings';
 import { useEffectOnlyOnUpdate } from '../../hooks/useEffectOnlyOnUpdate';
 import { getLoginMethodDeviceName } from '../../utils/getSigningDeviceName';
-
+import { useRouter } from 'next/router'
 
 import useUser from "../../lib/useUser";
 
@@ -51,7 +51,7 @@ const LoginModalButton = memo(({
   // For the demo purposes here is a dummy token
   const { user, mutateUser } = useUser();
 
-  console.log(user)
+  let router= useRouter();
 
   const {
     login,
@@ -80,6 +80,8 @@ const LoginModalButton = memo(({
     if (isLoggedIn && user?.isLoggedIn == false) {
       upsertAccount();
       close();
+    } else if(!isLoggedIn && user?.isLoggedIn == true) {
+      handleLogout();
     }
   }, [isLoggedIn]);
 
@@ -119,6 +121,7 @@ const LoginModalButton = memo(({
   const handleLogout = () => {
     logout().then(async () => {
       await fetch("/api/logout", { method: "POST" })
+      router.push('/')
     });
   };
 

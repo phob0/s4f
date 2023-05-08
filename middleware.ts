@@ -31,6 +31,14 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
+  if (req.nextUrl.pathname === '/task') {
+    if (user?.isLoggedIn) {
+      return res;
+    } else {
+      return NextResponse.redirect(new URL('/', req.url))  
+    }
+  }
+
 };
 
 

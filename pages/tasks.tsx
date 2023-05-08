@@ -18,6 +18,10 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { purple } from '@mui/material/colors';
 
+import useUser from "../lib/useUser";
+
+import { withSessionSsr } from "../lib/session";
+
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
     React.cloneElement(element, {
@@ -54,6 +58,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     router.replace(router.asPath)
   }
 
+  const { user, mutateUser } = useUser();
 
   let isComplete = true
 
@@ -85,7 +90,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     fetch(`api/task/${task.id}`, {
       body: JSON.stringify({
         id: task.id,
-        userID: JSON.parse(localStorage.user__account).id,
+        userID: user?.id,
         status: task.status
       }),
       headers: {
@@ -247,23 +252,43 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
 
 export default Tasks
 
+export const getServerSideProps = withSessionSsr(
+  async function GetServerSidePropsContext( { req, query } ) {
+    const user = req.session.user;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  // READ all Tasks from gym from DB
-  const id = Number(context.query.gym)
+    let tasks:Array<Task> = []
 
-  let tasks = await prisma?.task.findMany({
-    where: {
-      gymID: id,
-    },
-    include: {
-      users: true
+    let userTasks = await prisma?.user.findUnique({
+      where: {
+        id: Number(user?.id)
+      },
+      include: {
+        tasks: {
+          where: {
+            task: {
+              gymID: Number(query.gym)
+            }
+          },
+          include: {
+            task: true
+          }
+        }
+      }
+    })
+  
+    userTasks?.tasks.forEach((item) => {
+      tasks.push({
+        id: item.task.id,
+        name: item.task.name,
+        description: item.task.description,
+        status: item.status
+      })  
+    })
+  
+    return {
+      props: {
+        tasks
+      }
     }
-  })
-
-  return {
-    props: {
-      tasks
-    }
-  }
-}
+  },
+)
