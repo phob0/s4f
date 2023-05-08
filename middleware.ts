@@ -22,8 +22,8 @@ export const middleware = async (req: NextRequest) => {
   // await session.save();
   // or maybe you want to destroy session:
   // await session.destroy();
-
-  if (req.nextUrl.pathname === '/tasks') {
+  
+  if (req.nextUrl.pathname !== '/') {
     if (user?.isLoggedIn) {
       return res;
     } else {
@@ -31,13 +31,21 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 
-  if (req.nextUrl.pathname === '/task') {
-    if (user?.isLoggedIn) {
-      return res;
-    } else {
-      return NextResponse.redirect(new URL('/', req.url))  
-    }
-  }
+  // if (req.nextUrl.pathname === '/tasks') {
+  //   if (user?.isLoggedIn) {
+  //     return res;
+  //   } else {
+  //     return NextResponse.redirect(new URL('/', req.url))  
+  //   }
+  // }
+
+  // if (req.nextUrl.pathname === '/task') {
+  //   if (user?.isLoggedIn) {
+  //     return res;
+  //   } else {
+  //     return NextResponse.redirect(new URL('/', req.url))  
+  //   }
+  // }
 
 };
 
