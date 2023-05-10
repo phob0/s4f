@@ -140,11 +140,19 @@ const LoginModalButton = memo(({
   return (
     <>
       {isLoggedIn ? (
-        <Button onClick={handleLogout}>
+        <Button onClick={handleLogout}
+          sx={{ 
+            color: 'white',
+            borderColor: 'white'
+          }}
+        >
           Disconnect
           </Button>
       ) : (
-        <Button onClick={open}>
+        <Button variant="outlined" onClick={open} sx={{ 
+          color: 'white',
+          borderColor: 'white'
+        }}>
           {isLoggingIn ? 'Connecting...' : 'Connect'}
         </Button>
       )}
