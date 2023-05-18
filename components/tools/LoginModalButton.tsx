@@ -16,6 +16,7 @@ import { WalletConnectPairings } from './WalletConnectPairings';
 import { useEffectOnlyOnUpdate } from '../../hooks/useEffectOnlyOnUpdate';
 import { getLoginMethodDeviceName } from '../../utils/getSigningDeviceName';
 import { useRouter } from 'next/router'
+import { LedgerAccountsList } from './LedgerAccountsList';
 
 import useUser from "../../lib/useUser";
 
@@ -110,6 +111,7 @@ const LoginModalButton = memo(({
 
   const handleLogin = useCallback(
     (type: LoginMethodsEnum, ledgerAccountsIndex?: number) => () => {
+      console.log(type)
       setLoginMethod(type);
       login(type, ledgerAccountsIndex).then(()=>{
         
@@ -172,6 +174,7 @@ const LoginModalButton = memo(({
               
 
             <Stack 
+              spacing={2}
               sx = {{
                 direction: "column",
                 align: "center"
@@ -185,9 +188,28 @@ const LoginModalButton = memo(({
               {!isLoggedIn && (
                 <>
                   <Button
+                    variant="outlined"
+                    onClick={handleLogin(LoginMethodsEnum.wallet)}
+                  >
+                    MultiversX Web Wallet
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleLogin(LoginMethodsEnum.extension)}
+                  >
+                    MultiversX Browser Extension
+                  </Button>
+                  <Button
+                    variant="outlined"
                     onClick={handleLogin(LoginMethodsEnum.walletconnect)}
                   >
                     xPortal Mobile App
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleLedgerAccountsList}
+                  >
+                    Ledger
                   </Button>
                 </>
               )}
@@ -198,6 +220,13 @@ const LoginModalButton = memo(({
                     pairings={walletConnectPairings}
                     login={walletConnectPairingLogin}
                     remove={walletConnectRemovePairing}
+                  />
+                )}
+                {loginMethod === LoginMethodsEnum.ledger && (
+                  <LedgerAccountsList
+                    getHWAccounts={getHWAccounts}
+                    resetLoginMethod={resetLoginMethod}
+                    handleLogin={handleLogin}
                   />
                 )}
             </Stack>

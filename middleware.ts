@@ -25,3 +25,7 @@ export const middleware = async (req: NextRequest) => {
     }
   }
 };
+
+export const config = {
+  matcher: ["/tasks", "/task", "/task/:path*"],
+};
