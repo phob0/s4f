@@ -58,6 +58,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 {
                   gym.status === "OPEN" && isLoggedIn ? (
                     <Link 
+                      prefetch={false}
                       style={{ textDecoration: 'none' }}
                       href={{
                         pathname: '/tasks',
