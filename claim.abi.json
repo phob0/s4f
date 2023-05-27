@@ -1,0 +1,353 @@
+{
+  "buildInfo": {
+      "rustc": {
+          "version": "1.67.0-nightly",
+          "commitHash": "b7bc90fea3b441234a84b49fdafeb75815eebbab",
+          "commitDate": "2022-11-21",
+          "channel": "Nightly",
+          "short": "rustc 1.67.0-nightly (b7bc90fea 2022-11-21)"
+      },
+      "contractCrate": {
+          "name": "claim",
+          "version": "0.0.0"
+      },
+      "framework": {
+          "name": "multiversx-sc",
+          "version": "0.40.1"
+      }
+  },
+  "name": "Claim",
+  "constructor": {
+      "inputs": [
+          {
+              "name": "nft_token",
+              "type": "TokenIdentifier"
+          },
+          {
+              "name": "total_nfts",
+              "type": "BigUint"
+          },
+          {
+              "name": "sfit_token",
+              "type": "TokenIdentifier"
+          },
+          {
+              "name": "staking_sc",
+              "type": "Address"
+          },
+          {
+              "name": "sfitlegend_nft_token",
+              "type": "TokenIdentifier"
+          }
+      ],
+      "outputs": []
+  },
+  "endpoints": [
+      {
+          "name": "completeTasks",
+          "mutability": "mutable",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "claim",
+          "mutability": "mutable",
+          "payableInTokens": [
+              "*"
+          ],
+          "inputs": [],
+          "outputs": []
+      },
+      {
+          "name": "deposit",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "payableInTokens": [
+              "*"
+          ],
+          "inputs": [],
+          "outputs": []
+      },
+      {
+          "name": "canUserCompleteTasks",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "user",
+                  "type": "Address"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "bool"
+              }
+          ]
+      },
+      {
+          "name": "getUserClaimable",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "user",
+                  "type": "Address"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "gymNftToken",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "TokenIdentifier"
+              }
+          ]
+      },
+      {
+          "name": "sfitlegendNftToken",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "TokenIdentifier"
+              }
+          ]
+      },
+      {
+          "name": "totalNfts",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "gymStakingAddress",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "Address"
+              }
+          ]
+      },
+      {
+          "name": "sfitToken",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "TokenIdentifier"
+              }
+          ]
+      },
+      {
+          "name": "period",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "rewards",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "period",
+                  "type": "BigUint"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "creditedNfts",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "period",
+                  "type": "BigUint"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "variadic<u64>",
+                  "multi_result": true
+              }
+          ]
+      },
+      {
+          "name": "userShare",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "address",
+                  "type": "Address"
+              },
+              {
+                  "name": "period",
+                  "type": "BigUint"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "claimedUntil",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "address",
+                  "type": "Address"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "stakedNfts",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "user",
+                  "type": "Address"
+              },
+              {
+                  "name": "nft_token",
+                  "type": "TokenIdentifier"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "variadic<u64>",
+                  "multi_result": true
+              }
+          ]
+      },
+      {
+          "name": "totalClaimed",
+          "mutability": "readonly",
+          "inputs": [
+              {
+                  "name": "address",
+                  "type": "Address"
+              }
+          ],
+          "outputs": [
+              {
+                  "type": "BigUint"
+              }
+          ]
+      },
+      {
+          "name": "isScPaused",
+          "mutability": "readonly",
+          "inputs": [],
+          "outputs": [
+              {
+                  "type": "bool"
+              }
+          ]
+      },
+      {
+          "name": "pauseSc",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [],
+          "outputs": []
+      },
+      {
+          "name": "resumeSc",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [],
+          "outputs": []
+      },
+      {
+          "name": "setSfitIdentifier",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [
+              {
+                  "name": "addr",
+                  "type": "Address"
+              }
+          ],
+          "outputs": []
+      },
+      {
+          "name": "setSfitToken",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [
+              {
+                  "name": "token",
+                  "type": "TokenIdentifier"
+              }
+          ],
+          "outputs": []
+      },
+      {
+          "name": "setGymNftToken",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [
+              {
+                  "name": "token",
+                  "type": "TokenIdentifier"
+              }
+          ],
+          "outputs": []
+      },
+      {
+          "name": "setSfitlegendNftToken",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [
+              {
+                  "name": "token",
+                  "type": "TokenIdentifier"
+              }
+          ],
+          "outputs": []
+      },
+      {
+          "name": "setTotalNfts",
+          "onlyOwner": true,
+          "mutability": "mutable",
+          "inputs": [
+              {
+                  "name": "total",
+                  "type": "BigUint"
+              }
+          ],
+          "outputs": []
+      }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {}
+}
