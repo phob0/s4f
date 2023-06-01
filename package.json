@@ -16,7 +16,7 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
-    "@multiversx/sdk-core": "^12.2.0",
+    "@multiversx/sdk-dapp": "^2.14.3",
     "@prisma/client": "^4.12.0",
     "@types/qrcode": "^1.5.0",
     "@types/react": "18.0.33",

@@ -4,6 +4,23 @@ import type { AppProps } from 'next/app'
 import { SWRConfig } from "swr";
 import fetchJson from "../lib/fetchJson";
 import { useNetworkSync } from '@useelven/core';
+import dynamic from 'next/dynamic';
+
+const SignTransactionsModals = dynamic(
+  async () => {
+    return (await import('@multiversx/sdk-dapp/UI/SignTransactionsModals'))
+      .SignTransactionsModals;
+  },
+  { ssr: false }
+);
+
+const NotificationModal = dynamic(
+  async () => {
+    return (await import('@multiversx/sdk-dapp/UI/NotificationModal'))
+      .NotificationModal;
+  },
+  { ssr: false }
+);
 
 const App = ({ Component, pageProps }: AppProps) => {
   useNetworkSync({
@@ -34,6 +51,8 @@ const App = ({ Component, pageProps }: AppProps) => {
               min-height: 100vh;
             }
           `}</style>
+          <NotificationModal />
+          <SignTransactionsModals className='custom-class-for-modals' />
           <Component {...pageProps} />
         </Layout>
     </SWRConfig>   
