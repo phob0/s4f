@@ -11,6 +11,7 @@ import { useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import LoginModalButton from './tools/LoginModalButton';
+import LoginModal from './tools/LoginModal';
 
 import useUser from "../lib/useUser";
 
@@ -49,7 +50,7 @@ const NavBar = () => {
               />
             </Link>  
           </Typography>
-          <LoginModalButton />
+          <LoginModal />
         </Toolbar>
       </AppBar>
       
