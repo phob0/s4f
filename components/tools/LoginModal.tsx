@@ -130,7 +130,7 @@ import {
       } else if(!loggedIn && user?.isLoggedIn == true) {
         handleLogout();
       }
-    }, [loggedIn]);
+    });
   
     const upsertAccount = async () => {
       getAddress().then(async (address) => {

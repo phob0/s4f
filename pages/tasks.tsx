@@ -128,7 +128,7 @@ const Tasks: NextPage<Reward & Tasks> = ({ tasks, userReward }) => {
     })();
   
     return () => {};
-  }, [taskStatus.status,  rewardStatus.status]);
+  });
 
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
@@ -446,8 +446,6 @@ export const getServerSideProps = withSessionSsr(
         status: true
       }
     })
-
-    console.log(userReward)
 
     let userTasks = await prisma?.user.findUnique({
       where: {
