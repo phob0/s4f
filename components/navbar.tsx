@@ -10,7 +10,6 @@ import { useRouter } from 'next/router'
 import { useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import LoginModalButton from './tools/LoginModalButton';
 import LoginModal from './tools/LoginModal';
 
 import useUser from "../lib/useUser";
