@@ -12,10 +12,27 @@ import { purple } from '@mui/material/colors';
 import { useRouter } from 'next/router'
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
+import { useState, useEffect } from 'react';
 
 import useUser from "../lib/useUser";
 
 import { withSessionSsr } from "../lib/session";
+
+import {
+  AbiRegistry,
+  SmartContract,
+  Address,
+  Account,
+  Interaction
+} from '@multiversx/sdk-core/out';
+import { TokenTransfer } from "@multiversx/sdk-core";
+import { ContractFunction } from '@multiversx/sdk-core/out';
+import { sendTransactions } from '@multiversx/sdk-dapp/services';
+import { refreshAccount } from '@multiversx/sdk-dapp/utils';
+import json from '../claim.abi.json';
+import { contractAddress } from '../config/config';
+import { getAddress } from '@multiversx/sdk-dapp/utils';
+import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
 
 interface Task {
   task: {
@@ -44,7 +61,13 @@ const Task:NextPage<Task> = ({ task }) =>  {
   const router = useRouter()
 
   const { user, mutateUser } = useUser();
-  
+
+  const [transactionSessionId, setTransactionSessionId] = useState<
+    string | null
+  >(null);
+
+  const [taskProps, setTaskProps] = useState<PropTask>();
+
   const refreshData = () => {
     router.replace(router.asPath)
   }
@@ -53,15 +76,29 @@ const Task:NextPage<Task> = ({ task }) =>  {
     return status === "NEW" ? "red" : status === "STARTED" ? "yellow" : "green"
   }
 
+  const { status } = useTrackTransactionStatus({
+    transactionId: transactionSessionId
+  })
+
+  useEffect(() => {
+    (async () => {
+      if (status === 'signed' && taskProps?.status === "STARTED") {
+        updateTaskStatus()
+      }
+    })();
+  
+    return () => {};
+  }, [status]);
+
   const TaskButtonStatus = (props: PropTask) => {
     const status = props.status
   
     if (status === "NEW") {
-      return <Button variant="contained" color="secondary" onClick={() => updateTaskStatus(props)}>
+      return <Button variant="contained" color="secondary" onClick={() => changeTaskStatus(props)}>
               Start
             </Button>
     } else if (status === "STARTED") {
-      return <Button variant="contained" color="error" onClick={() => updateTaskStatus(props)}>
+      return <Button variant="contained" color="error" onClick={() => changeTaskStatus(props)}>
               End Task
             </Button>
     } else {
@@ -69,20 +106,67 @@ const Task:NextPage<Task> = ({ task }) =>  {
     }
   }
 
-  const updateTaskStatus = async (task: PropTask) => {
-    fetch(`api/task/${task.id}`, {
-      body: JSON.stringify({
-        id: task.id,
-        userID: user?.id,
-        status: task.status
-      }),
-      headers: {
-        'Content-Type': 'application/json',
+  const sendCompleteTasks = async (address:string) => {
+
+    let abiRegistry = AbiRegistry.create(json);
+
+    const contract = new SmartContract({ address: new Address(contractAddress), abi: abiRegistry });
+
+    let interaction = new Interaction(contract, new ContractFunction('completeTasks'), []);
+
+  
+    let tx = interaction
+    .withSender(new Address(address))
+    .useThenIncrementNonceOf(new Account(new Address(address)))
+    .withGasLimit(20000000)
+    .withChainID("D")
+    .withValue(TokenTransfer.egldFromAmount(0))
+    .buildTransaction();
+
+    await refreshAccount();
+
+    const { sessionId, error } = await sendTransactions({
+      transactions: tx,
+      callbackRoute: '/',
+      transactionsDisplayInfo: {
+        processingMessage: 'Processing Complete Task transaction',
+        errorMessage: 'An error has occured during Complete Task',
+        successMessage: 'Complete Task transaction successful'
       },
-      method: 'PUT'
-    }).then(() => {
-      refreshData()
-    })
+      redirectAfterSign: false
+    });
+    
+    if (sessionId != null) {
+      setTransactionSessionId(sessionId);
+    } 
+  };
+
+  const changeTaskStatus = async (task: PropTask) => {
+    setTaskProps(task)
+    if (task?.status === "STARTED") {
+      getAddress().then(async (address) => {
+        await sendCompleteTasks(address)
+      })
+    } else {
+      await updateTaskStatus()
+    }
+    
+  }
+
+  const updateTaskStatus = async () => {
+      fetch(`api/task/${taskProps?.id}`, {
+        body: JSON.stringify({
+          id: taskProps?.id,
+          userID: user?.id,
+          status: taskProps?.status
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT'
+      }).then(() => {
+        refreshData()
+      })
   }
 
   return (

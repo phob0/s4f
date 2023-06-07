@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { NextPage } from 'next'
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
@@ -17,7 +17,6 @@ import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { purple } from '@mui/material/colors';
-import { useEffect } from 'react';
 
 import useUser from "../lib/useUser";
 
@@ -93,10 +92,6 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
       return false
     }
   })
-
-  const onSuccess = () => {
-    
-  }
 
   const { status } = useTrackTransactionStatus({
     transactionId: transactionSessionId
