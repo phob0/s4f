@@ -59,6 +59,14 @@ interface Task {
   description: string
   status: string
 }
+
+interface Reward {
+  userReward: {
+    id: number
+    userID: number
+    status: string
+  }
+}
 interface Tasks {
   tasks: {
     id: number
@@ -68,7 +76,7 @@ interface Tasks {
   }[]
 }
 
-const Tasks: NextPage<Tasks> = ({ tasks }) => {
+const Tasks: NextPage<Reward & Tasks> = ({ tasks, userReward }) => {
   const router = useRouter()
   
   const refreshData = () => {
@@ -79,9 +87,17 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     string | null
   >(null);
 
+  const [claimTransactionSessionId, setClaimTransactionSessionId] = useState<
+    string | null
+  >(null);
+
   const [taskProps, setTaskProps] = useState<Task>();
 
+  const [reward, setReward] = useState<boolean>(false);
+
   const { user, mutateUser } = useUser();
+
+  console.log(userReward)
 
   let isComplete = true
 
@@ -93,19 +109,26 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     }
   })
 
-  const { status } = useTrackTransactionStatus({
-    transactionId: transactionSessionId
-  })
+  const { taskStatus, rewardStatus } = {
+    taskStatus: useTrackTransactionStatus({
+      transactionId: transactionSessionId
+    }),
+    rewardStatus: useTrackTransactionStatus({
+      transactionId: claimTransactionSessionId
+    }) 
+  }
 
   useEffect(() => {
     (async () => {
-      if (status === 'signed' && taskProps?.status === "STARTED") {
+      if (taskStatus.status === 'signed' && taskProps?.status === "STARTED") {
         updateTaskStatus()
+      } else if (rewardStatus.status === 'signed' && reward) {
+        addReward()
       }
     })();
   
     return () => {};
-  }, [status]);
+  }, [taskStatus.status,  rewardStatus.status]);
 
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
@@ -186,6 +209,62 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
       })
   }
 
+  const sendClaimReward = async (address:string) => {
+
+    let abiRegistry = AbiRegistry.create(json);
+
+    const contract = new SmartContract({ address: new Address(contractAddress), abi: abiRegistry });
+
+    let interaction = new Interaction(contract, new ContractFunction('claim'), []);
+
+  
+    let tx = interaction
+    .withSender(new Address(address))
+    .useThenIncrementNonceOf(new Account(new Address(address)))
+    .withGasLimit(20000000)
+    .withChainID("D")
+    .withValue(TokenTransfer.egldFromAmount(0))
+    .buildTransaction();
+
+    await refreshAccount();
+
+    const { sessionId, error } = await sendTransactions({
+      transactions: tx,
+      callbackRoute: '/',
+      transactionsDisplayInfo: {
+        processingMessage: 'Processing Complete Task transaction',
+        errorMessage: 'An error has occured during Complete Task',
+        successMessage: 'Complete Task transaction successful'
+      },
+      redirectAfterSign: false
+    });
+    
+    if (sessionId != null) {
+      setClaimTransactionSessionId(sessionId);
+    } 
+  };
+
+  const addReward = async () => {
+    fetch(`api/reward/create`, {
+      body: JSON.stringify({
+        userID: user?.id
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST'
+    }).then(() => {
+      refreshData()
+    })
+}
+
+  const claimReward = async () => {
+    setReward(true)
+      getAddress().then(async (address) => {
+        await sendClaimReward(address)
+      })
+  }
+
   return (
     <Container maxWidth="xl">
       <Box
@@ -214,7 +293,7 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
             }}
         >
           <Grid xs={8}>
-          { isComplete ? (
+          { isComplete  && userReward == null ? (
               <Grid container spacing={2} p={2}>
               <Grid md={12}>
                 <Card>
@@ -237,8 +316,25 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                     "&:hover": {
                       backgroundColor: '#f57f17',
                     }
-                  }}>CLAIM REWARD</Button>
+                  }}
+                  onClick={ () => { claimReward() } }>CLAIM REWARD</Button>
                 </CardActions>
+              </Grid>
+              </Grid>
+          ) : isComplete  && userReward != null ? (
+            <Grid container spacing={2} p={2}>
+              <Grid md={12}>
+                <Card>
+                  <CardContent>
+                  <Typography 
+                        gutterBottom 
+                        variant="body1" 
+                        component="div"
+                      >
+                        Great, you have claimed your reward! Please wait for your next tasks.
+                      </Typography>
+                  </CardContent>
+                </Card>
               </Grid>
               </Grid>
           ) : null }
@@ -339,6 +435,20 @@ export const getServerSideProps = withSessionSsr(
 
     let tasks:Array<Task> = []
 
+    let userReward = await prisma?.reward.findFirst({
+      where: {
+        userID: Number(user?.id),
+        status: "CURRENT"
+      },
+      select: {
+        id: true,
+        userID: true,
+        status: true
+      }
+    })
+
+    console.log(userReward)
+
     let userTasks = await prisma?.user.findUnique({
       where: {
         id: Number(user?.id)
@@ -368,7 +478,8 @@ export const getServerSideProps = withSessionSsr(
   
     return {
       props: {
-        tasks
+        tasks,
+        userReward: userReward
       }
     }
   },

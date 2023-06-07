@@ -38,6 +38,18 @@ model User {
   updatedAt DateTime       @updatedAt
   signature String         @db.VarChar(255)
   tasks     TasksOnUsers[]
+  rewards   Reward[]
+}
+
+model Reward {
+  id          Int            @id @default(autoincrement())
+  status      RewardStatus     @default(CURRENT)
+  userID       Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  user      User       @relation(fields: [userID], references: [id])
+
+  @@index([userID], map: "Reward_userID_fkey")
 }
 
 model TasksOnUsers {
@@ -63,4 +75,9 @@ enum TaskStatus {
 enum GymStatus {
   OPEN
   COMMING_SOON
+}
+
+enum RewardStatus {
+  CURRENT
+  PREVIOUS
 }
