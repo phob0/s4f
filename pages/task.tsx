@@ -88,7 +88,7 @@ const Task:NextPage<Task> = ({ task }) =>  {
     })();
   
     return () => {};
-  }, [status]);
+  });
 
   const TaskButtonStatus = (props: PropTask) => {
     const status = props.status
@@ -150,7 +150,6 @@ const Task:NextPage<Task> = ({ task }) =>  {
     } else {
       await updateTaskStatus()
     }
-    
   }
 
   const updateTaskStatus = async () => {
