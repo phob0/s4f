@@ -17,10 +17,28 @@ import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { purple } from '@mui/material/colors';
+import { useEffect } from 'react';
 
 import useUser from "../lib/useUser";
 
 import { withSessionSsr } from "../lib/session";
+
+import {
+  AbiRegistry,
+  SmartContract,
+  Address,
+  Account,
+  Interaction
+} from '@multiversx/sdk-core/out';
+import { TokenTransfer } from "@multiversx/sdk-core";
+import { ContractFunction } from '@multiversx/sdk-core/out';
+import { sendTransactions } from '@multiversx/sdk-dapp/services';
+import { refreshAccount } from '@multiversx/sdk-dapp/utils';
+import json from '../claim.abi.json';
+import { contractAddress } from '../config/config';
+import { getAddress } from '@multiversx/sdk-dapp/utils';
+import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
+
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
@@ -58,6 +76,12 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     router.replace(router.asPath)
   }
 
+  const [transactionSessionId, setTransactionSessionId] = useState<
+    string | null
+  >(null);
+
+  const [taskProps, setTaskProps] = useState<Task>();
+
   const { user, mutateUser } = useUser();
 
   let isComplete = true
@@ -70,15 +94,33 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     }
   })
 
+  const onSuccess = () => {
+    
+  }
+
+  const { status } = useTrackTransactionStatus({
+    transactionId: transactionSessionId
+  })
+
+  useEffect(() => {
+    (async () => {
+      if (status === 'signed' && taskProps?.status === "STARTED") {
+        updateTaskStatus()
+      }
+    })();
+  
+    return () => {};
+  }, [status]);
+
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
     if (status === "NEW") {
-      return <Button variant="contained" color="secondary" onClick={() => updateTaskStatus(props)}>
+      return <Button variant="contained" color="secondary" onClick={() => changeTaskStatus(props)}>
               Start
             </Button>
     } else if (status === "STARTED") {
-      return <Button variant="contained" color="error" onClick={() => updateTaskStatus(props)}>
+      return <Button variant="contained" color="error" onClick={() => changeTaskStatus(props)}>
               End Task
             </Button>
     } else {
@@ -86,20 +128,67 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
     }
   }
 
-  const updateTaskStatus = async (task: Task) => {
-    fetch(`api/task/${task.id}`, {
-      body: JSON.stringify({
-        id: task.id,
-        userID: user?.id,
-        status: task.status
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT'
-    }).then(() => {
-      refreshData()
-    })
+  const sendCompleteTasks = async (address:string) => {
+
+      let abiRegistry = AbiRegistry.create(json);
+
+      const contract = new SmartContract({ address: new Address(contractAddress), abi: abiRegistry });
+
+      let interaction = new Interaction(contract, new ContractFunction('completeTasks'), []);
+
+    
+      let tx = interaction
+      .withSender(new Address(address))
+      .useThenIncrementNonceOf(new Account(new Address(address)))
+      .withGasLimit(20000000)
+      .withChainID("D")
+      .withValue(TokenTransfer.egldFromAmount(0))
+      .buildTransaction();
+
+      await refreshAccount();
+
+      const { sessionId, error } = await sendTransactions({
+        transactions: tx,
+        callbackRoute: '/',
+        transactionsDisplayInfo: {
+          processingMessage: 'Processing Complete Task transaction',
+          errorMessage: 'An error has occured during Complete Task',
+          successMessage: 'Complete Task transaction successful'
+        },
+        redirectAfterSign: false
+      });
+      
+      if (sessionId != null) {
+        setTransactionSessionId(sessionId);
+      } 
+  };
+
+  const changeTaskStatus = async (task: Task) => {
+    setTaskProps(task)
+    if (task?.status === "STARTED") {
+      getAddress().then(async (address) => {
+        await sendCompleteTasks(address)
+      })
+    } else {
+      await updateTaskStatus()
+    }
+    
+  }
+
+  const updateTaskStatus = async () => {
+      fetch(`api/task/${taskProps?.id}`, {
+        body: JSON.stringify({
+          id: taskProps?.id,
+          userID: user?.id,
+          status: taskProps?.status
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT'
+      }).then(() => {
+        refreshData()
+      })
   }
 
   return (
@@ -188,9 +277,6 @@ const Tasks: NextPage<Tasks> = ({ tasks }) => {
                   <CardActions style={{justifyContent: 'center'}}>
                       {TaskButtonStatus(task)}
                   </CardActions>
-                  {/* <CardActions style={{justifyContent: 'center'}}>
-                      <Alert variant="filled" severity="success">Task is done</Alert>
-                  </CardActions> */}
                 </Card>
               </Grid>
             ))}  

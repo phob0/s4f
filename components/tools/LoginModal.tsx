@@ -1,26 +1,13 @@
 import {
-    Dialog,
-    DialogContent,
-    Typography,
-    DialogActions,
     Button,
-    CircularProgress,
-    DialogTitle,
-    Stack,
-    Box
+    Stack
   } from '@mui/material';
-  import { FC, useState, useCallback, memo, useEffect } from 'react';
-  import { useLogin, useLoginInfo, useLogout, LoginMethodsEnum, useAccount } from '@useelven/core';
-  import { WalletConnectQRCode } from './WalletConnectQRCode';
-  import { WalletConnectPairings } from './WalletConnectPairings';
-  import { useEffectOnlyOnUpdate } from '../../hooks/useEffectOnlyOnUpdate';
-  import { getLoginMethodDeviceName } from '../../utils/getSigningDeviceName';
+  import { useState, memo, useEffect } from 'react';
   import { useRouter } from 'next/router'
-  import { LedgerAccountsList } from './LedgerAccountsList';
   import dynamic from 'next/dynamic';
   import { walletConnectV2ProjectId } from '../../config/config';
-  import { useGetIsLoggedIn, useGetLoginInfo, useGetAccount } from '@multiversx/sdk-dapp/hooks';
-  import { logout, getAccount, getAddress, refreshAccount } from '@multiversx/sdk-dapp/utils';
+  import { useGetIsLoggedIn, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
+  import { logout, getAddress } from '@multiversx/sdk-dapp/utils';
 
   const DappModal = dynamic(
     async () => {
@@ -123,8 +110,6 @@ import {
     const loggedIn = useGetIsLoggedIn();
     const logginInfo = useGetLoginInfo();
 
-    console.log('info')
-
     const commonProps = {
         // callbackRoute: routeNames.dashboard,
         nativeAuth: true // optional
@@ -165,22 +150,13 @@ import {
       })
     }
   
-    const [loginMethod, setLoginMethod] = useState<LoginMethodsEnum>();
-  
     const handleLogout = () => {
       logout('/').then(async () => {
         await fetch("/api/logout", { method: "POST" })
         router.push('/')
       });
     };
-  
-    const handleLedgerAccountsList = useCallback(() => {
-      setLoginMethod(LoginMethodsEnum.ledger);
-    }, []);
-  
-    const resetLoginMethod = useCallback(() => {
-      setLoginMethod(undefined);
-    }, []);
+
 
     return (
       <>
