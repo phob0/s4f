@@ -5,12 +5,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
-import { useLogin } from '@useelven/core';
 import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/hooks';
 
 // Array interface
