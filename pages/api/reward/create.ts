@@ -6,10 +6,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const userID = req.body.userID
+  const gymID = req.body.gymID
 
   const reward = await prisma.reward.create({
     data: {
-      userID: userID
+      userID: userID,
+      gymID: gymID
     }
   })
 

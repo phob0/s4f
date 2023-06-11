@@ -76,7 +76,11 @@ interface Tasks {
   }[]
 }
 
-const Tasks: NextPage<Reward & Tasks> = ({ tasks, userReward }) => {
+interface GymID {
+  gymID: { id: number; }
+}
+
+const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) => {
   const router = useRouter()
   
   const refreshData = () => {
@@ -96,8 +100,6 @@ const Tasks: NextPage<Reward & Tasks> = ({ tasks, userReward }) => {
   const [reward, setReward] = useState<boolean>(false);
 
   const { user, mutateUser } = useUser();
-
-  console.log(userReward)
 
   let isComplete = true
 
@@ -247,7 +249,8 @@ const Tasks: NextPage<Reward & Tasks> = ({ tasks, userReward }) => {
   const addReward = async () => {
     fetch(`api/reward/create`, {
       body: JSON.stringify({
-        userID: user?.id
+        userID: user?.id,
+        gymID: gymID
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -437,6 +440,7 @@ export const getServerSideProps = withSessionSsr(
 
     let userReward = await prisma?.reward.findFirst({
       where: {
+        gymID: Number(query.gym),
         userID: Number(user?.id),
         status: "CURRENT"
       },
@@ -473,9 +477,10 @@ export const getServerSideProps = withSessionSsr(
         status: item.status
       })  
     })
-  
+
     return {
       props: {
+        gymID: Number(query.gym),
         tasks,
         userReward: userReward
       }
