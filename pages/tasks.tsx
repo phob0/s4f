@@ -37,6 +37,7 @@ import json from '../claim.abi.json';
 import { contractAddress } from '../config/config';
 import { getAddress } from '@multiversx/sdk-dapp/utils';
 import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
+import { debounce } from '@mui/material';
 
 
 function generate(element: React.ReactElement) {
@@ -123,24 +124,24 @@ const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) =
   useEffect(() => {
     (async () => {
       if (taskStatus.status === 'signed' && taskProps?.status === "STARTED") {
-        updateTaskStatus()
+        updateTaskStatus(null)
       } else if (rewardStatus.status === 'signed' && reward) {
         addReward()
       }
     })();
   
     return () => {};
-  });
+  })
 
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
     if (status === "NEW") {
-      return <Button variant="contained" color="secondary" onClick={() => changeTaskStatus(props)}>
+      return <Button variant="contained" color="secondary" onClick={() => { changeTaskStatus(props) }}>
               Start
             </Button>
     } else if (status === "STARTED") {
-      return <Button variant="contained" color="error" onClick={() => changeTaskStatus(props)}>
+      return <Button variant="contained" color="error" onClick={() => { changeTaskStatus(props) }}>
               End Task
             </Button>
     } else {
@@ -190,25 +191,32 @@ const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) =
         await sendCompleteTasks(address)
       })
     } else {
-      await updateTaskStatus()
+      await updateTaskStatus(task)
     }
     
   }
 
-  const updateTaskStatus = async () => {
-      fetch(`api/task/${taskProps?.id}`, {
+  const updateTaskStatus = async (task:any) => {
+      let currentTask;
+
+      if(task == null) {
+        currentTask = taskProps
+      } else {
+        currentTask = task
+      }
+
+      await fetch(`api/task/${currentTask?.id}`, {
         body: JSON.stringify({
-          id: taskProps?.id,
+          id: currentTask?.id,
           userID: user?.id,
-          status: taskProps?.status
+          status: currentTask?.status
         }),
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'PUT'
-      }).then(() => {
-        refreshData()
       })
+      refreshData()
   }
 
   const sendClaimReward = async (address:string) => {
