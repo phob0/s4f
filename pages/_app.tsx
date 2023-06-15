@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { EnvironmentsEnum } from '@multiversx/sdk-dapp/types';
 import { DappProvider } from '@multiversx/sdk-dapp/wrappers/DappProvider';
 
+
 const SignTransactionsModals = dynamic(
   async () => {
     return (await import('@multiversx/sdk-dapp/UI/SignTransactionsModals'))

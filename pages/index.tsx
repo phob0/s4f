@@ -35,10 +35,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 20
           }}
         >
-          <Typography variant="h1" color={purple['A400']} gutterBottom>
+          <Typography align="center" variant="h1" color="common.white" gutterBottom>
             Sense4FIT Metaverse Gym
           </Typography>
-          <Typography variant="h4" color="common.white" gutterBottom>
+          <Typography align="center" variant="h3" color="#48eeed" gutterBottom>
             Get fit, earn rewards, and build your empire in the virtual world.
           </Typography>
         </Box>
@@ -51,7 +51,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           <Grid container spacing={2} sx={{ mb: 5 }}>
           {gyms.map((gym, key) => (
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
-              <Card sx={{ width: 250 }}>
+              <Card className="gymTab" sx={{
+                boxShadow: gym.status === "OPEN" ? '0px 0px 50px 5px #48EFEE' : '0px 0px 50px 5px #ff3f3f',
+                opacity: gym.status === "OPEN" ? 1 : 0.5
+              }}>
                 {
                   gym.status === "OPEN" && isLoggedIn ? (
                     <Link 
@@ -70,7 +73,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           variant="h5" 
                           align="center" 
                           component="div"
-                          sx={{fontWeight: 'bold'}}
+                          sx={{
+                            fontWeight: 'bold'
+                          }}
+                          className="gymTitle"
                         >
                           {gym.name}
                         </Typography>
@@ -100,6 +106,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           align="center" 
                           component="div"
                           sx={{fontWeight: 'bold'}}
+                          className="gymTitle"
                         >
                           {gym.name}
                         </Typography>

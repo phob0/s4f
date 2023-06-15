@@ -45,7 +45,7 @@ const NavBar = () => {
                   height: 40,
                   margin: 3 
                 }}
-                src="/s4f-classic.png"
+                src="/s4f_white.png"
               />
             </Link>  
           </Typography>
