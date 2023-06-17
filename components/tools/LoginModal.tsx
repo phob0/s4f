@@ -188,28 +188,30 @@ import {
             <DappModalBody>
   
               <Stack 
-                spacing={2}
                 sx = {{
                   direction: "column",
                   align: "center"
                 }}
                 >
                  <ExtensionLoginButton
-                  loginButtonText='Extension'
+                  className="dappLoginButton"
+                  loginButtonText='MultiversX Browser Extension'
                   {...commonProps}
                 />
 
                 <WebWalletLoginButton
-                  loginButtonText='Web wallet'
+                  className="dappLoginButton"
+                  loginButtonText='MultiversX Web wallet'
                   {...commonProps}
                 />
                 <LedgerLoginButton
                   loginButtonText='Ledger'
-                  className='test-class_name'
+                  className='dappLoginButton'
                   {...commonProps}
                 />
                 <WalletConnectLoginButton
-                  loginButtonText='Maiar'
+                  className="dappLoginButton"
+                  loginButtonText='xPortal Mobile App'
                   {...commonProps}
                   {...(walletConnectV2ProjectId
                     ? {

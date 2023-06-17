@@ -39,7 +39,6 @@ import { getAddress } from '@multiversx/sdk-dapp/utils';
 import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
 import { debounce } from '@mui/material';
 
-
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
     React.cloneElement(element, {

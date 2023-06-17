@@ -1,4 +1,5 @@
-import '@/styles/globals.css'
+import '../styles/globals.css'
+import '../styles/carousel.css';
 import Layout from '../components/layout'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from "swr";

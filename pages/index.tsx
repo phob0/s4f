@@ -52,7 +52,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           {gyms.map((gym, key) => (
             <Grid key={key} xs item display="flex" justifyContent="center" alignItems="center">
               <Card className="gymTab" sx={{
-                boxShadow: gym.status === "OPEN" ? '0px 0px 50px 5px #48EFEE' : '0px 0px 50px 5px #ff3f3f',
+                boxShadow: gym.status === "OPEN" ? '0px 0px 40px 5px #48EFEE' : '0px 0px 40px 5px #ff3f3f',
                 opacity: gym.status === "OPEN" ? 1 : 0.5
               }}>
                 {
@@ -82,19 +82,23 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         </Typography>
                         <Typography 
                           gutterBottom 
-                          variant="h6" 
                           align="center" 
                           component="div"
+                          className="gymSubTitle"
                         >
                           Metaverse Gym
                         </Typography>
                         <Typography 
                           variant="h6" 
                           align="center" 
-                          color={ handleColorAvailability(gym.status) }
-                          sx={{fontWeight: 'bold'}}
+                          color="common.white"
+                          className='gymStatus'
+                          sx={{
+                            fontWeight: 'bold',
+                            width: gym.status === "OPEN" ? '50%' : '100%'
+                          }}
                         >
-                          {gym.status}
+                          {gym.status  === "OPEN" ? "ENTER" : "COMING SOON"}
                         </Typography>
                       </CardContent>
                     </Link>
@@ -112,7 +116,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         </Typography>
                         <Typography 
                           gutterBottom 
-                          variant="h6" 
+                          className="gymSubTitle"
                           align="center" 
                           component="div"
                         >
@@ -121,10 +125,14 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         <Typography 
                           variant="h6" 
                           align="center" 
-                          color={ handleColorAvailability(gym.status) }
-                          sx={{fontWeight: 'bold'}}
+                          color="common.white"
+                          sx={{
+                            fontWeight: 'bold',
+                            width: gym.status === "OPEN" ? '50%' : '100%'
+                          }}
+                          className='gymStatus'
                         >
-                          {gym.status}
+                          {gym.status === "OPEN" ? "ENTER" : "COMING SOON"}
                         </Typography>
                       </CardContent>
                   )

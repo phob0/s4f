@@ -21,7 +21,7 @@ body {
   font-family: 'Roboto', sans-serif;
   color: rgb(var(--foreground-rgb));
   background-color: rgba(186, 104, 200, 0.225);
-  background: url("../public/s4f-bg.jpg") no-repeat center center fixed;
+  background: url("/s4f-bg.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -33,14 +33,54 @@ body {
 .gymTab {
   background-image: linear-gradient(rgba(42, 1, 116,  1), rgba(100, 15, 225,  1));
   width: 250px;
-  border-radius: 19px;
+  border-radius: 19px!important;
   border: 4px solid #48EFEE;
 }
 
 .gymTitle {
-  font-size: 42px;
-  font-weight: bold;
+  font-size: 42px!important;
+  font-weight: bold!important;
   background: -webkit-linear-gradient(#b380ff, #48efefa8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
+}
+
+.gymSubTitle {
+  color: white;
+  margin: 0;
+  font-size: x-large!important;
+}
+
+.gymStatus {
+  border: 3px solid #DC389C;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 5px #dc389d81;
+  background-color: #210453;
+  margin: 0 auto!important;
+  margin-top: 10px;
+  /* outline: solid 1px #a32c73;
+  outline-offset: -4px; */
+}
+
+.dapp-modal-dialog-content {
+  background-color: #091332!important;
+}
+
+.dapp-modal-dialog-content-body {
+  padding: 15%!important;
+}
+
+.dappLoginButton {
+  background: -webkit-linear-gradient(#6100EC, #5201C8)!important;
+  margin: 0px!important;
+  box-shadow: 0px 0px 5px 1px #48EFEE!important;
+  border-radius: 15px!important;
+  border: 4px solid #48EFEE!important;
+  font-size: large!important;
+  text-decoration: none!important;
+  margin-top: 10%!important;
+  padding-top: 15px!important;
+  padding-bottom: 15px!important;
+  text-align: left!important;
 }
