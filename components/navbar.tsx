@@ -17,25 +17,27 @@ import useUser from "../lib/useUser";
 const NavBar = () => {
   const router = useRouter();
 
+  const BackButton = () => {
+    return router.route !== "/" ? (
+      <IconButton sx={{ 
+        color: 'white', 
+        backgroundColor: '#ab47bc',
+        "&:hover": { 
+          color: "#ab47bc",
+          backgroundColor: "white" 
+        } 
+      }} onClick={() => router.back()}>
+        <ArrowBackIcon />
+      </IconButton>    
+    ) : ( null )
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {
-              router.route !== "/" ? (
-                <IconButton sx={{ 
-                  color: 'white', 
-                  backgroundColor: '#ab47bc',
-                  "&:hover": { 
-                    color: "#ab47bc",
-                    backgroundColor: "white" 
-                  } 
-                }} onClick={() => router.back()}>
-                  <ArrowBackIcon />
-                </IconButton>    
-              ) : ( null )
-            }
+            <BackButton />
           </Typography>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/">
@@ -52,7 +54,6 @@ const NavBar = () => {
           <LoginModal />
         </Toolbar>
       </AppBar>
-      
     </Box>
   )
 }

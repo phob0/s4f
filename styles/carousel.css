@@ -11,17 +11,23 @@
     right: 0%;
   }
   .react-stacked-center-carousel {
-    padding: 20px 0;
+    padding: 32px 0;
   }
   
   .twitch-card {
     transition: all 300ms ease;
     cursor: pointer;
     width: 100%;
-    height: 300px;
+    height: 600px;
     position: relative;
-    background-color: #ffffff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.05);
+    background: -webkit-linear-gradient(#210050, #6A10ED);
+    border-radius: 10px;
+    border: 4px solid #48EFEE;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .glow-card {
+    box-shadow: 0px 0px 30px 5px #48EFEE;
   }
   
   .twitch-card:hover {
@@ -84,7 +90,7 @@
   .twitch-card .video {
     width: 70%;
   }
-  .twitch-card .discription {
+  .twitch-card .description {
     width: 30%;
     display: flex;
     flex-direction: column;
@@ -99,4 +105,30 @@
     padding: 0 12px;
     font-size: 14px;
     line-height: 150%;
+  }
+
+  .sliderBox {
+    border: 4px solid #48EFEE;
+    border-radius: 10px;
+    background-color: rgba(72, 239, 238, 0.35);
+  }
+
+  .taskButton {
+    width: 80%;
+    font-size: x-large;
+    border-radius: 15px;
+    border: 3px solid #fff;
+  }
+
+  .taskButtonAlert {
+    width: 70%;
+    font-size: x-large;
+    border-radius: 15px;
+    border: 3px solid #fff;
+  }
+
+  .taskButtonAlert > .MuiAlert-icon {
+    font-size: xx-large;
+    padding-top: 9px;
+    margin-left: 11%;
   }

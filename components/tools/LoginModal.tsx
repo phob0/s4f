@@ -98,7 +98,7 @@ import {
     address: string;
   };
   
-  const LoginModalButton = memo(({
+  const LoginModalButton = ({
     // onClose,
     // onOpen
   }) => {
@@ -161,7 +161,7 @@ import {
     return (
       <>
         {loggedIn ? (
-          <Button onClick={handleLogout}
+          <Button variant="outlined" onClick={handleLogout}
             sx={{ 
               color: 'white',
               borderColor: 'white'
@@ -180,7 +180,6 @@ import {
         <DappModal
           visible={opened}
           onHide={close}
-          // onCloseComplete={onCloseComplete}
         >
             <DappModalHeader
               headerText="Connect your wallet"
@@ -225,7 +224,7 @@ import {
         </DappModal>
       </>
     );
-  });
+  };
   
   LoginModalButton.displayName = 'LoginModalButton';
   
