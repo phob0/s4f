@@ -113,6 +113,12 @@
     background-color: rgba(72, 239, 238, 0.35);
   }
 
+  .titleBox {
+    border: 4px solid #48EFEE;
+    border-radius: 10px;
+    background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  }
+
   .taskButton {
     width: 80%;
     font-size: x-large;

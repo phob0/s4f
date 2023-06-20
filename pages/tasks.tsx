@@ -14,6 +14,7 @@ import Alert from '@mui/material/Alert';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -94,30 +95,26 @@ interface GymID {
   gymID: { id: number; }
 }
 
-// const data = new Array(5).fill({ coverImage: cover, video: noice });
+interface GymName {
+  gymName: string;
+}
 
-const data = [
-  {
-    id: 1,
-    name: "first task to complete",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean interdum felis eu lorem tristique suscipit. In blandit purus quis tortor dapibus, eu eleifend est condimentum. Vestibulum metus augue, ornare non libero vitae, pulvinar tristique est. In sed tincidunt purus, non varius lectus. Maecenas sit amet condimentum ante. Nunc arcu sem, fringilla eu purus at, ultricies cursus lorem. Maecenas eleifend nisi vel est varius, nec porttitor diam interdum. Nulla tincidunt nisi vel eros bibendum, eu posuere dui egestas. Quisque viverra blandit urna, a pharetra neque iaculis in. Nulla eget quam ligula. ",
-    status: "NEW"
-  },
-  {
-    id: 2,
-    name: "second task to complete",
-    description: "Duis suscipit pretium urna in scelerisque. Aenean id sem lacinia metus tincidunt imperdiet at vel justo. In tincidunt congue odio at sagittis.",
-    status: "STARTED"
-  },
-  {
-    id: 3,
-    name: "third task to complete",
-    description: "Pellentesque sollicitudin iaculis lectus, sed eleifend mi aliquam et. Donec id nunc nisi. Aliquam a mattis orci, ac viverra dolor. Cras aliquet maximus ornare.",
-    status: "FINISHED"
-  }
-];
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value,
+        )}`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
-const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) => {
+const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tasks, userReward }) => {
   const router = useRouter()
   
   const refreshData = () => {
@@ -312,13 +309,177 @@ const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) =
               alignItems: "center"
             }}
         >
-          <Grid xs={4}>
-            asd
+          <Grid xs={4} sx={{ pr: 3 }}>
+            <Stack spacing={2} sx={{ pr: 3 }}>
+              <Card className="statsWell">
+                <CardContent>
+                  <Typography color="common.white" variant="h5" component="div" align="center">
+                    YOUR WALLET PORTFOLIO
+                  </Typography>
+                  
+                </CardContent>  
+                <CardContent>
+                <Grid container spacing={2} >
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        OWNED SFIT
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        32,467,050
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        PARTICIPATION IN GYMS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={76} />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              <Card className="statsWell">
+                <CardContent>
+                  <Typography color="common.white" variant="h5" component="div" align="center">
+                    YOUR PARTICIPATION IN { gymName } GYM
+                  </Typography>
+                  
+                </CardContent>  
+                <CardContent>
+                <Grid container spacing={2} >
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        CLAIMABLE SFIT
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        467,050
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        ACTIVE TASKS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={6} />
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        NUMBER OF NFTS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={56} />
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        OWNERSHIP PERCENTAGE
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={16} />
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        SFIT EARNED SO FAR
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        467,050
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              <Card className="statsWell">
+                <CardContent>
+                  <Typography color="common.white" variant="h5" component="div" align="center">
+                    OVERALL STATISTICS
+                  </Typography>
+                  
+                </CardContent>  
+                <CardContent>
+                <Grid container spacing={2} >
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        NUMBER OF OWNERS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        32
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        NUMBER OF MEMBERS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        1321
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        COMPLETE TASKS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        84
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        NEXT TASKS BATCH IN
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        6D : 11H : 57M : 3S
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        TOTAL SFIT GENERATED
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        1,557,465
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        TOTAL SFIT LAST MONTH
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        57,465
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Stack>  
           </Grid>
           <Grid xs={8}>
-            <Box sx={{ my: 2, border: '1px solid #fff' }}>
-              <Typography color="common.white">
-              Title
+            <Box className="titleBox" sx={{ my: 2, border: '1px solid #fff' }}>
+              <Typography variant="h4" color="common.white" align="center">
+                Welcome to your
+              </Typography>
+              <Typography variant="h2" color="common.black" align="center">
+                { gymName } Metaverse Gym
               </Typography>
             </Box>
 
@@ -334,7 +495,7 @@ const Tasks: NextPage<Reward & Tasks & GymID> = ({ gymID, tasks, userReward }) =
                           slideComponent={Slide}
                           slideWidth={400}
                           carouselWidth={width}
-                          data={data}
+                          data={tasks}
                           maxVisibleSlide={5}
                           disableSwipe
                           customScales={[1, 0.85, 0.7, 0.55]}
@@ -438,6 +599,8 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
   );
 });
 
+Slide.displayName = 'Slide';
+
 export const getServerSideProps = withSessionSsr(
   async function GetServerSidePropsContext( { req, query } ) {
     const user = req.session.user;
@@ -484,8 +647,15 @@ export const getServerSideProps = withSessionSsr(
       })  
     })
 
+    let gym = await prisma?.gym.findUnique({
+      where: {
+        id: Number(query.gym)
+      }
+    })
+
     return {
       props: {
+        gymName: gym?.name,
         gymID: Number(query.gym),
         tasks,
         userReward: userReward
