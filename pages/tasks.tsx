@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useEffect, useRef, memo, useContext } from 'react';
 import type { NextPage } from 'next'
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
@@ -99,6 +99,10 @@ interface GymName {
   gymName: string;
 }
 
+interface SlideProps extends StackedCarouselSlideProps {
+  signal: string
+}
+
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -113,6 +117,14 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
     </Box>
   );
 }
+
+interface SlideContextValue {
+  eventSignal: Task | null;
+  setEventSignal: React.Dispatch<React.SetStateAction<Task | null>>;
+}
+
+const SlideContext = React.createContext<SlideContextValue 
+| undefined>(undefined);
 
 const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tasks, userReward }) => {
   const router = useRouter()
@@ -129,9 +141,18 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
     string | null
   >(null);
 
-  const [taskProps, setTaskProps] = useState<Task>();
+  const [taskProps, setTaskProps] = useState<Task | null>();
 
   const [reward, setReward] = useState<boolean>(false);
+
+  const [eventSignal, setEventSignal] = useState<Task | null>(null);
+
+  useEffect(() => {
+    console.log(eventSignal)
+    if (eventSignal != null) {
+      changeTaskStatus(eventSignal)
+    }
+  })
 
   const { user, mutateUser } = useUser();
 
@@ -195,13 +216,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
         },
         redirectAfterSign: false
       });
+
+      setEventSignal(null)
       
       if (sessionId != null) {
         setTransactionSessionId(sessionId);
       } 
   };
 
-  const changeTaskStatus = async (task: Task) => {
+  const changeTaskStatus = async (task: Task | null) => {
     setTaskProps(task)
     if (task?.status === "STARTED") {
       getAddress().then(async (address) => {
@@ -233,6 +256,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
         },
         method: 'PUT'
       })
+
+      setEventSignal(null)
+
       refreshData()
   }
 
@@ -296,6 +322,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const ref = useRef<StackedCarousel>();
 
   return (
+    <SlideContext.Provider value={{eventSignal, setEventSignal}}>
     <Container maxWidth="xl">
 
       <Box sx={{ 
@@ -511,6 +538,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
         </Grid>
       </Box>
     </Container>
+    </SlideContext.Provider>
   )
 }
 
@@ -521,6 +549,8 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
   const [loadDelay, setLoadDelay] = useState<any>();
   const [removeDelay, setRemoveDelay] = useState<any>();
   const [loaded, setLoaded] = useState(false);
+  const slideContext = useContext(SlideContext);
+
   useEffect(() => {
     if (isCenterSlide) {
       clearTimeout(removeDelay);
@@ -536,15 +566,21 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
     clearTimeout(loadDelay);
   });
 
+  const changeSignal = (task: Task) => {
+    slideContext?.setEventSignal(task)
+  }
+
+  // console.log(signal)
+
   const TaskButtonStatus = (props: Task) => {
     const status = props.status
   
     if (status === "NEW") {
-      return <Button variant="contained" className="taskButton" color="secondary">
+      return <Button variant="contained" className="taskButton" color="secondary" onClick={ () => { changeSignal(props) } }>
               Start
             </Button>
     } else if (status === "STARTED") {
-      return <Button variant="contained" className="taskButton" color="error">
+      return <Button variant="contained" className="taskButton" color="error" onClick={ () => { changeSignal(props) } }>
               End Task
             </Button>
     } else {
