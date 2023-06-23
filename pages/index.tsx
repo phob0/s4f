@@ -9,7 +9,11 @@ import CardContent from '@mui/material/CardContent';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { purple } from '@mui/material/colors';
-import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/hooks';
+import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
+import { useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUserClaimable } from '@/utils/services/hooks';
+import { claim, completeTasks } from '@/utils/services/calls';
+import { Button } from '@mui/material';
+// import { useGetTotalClaimed } from '@/utils/hooks/hooks';
 
 // Array interface
 interface Gym {
@@ -22,7 +26,21 @@ interface Gym {
 
 const Home: NextPage<Gym> = ({ gyms }) =>  {
 
-  const isLoggedIn = useGetIsLoggedIn();
+  const { isLoggedIn } = useGetLoginInfo();
+  const accountInfo = useGetAccount();
+  const connectedUserAddress = accountInfo.address;
+
+  // QUERIES
+  // const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo();
+  // const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
+  // const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
+  // const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
+
+  // CALLS
+  // completeTasks(connectedUserAddress)
+  // claim(connectedUserAddress, "KFBLERS-fb3bac", 5)
+
+  // console.log("LOG: ", tx_res);
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
