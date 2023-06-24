@@ -28,7 +28,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const { isLoggedIn } = useGetLoginInfo();
   const accountInfo = useGetAccount();
-  const connectedUserAddress = accountInfo.address;
+  
+  // const connectedUserAddress = accountInfo.address;
 
   // QUERIES
   // const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo();
@@ -38,9 +39,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   // CALLS
   // completeTasks(connectedUserAddress)
-  // claim(connectedUserAddress, "KFBLERS-fb3bac", 5)
+  // const nft_token = tokensInfo[1].token;
+  // const nft_nonce = 1; // any numbers based on user's balance
+  // claim(connectedUserAddress, nft_token, nft_nonce);
 
-  // console.log("LOG: ", tx_res);
+  // console.log("LOG: ");
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
