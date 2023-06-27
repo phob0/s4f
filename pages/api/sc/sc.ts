@@ -55,6 +55,7 @@ export type WspTypes =
 export const getInterface = (workspace: WspTypes) => {
 
     let address = Address.Zero();
+    // let address = contractAddress.claim;
     let abiUrl: any = null;
     let implementsInterfaces = "";
     let simpleAddress = "";

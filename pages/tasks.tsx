@@ -24,22 +24,9 @@ import useUser from "../lib/useUser";
 
 import { withSessionSsr } from "../lib/session";
 
-import {
-  AbiRegistry,
-  SmartContract,
-  Address,
-  Account,
-  Interaction
-} from '@multiversx/sdk-core/out';
-import { TokenTransfer } from "@multiversx/sdk-core";
-import { ContractFunction } from '@multiversx/sdk-core/out';
-import { sendTransactions } from '@multiversx/sdk-dapp/services';
-import { refreshAccount } from '@multiversx/sdk-dapp/utils';
-import json from '../claim.abi.json';
-import { contractAddress } from '../config/config';
-import { getAddress } from '@multiversx/sdk-dapp/utils';
+import { useGetAccount } from '@multiversx/sdk-dapp/hooks';
 import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
-import { debounce } from '@mui/material';
+import { getAccountBalance } from '@multiversx/sdk-dapp/utils/account';
 
 import {
     StackedCarousel,
@@ -47,11 +34,8 @@ import {
     StackedCarouselSlideProps
   } from 'react-stacked-center-carousel';
 
-import cover from '../public/s4f-bg.jpg';
-import noice from '../public/s4f-classic.png';
-import Fab from '@mui/material/Fab';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable } from '../utils/services/hooks'
+import { completeTasks, claim } from '../utils/services/calls'
 
 
 function generate(element: React.ReactElement) {
@@ -148,9 +132,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const [eventSignal, setEventSignal] = useState<Task | null>(null);
 
   useEffect(() => {
-    console.log(eventSignal)
     if (eventSignal != null) {
-      changeTaskStatus(eventSignal)
+      updateTaskStatus(eventSignal)
     }
   })
 
@@ -158,11 +141,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   let isComplete = true
 
+  let totalCompleted = 0
+
   tasks.forEach((el)=>{
     if (el.status !== "FINISHED") {
       isComplete = false
       
       return false
+    } else if (el.status === "FINISHED") {
+      totalCompleted++
     }
   })
 
@@ -175,67 +162,18 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
     }) 
   }
 
-  useEffect(() => {
-    (async () => {
-      if (taskStatus.status === 'signed' && taskProps?.status === "STARTED") {
-        updateTaskStatus(null)
-      } else if (rewardStatus.status === 'signed' && reward) {
-        addReward()
-      }
-    })();
+  // useEffect(() => {
+  //   (async () => {
+  //     if (taskStatus.status === 'signed' && taskProps?.status === "STARTED") {
+  //       updateTaskStatus(null)
+  //     } else if (rewardStatus.status === 'signed' && reward) {
+  //       addReward()
+  //     }
+  //   })();
   
-    return () => {};
-  })
-
-  const sendCompleteTasks = async (address:string) => {
-
-      let abiRegistry = AbiRegistry.create(json);
-
-      const contract = new SmartContract({ address: new Address(contractAddress), abi: abiRegistry });
-
-      let interaction = new Interaction(contract, new ContractFunction('completeTasks'), []);
-
-    
-      let tx = interaction
-      .withSender(new Address(address))
-      .useThenIncrementNonceOf(new Account(new Address(address)))
-      .withGasLimit(20000000)
-      .withChainID("D")
-      .withValue(TokenTransfer.egldFromAmount(0))
-      .buildTransaction();
-
-      await refreshAccount();
-
-      const { sessionId, error } = await sendTransactions({
-        transactions: tx,
-        callbackRoute: '/',
-        transactionsDisplayInfo: {
-          processingMessage: 'Processing Complete Task transaction',
-          errorMessage: 'An error has occured during Complete Task',
-          successMessage: 'Complete Task transaction successful'
-        },
-        redirectAfterSign: false
-      });
-
-      setEventSignal(null)
-      
-      if (sessionId != null) {
-        setTransactionSessionId(sessionId);
-      } 
-  };
-
-  const changeTaskStatus = async (task: Task | null) => {
-    setTaskProps(task)
-    if (task?.status === "STARTED") {
-      getAddress().then(async (address) => {
-        await sendCompleteTasks(address)
-      })
-    } else {
-      await updateTaskStatus(task)
-    }
-    
-  }
-
+  //   return () => {};
+  // })
+  
   const updateTaskStatus = async (task:any) => {
       let currentTask;
 
@@ -262,64 +200,27 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
       refreshData()
   }
 
-  const sendClaimReward = async (address:string) => {
-
-    let abiRegistry = AbiRegistry.create(json);
-
-    const contract = new SmartContract({ address: new Address(contractAddress), abi: abiRegistry });
-
-    let interaction = new Interaction(contract, new ContractFunction('claim'), []);
-
-  
-    let tx = interaction
-    .withSender(new Address(address))
-    .useThenIncrementNonceOf(new Account(new Address(address)))
-    .withGasLimit(20000000)
-    .withChainID("D")
-    .withValue(TokenTransfer.egldFromAmount(0))
-    .buildTransaction();
-
-    await refreshAccount();
-
-    const { sessionId, error } = await sendTransactions({
-      transactions: tx,
-      callbackRoute: '/',
-      transactionsDisplayInfo: {
-        processingMessage: 'Processing Complete Task transaction',
-        errorMessage: 'An error has occured during Complete Task',
-        successMessage: 'Complete Task transaction successful'
-      },
-      redirectAfterSign: false
-    });
-    
-    if (sessionId != null) {
-      setClaimTransactionSessionId(sessionId);
-    } 
-  };
-
-  const addReward = async () => {
-    fetch(`api/reward/create`, {
-      body: JSON.stringify({
-        userID: user?.id,
-        gymID: gymID
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST'
-    }).then(() => {
-      refreshData()
-    })
-}
-
-  const claimReward = async () => {
-    setReward(true)
-      getAddress().then(async (address) => {
-        await sendClaimReward(address)
-      })
-  }
-
   const ref = useRef<StackedCarousel>();
+
+  const accountInfo = useGetAccount();
+  
+  const connectedUserAddress = accountInfo.address;
+
+  // console.log('adddress', connectedUserAddress)
+
+  // QUERIES
+  const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo();
+  const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
+  const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
+  const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
+
+  // CALLS
+  // completeTasks(connectedUserAddress)
+  // claim(connectedUserAddress, "KFBLERS-fb3bac", 5)
+
+  // claim(connectedUserAddress, tokens?.pop()?.token, 5)
+
+  console.log(getAccountBalance(connectedUserAddress))
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -364,6 +265,19 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <LinearProgressWithLabel value={76} />
+                    </Grid>
+                    <Grid xs={12}>
+                    <Stack
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={12}
+                      mb={3}
+                    >
+                      <Button variant="contained" size="large" onClick={ () => { claim(connectedUserAddress, "KFBLERS-fb3bac", 5) } }>
+                        Claim Reward
+                      </Button>
+                      </Stack>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -511,6 +425,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
             </Box>
 
             <Box className="sliderBox">
+
+                <Typography variant="h6" component="div" color="common.white" align="right" sx={{ mr: 5, mt: 2, mb: 2 }}>
+                  Completed Tasks: { totalCompleted }/{ tasks.length }
+                </Typography>
+                
               <div className='twitch'>
                 <div style={{ width: '100%', position: 'relative' }}>
                   <ResponsiveContainer
@@ -524,15 +443,29 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           carouselWidth={width}
                           data={tasks}
                           maxVisibleSlide={5}
-                          disableSwipe
                           customScales={[1, 0.85, 0.7, 0.55]}
                           transitionTime={450}
+                          useGrabCursor={true}
                         />
                       );
                     }}
                   />
                 </div>
               </div>
+
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={12}
+                  mb={3}
+                >
+
+                <Button variant="contained" size="large" disabled={!canCompleteTasks?.canCompleteTasks || !isComplete} onClick={() => { completeTasks(connectedUserAddress) }}>
+                  Complete Tasks
+                </Button>
+
+                </Stack> 
             </Box>
           </Grid>
         </Grid>
@@ -554,10 +487,10 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
   useEffect(() => {
     if (isCenterSlide) {
       clearTimeout(removeDelay);
-      setLoadDelay(setTimeout(() => setLoaded(true), 500));
+      setLoadDelay(setTimeout(() => setLoaded(true), 50));
     } else {
       clearTimeout(loadDelay);
-      if (loaded) setRemoveDelay(setTimeout(() => setLoaded(false), 500));
+      if (loaded) setRemoveDelay(setTimeout(() => setLoaded(false), 50));
     }
   }, [isCenterSlide]);
 
