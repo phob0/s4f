@@ -214,13 +214,16 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
 
+
+  const claimableAmount = userClaimable ? userClaimable?.amount : 1
+
   // CALLS
   // completeTasks(connectedUserAddress)
   // claim(connectedUserAddress, "KFBLERS-fb3bac", 5)
 
   // claim(connectedUserAddress, tokens?.pop()?.token, 5)
 
-  console.log(getAccountBalance(connectedUserAddress))
+  console.log(userClaimable)
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -274,7 +277,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       spacing={12}
                       mb={3}
                     >
-                      <Button variant="contained" size="large" onClick={ () => { claim(connectedUserAddress, "KFBLERS-fb3bac", 5) } }>
+                      <Button variant="contained" size="large" disabled={claimableAmount > 0} onClick={ () => { claim(connectedUserAddress, "KFBLERS-fb3bac", 5) } }>
                         Claim Reward
                       </Button>
                       </Stack>
