@@ -36,6 +36,8 @@ import {
 
 import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable } from '../utils/services/hooks'
 import { completeTasks, claim } from '../utils/services/calls'
+import useGetUserNfts from '@/hooks/useGetUserNfts';
+import { IElrondNFT } from '@/utils/types/sc.interface';
 
 
 function generate(element: React.ReactElement) {
@@ -129,6 +131,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   const [reward, setReward] = useState<boolean>(false);
 
+  // const [sfitLegendNfts, setSfitLegendNfts] = useState<IElrondNFT>([]);
+
   const [eventSignal, setEventSignal] = useState<Task | null>(null);
 
   useEffect(() => {
@@ -209,22 +213,22 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   // console.log('adddress', connectedUserAddress)
 
   // QUERIES
-  const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo();
+  const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
   const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
-
-
-  const claimableAmount = userClaimable ? userClaimable?.amount : 0
+  const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress);
 
   // CALLS
   // completeTasks(connectedUserAddress)
-  // claim(connectedUserAddress, "KFBLERS-fb3bac", 5)
+  // claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce)
 
-  // claim(connectedUserAddress, tokens?.pop()?.token, 5)
+  let sfitLegendNfts: IElrondNFT[] = [];
+  if (tokensInfo.length > 1 && nfts.length > 0) {
+    sfitLegendNfts = nfts.filter(nft => nft.collection === tokensInfo[1].token);
+  }
 
-  // console.log(claimableAmount)
-  // console.log(canCompleteTasks)
+  const claimableAmount = userClaimable ? userClaimable?.amount : 0
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -278,7 +282,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       spacing={12}
                       mb={3}
                     >
-                      <Button variant="contained" size="large" disabled={claimableAmount == 0} onClick={ () => { claim(connectedUserAddress, "KFBLERS-fb3bac", 5) } }>
+                      <Button variant="contained" size="large" disabled={claimableAmount == 0 || sfitLegendNfts.length == 0} onClick={ () => { claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce) } }>
                         Claim Reward
                       </Button>
                       </Stack>
