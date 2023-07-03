@@ -150,8 +150,6 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   tasks.forEach((el)=>{
     if (el.status !== "FINISHED") {
       isComplete = false
-      
-      return false
     } else if (el.status === "FINISHED") {
       totalCompleted++
     }
@@ -489,7 +487,7 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
   const { data, dataIndex, isCenterSlide, swipeTo, slideIndex } = props;
   const [loadDelay, setLoadDelay] = useState<any>();
   const [removeDelay, setRemoveDelay] = useState<any>();
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
