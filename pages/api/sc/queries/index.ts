@@ -11,7 +11,7 @@ import { getInterface, provider, WspTypes } from "../sc";
 export const scQuery = async (
     workspace: WspTypes,
     funcName = "",
-    args = [],
+    args:any = [],
     endpointDef?: string,
 ) => {
     try {

@@ -19,7 +19,7 @@ export const fetchTotalClaimed = async (address: string): Promise<IScTotalClaime
             new AddressValue(new Address(address))
         ]);
 
-        const data = scRes.firstValue?.valueOf();
+        const data = scRes?.firstValue?.valueOf();
 
         const finalData: IScTotalClaimed = {
             amount: BigNumber(data.valueOf()).toNumber()
@@ -33,7 +33,7 @@ export const fetchTokensInfo = async (): Promise<IScTokensInfo[]> => {
 
     const scRes = await scQuery("claimWsp", "getTokensInfo", []);
 
-    const data = scRes.firstValue?.valueOf();
+    const data = scRes?.firstValue?.valueOf();
 
     const finalData: IScTokensInfo[] = data.map((item: any) => {
         const data: IScTokensInfo = {
@@ -57,7 +57,7 @@ export const fetchCanUserCompleteTasks = async (address: string): Promise<IScCan
             new AddressValue(new Address(address))
         ]);
 
-        const data = scRes.firstValue?.valueOf();
+        const data = scRes?.firstValue?.valueOf();
 
         const finalData: IScCanUserCompleteTasks = {
             canCompleteTasks: new BooleanValue(data.valueOf()).valueOf()
@@ -79,7 +79,7 @@ export const fetchUserClaimable = async (address: string): Promise<IScUserClaima
             new AddressValue(new Address(address))
         ]);
 
-        const data = scRes.firstValue?.valueOf();
+        const data = scRes?.firstValue?.valueOf();
 
         const finalData: IScUserClaimable = {
             amount: BigNumber(data.valueOf()).toNumber()

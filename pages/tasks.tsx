@@ -166,17 +166,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
     }) 
   }
 
-  // useEffect(() => {
-  //   (async () => {
-  //     if (taskStatus.status === 'signed' && taskProps?.status === "STARTED") {
-  //       updateTaskStatus(null)
-  //     } else if (rewardStatus.status === 'signed' && reward) {
-  //       addReward()
-  //     }
-  //   })();
-  
-  //   return () => {};
-  // })
+  const activeTasks = tasks.filter(task => task.status === 'STARTED')
   
   const updateTaskStatus = async (task:any) => {
       let currentTask;
@@ -214,7 +204,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   // QUERIES
   const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
-  const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
+  // const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
   const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress);
@@ -224,8 +214,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   // claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce)
 
   let sfitLegendNfts: IElrondNFT[] = [];
-  if (tokensInfo.length > 1 && nfts.length > 0) {
-    sfitLegendNfts = nfts.filter(nft => nft.collection === tokensInfo[1].token);
+
+  if (tokensInfo != undefined) {
+    if (tokensInfo.length > 1 && nfts.length > 0) {
+      sfitLegendNfts = nfts.filter(nft => nft.collection === tokensInfo[1].token);
+    }
   }
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
@@ -280,9 +273,16 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       justifyContent="center"
                       alignItems="center"
                       spacing={12}
-                      mb={3}
                     >
-                      <Button variant="contained" size="large" disabled={claimableAmount == 0 || sfitLegendNfts.length == 0} onClick={ () => { claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce) } }>
+                      <Button 
+                        className="claimButton"
+                        variant="contained" 
+                        size="large" 
+                        disabled={claimableAmount == 0 || sfitLegendNfts.length == 0} onClick={ () => { claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce) } }
+                        sx={{
+                          marginTop: 3
+                        }}  
+                      >
                         Claim Reward
                       </Button>
                       </Stack>
@@ -316,7 +316,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <LinearProgressWithLabel value={6} />
+                      <LinearProgressWithLabel value={activeTasks.length} />
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
@@ -469,7 +469,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   mb={3}
                 >
 
-                <Button variant="contained" size="large" disabled={!canCompleteTasks?.canCompleteTasks || !isComplete} onClick={() => { completeTasks(connectedUserAddress) }}>
+                <Button className="claimButton" variant="contained" size="large" disabled={!canCompleteTasks?.canCompleteTasks || !isComplete} onClick={() => { completeTasks(connectedUserAddress) }}>
                   Complete Tasks
                 </Button>
 
