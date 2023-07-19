@@ -4,7 +4,7 @@ import {
     BooleanValue
 } from "@multiversx/sdk-core/out";
 import { scQuery } from "../../pages/api/sc/queries/index";
-import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable } from "../types/sc.interface";
+import { OwnedSFIT, IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable } from "../types/sc.interface";
 import BigNumber from "bignumber.js";
 
 export const fetchTotalClaimed = async (address: string): Promise<IScTotalClaimed> => {
@@ -83,6 +83,28 @@ export const fetchUserClaimable = async (address: string): Promise<IScUserClaima
 
         const finalData: IScUserClaimable = {
             amount: BigNumber(data.valueOf()).toNumber()
+        };
+    
+        return finalData;
+    }
+};
+
+export const fetchSFITToken = async (address: string): Promise<OwnedSFIT> => {
+
+    if (address == "" || address == Address.Zero().toString()) {
+        const finalData: OwnedSFIT = {
+            token: ''
+        };
+        return finalData;
+    } else {
+        const scRes = await scQuery("claimWsp", "sfitToken", [
+            new AddressValue(new Address(address))
+        ]);
+
+        const data = scRes?.firstValue?.valueOf();
+
+        const finalData: OwnedSFIT = {
+            token: data.valueOf().toString()
         };
     
         return finalData;

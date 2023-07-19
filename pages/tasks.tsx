@@ -202,7 +202,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   // QUERIES
   const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
-  // const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
+  // useGetOwnedSFIT
+  const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
+  console.log(totalClaimed);
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
   const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress);

@@ -89,3 +89,57 @@ body {
   border: 4px solid #48EFEE;
   box-shadow: 0px 0px 30px 5px #48EFEE;
 }
+
+.breakLine {
+  height: 3px;
+  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.nftAccordion {
+  background: none!important;
+}
+
+.nftImage {
+  border-radius: 10px;
+  border: 3px solid #48efefa8;
+}
+
+.nftImageList {
+  margin-left: 15px;
+}
+
+.nftAccordionImage {
+  margin: 0 auto!important;
+}
+
+.nftCardImage {
+  margin: 0 auto!important;
+}
+
+.nftCardButton {
+  margin: 0 auto!important;
+  width: 80%;
+  background: -webkit-linear-gradient(#6100EC, #5201C8)!important;
+  box-shadow: 0px 0px 5px 1px #48EFEE!important;
+  border-radius: 10px!important;
+  border: 2px solid #48EFEE!important;
+}
+
+.nftButton {
+  color: #fff!important;
+  border-color: #fff!important;
+}
+
+.nftCard {
+  background: rgba(26, 30, 248, 0.2)!important;
+  padding: 10px 5px 5px 5px;
+}
+
+.vAlign {
+  display: flex;
+  align-items: center;
+}

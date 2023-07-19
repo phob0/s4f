@@ -20,6 +20,10 @@ export interface IScUserClaimable {
   amount: number;
 }
 
+export interface OwnedSFIT {
+  token: string;
+}
+
 type ElrondType =
   | "NonFungibleESDT"
   | "SemiFungibleESDT"

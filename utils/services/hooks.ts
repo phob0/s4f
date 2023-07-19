@@ -1,6 +1,6 @@
-import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable } from "../types/sc.interface";
+import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable, OwnedSFIT } from "../types/sc.interface";
 import useSwr from "swr";
-import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable } from "./queries";
+import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchSFITToken } from "./queries";
 
 
 export const useGetTotalClaimed = (address: string) => {
@@ -100,3 +100,28 @@ export const useGetUserClaimable = (address: string) => {
         errorUserClaimable: error,
     };
 };
+
+// export const useGetOwnedSFIT = (address: string) => {
+
+//     const {
+//         data: fetchSFITToken,
+//         isLoading,
+//         error,
+//     } = useSwr<OwnedSFIT>(
+//         `claimWsp:sfitToken:${address}`,
+//         async () => {
+//             return await fetchSFITToken(address);
+//         },
+//         {
+//             fallbackData: {
+//                 token: ''
+//             },
+//         }
+//     );
+
+//     return {
+//         fetchSFITToken: fetchSFITToken,
+//         isLoadingSFITToken: isLoading,
+//         errorSFITToken: error,
+//     };
+// };
