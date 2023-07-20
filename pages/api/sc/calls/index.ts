@@ -160,26 +160,80 @@ export const ScCallwithESDTNFTTransfer = async ({
     gasLimit?: number;
   }) => {
     let { simpleAddress } = getInterface(workspace);
-  
+
     if (simpleAddress === "") {
       simpleAddress = workspace;
     }
-  
+
     const senderAddress = new Address(sender);
-  
+
     const contract = new SmartContract({ address: new Address(simpleAddress)});
     let interaction = new Interaction(contract, new ContractFunction(funcName), args);
-  
+
     let tx = interaction
       .withSender(senderAddress)
       .withSingleESDTNFTTransfer(TokenTransfer.nonFungible(token_identifier, token_nonce))
-    //   .useThenIncrementNonceOf(new Account(senderAddress)) // den xerw an xreiazetai auto
       .withValue(0)
       .withGasLimit(gasLimit)
       .withChainID(ChainID)
       .buildTransaction();
-  
+
     let transactionInput = { transactions: [tx] };
-  
+
     return await runTransactions(transactionInput);
-  };
+    };
+
+export const ScCallwithMultiESDTNFTTransfer = async ({
+  workspace,
+  sender,
+  funcName,
+  token_identifiers,
+  token_nonces,
+  args = [],
+  gasLimit = 50000000,
+} : {
+  workspace: WspTypes;
+  sender: string;
+  funcName: string;
+  token_identifiers: any[];
+  token_nonces: any[];
+  args?: any[];
+  gasLimit?: number;
+}) => {
+    let { simpleAddress } = getInterface(workspace);
+
+    if (simpleAddress === "") {
+      simpleAddress = workspace;
+    }
+
+    const senderAddress = new Address(sender);
+
+    const contract = new SmartContract({ address: new Address(simpleAddress)});
+    let interaction = new Interaction(contract, new ContractFunction(funcName), args);
+
+    const tokenTransfers = [];
+
+    for (let i = 0; i < token_identifiers.length; i++) {
+      const token_identifier = token_identifiers[i];
+      const token_nonce = token_nonces[i];
+
+      // Create the TokenTransfer object and add it to the array
+      const tokenTransfer = TokenTransfer.nonFungible(token_identifier, token_nonce);
+
+      tokenTransfers.push(tokenTransfer);
+    }
+
+    // The tokenTransfers array will now contain objects in the format: TokenTransfer.nonFungible(token_identifier, token_nonce)
+
+    let tx = interaction
+      .withSender(senderAddress)
+      .withMultiESDTNFTTransfer(tokenTransfers)
+      .withValue(0)
+      .withGasLimit(gasLimit)
+      .withChainID(ChainID)
+      .buildTransaction();
+
+    let transactionInput = { transactions: [tx] };
+
+    return await runTransactions(transactionInput);
+};

@@ -14,7 +14,7 @@ import Image from 'next/image'
 import { purple } from '@mui/material/colors';
 import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
 import { useGetAllowedGymNfts, useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUnbondingDuration, useGetUserClaimable, useGetUserStakedInfo } from '@/utils/services/hooks';
-import { claim, completeTasks } from '@/utils/services/calls';
+import { claim, completeTasks, stake, stakeMulti, unstake } from '@/utils/services/calls';
 import { Button } from '@mui/material';
 // import { useGetTotalClaimed } from '@/utils/hooks/hooks';
 import Accordion from '@mui/material/Accordion';
@@ -66,7 +66,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
 
-  // console.log(sfitLegendsNfts, gym1Nfts, stakedGymNfts);
+  console.log(sfitLegendsNfts, gym1Nfts, stakedGymNfts);
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
