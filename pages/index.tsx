@@ -13,7 +13,7 @@ import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import { purple } from '@mui/material/colors';
 import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
-import { useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUserClaimable } from '@/utils/services/hooks';
+import { useGetAllowedGymNfts, useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUnbondingDuration, useGetUserClaimable, useGetUserStakedInfo } from '@/utils/services/hooks';
 import { claim, completeTasks } from '@/utils/services/calls';
 import { Button } from '@mui/material';
 // import { useGetTotalClaimed } from '@/utils/hooks/hooks';
@@ -23,6 +23,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import React, { useState } from 'react';
+import useGetUserNfts from '@/hooks/useGetUserNfts';
 
 // Array interface
 interface Gym {
@@ -40,22 +41,32 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const [panel1, setPanel1] = useState(true);
   const [panel2, setPanel2] = useState(true);
-  
-  // const connectedUserAddress = accountInfo.address;
+
+  const connectedUserAddress = accountInfo.address;
 
   // QUERIES
-  // const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo();
-  // const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
-  // const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
-  // const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
+  const { tokensInfo, isLoadingTokensInfo, errorTokensInfo } = useGetTokensInfo(); // (intended to be run in a specific Gym - here only to get SFITLEGENDS & SFIT TOKEN)
+  const { gymNftsInfo, isLoadingGymNftsInfo, errorGymNftsInfo } = useGetAllowedGymNfts();
+  const { unbondingDuration, isLoadingUnbondingDuration, errorUnbondingDuration } = useGetUnbondingDuration(); // for the user to know after how many seconds will be able to unstake a GYM NFT
 
-  // CALLS
-  // completeTasks(connectedUserAddress)
-  // const nft_token = tokensInfo[1].token;
-  // const nft_nonce = 1; // any numbers based on user's balance
-  // claim(connectedUserAddress, nft_token, nft_nonce);
+  // TOKENS (intended to be run in a specific Gym, not here)
+  // let gymNftsIdentifier = "";
+  let sfitLegendsNftsIdentifier = "";
+  // let sfitTokenIdentifier = "";
+  if (!isLoadingTokensInfo && tokensInfo?.length == 3) {
+    // gymNftsIdentifier = tokensInfo[0]?.token;
+    sfitLegendsNftsIdentifier = tokensInfo[1]?.token;
+    // sfitTokenIdentifier = tokensInfo[2]?.token;
+  }
 
-  // console.log("LOG: ");
+  // NFTs BALANCE IN WALLET
+  const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
+  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0].token);
+
+  // GYM NFTs STAKED
+  const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
+
+  // console.log(sfitLegendsNfts, gym1Nfts, stakedGymNfts);
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"

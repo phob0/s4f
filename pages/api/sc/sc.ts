@@ -5,6 +5,7 @@ import { sendTransactions } from "@multiversx/sdk-dapp/services";
 
 //abis import
 import claimAbi from "../../../claim.abi.json";
+import gymStakingAbi from "../../../gymstaking.abi.json";
 
 /* Queries */
 export const provider = new ProxyNetworkProvider(network.gatewayAddress, {
@@ -51,6 +52,7 @@ export const runTransactions = async ({
 
 export type WspTypes = 
             | "claimWsp"
+            | "gymStakingWsp"
 
 export const getInterface = (workspace: WspTypes) => {
 
@@ -67,9 +69,15 @@ export const getInterface = (workspace: WspTypes) => {
             abiUrl = claimAbi;
             implementsInterfaces = "ClaimWsp";
             break;
+        case "gymStakingWsp":
+            simpleAddress = contractAddress.gymStaking;
+            address = new Address(simpleAddress);
+            abiUrl = gymStakingAbi;
+            implementsInterfaces = "GymStakingWsp";
+            break;
 
-            default:
-                break;
+        default:
+            break;
     }
 
     return { address, abiUrl, implementsInterfaces, simpleAddress };

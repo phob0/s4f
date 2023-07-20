@@ -20,6 +20,16 @@ export interface IScUserClaimable {
   amount: number;
 }
 
+export interface IScUnbondingDuration {
+  seconds: number;
+}
+
+export interface IScUserStakedInfo {
+  token: string;
+  nonce: number;
+  unbondingTimestamp: number;
+}
+
 export interface OwnedSFIT {
   token: string;
 }

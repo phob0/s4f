@@ -1,6 +1,6 @@
-import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable, OwnedSFIT } from "../types/sc.interface";
+import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUnbondingDuration, IScUserClaimable, IScUserStakedInfo, OwnedSFIT } from "../types/sc.interface";
 import useSwr from "swr";
-import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchSFITToken } from "./queries";
+import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchSFITToken, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo } from "./queries";
 
 
 export const useGetTotalClaimed = (address: string) => {
@@ -125,3 +125,74 @@ export const useGetUserClaimable = (address: string) => {
 //         errorSFITToken: error,
 //     };
 // };
+
+export const useGetAllowedGymNfts = () => {
+
+    const {
+        data: allwedGymNfts,
+        isLoading,
+        error,
+    } = useSwr<IScTokensInfo[]>(
+        `gymStakingWsp:allowedGymNfts`,
+        async () => {
+            return await fetchAllowedGymNfts();
+        },
+        {
+            fallbackData: [],
+        }
+    );
+
+    return {
+        gymNftsInfo: allwedGymNfts,
+        isLoadingGymNftsInfo: isLoading,
+        errorGymNftsInfo: error,
+    };
+};
+
+export const useGetUnbondingDuration = () => {
+
+    const {
+        data: unbondingDuration,
+        isLoading,
+        error,
+    } = useSwr<IScUnbondingDuration>(
+        `gymStakingWsp:unbondingDuration`,
+        async () => {
+            return await fetchUnbondingDuration();
+        },
+        {
+            fallbackData: {
+                seconds: 0
+            },
+        }
+    );
+
+    return {
+        unbondingDuration: unbondingDuration,
+        isLoadingUnbondingDuration: isLoading,
+        errorUnbondingDuration: error,
+    };
+};
+
+export const useGetUserStakedInfo = (address: string) => {
+
+    const {
+        data: userStakedInfo,
+        isLoading,
+        error,
+    } = useSwr<IScUserStakedInfo[]>(
+        `gymStakingWsp:getUserStakedInfo:${address}`,
+        async () => {
+            return await fetchUserStakedInfo();
+        },
+        {
+            fallbackData: [],
+        }
+    );
+
+    return {
+        userStakedInfo: userStakedInfo,
+        isLoadingUserStakedInfo: isLoading,
+        errorUserStakedInfo: error,
+    };
+};

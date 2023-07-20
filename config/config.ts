@@ -1,7 +1,8 @@
 export const contractAddress = {
     claim: 'erd1qqqqqqqqqqqqqpgqr4su90zz4uz2zj2t02swmga5lcuv9fxtu7zsdakddk',
+    gymStaking: 'erd1qqqqqqqqqqqqqpgq45xtljt6j2a0vrnck68zfcln5nx0m5t7u7zsnwj48x'
 }
-export const dAppName = 'NextJS Dapp';
+export const dAppName = 'FintessVerse';
 
 // Generate your own WalletConnect 2 ProjectId here: https://cloud.walletconnect.com/app
 export const walletConnectV2ProjectId = '1dfc2bc8f9ad07462c9eeef11fd560cf';
