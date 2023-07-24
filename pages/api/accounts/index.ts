@@ -34,3 +34,23 @@ export const getNft = async ({
   const res = await axiosLink.get<IElrondNFT[]>(`/nfts/${identifier}`);
   return res.data;
 };
+
+export const getNFTs = async ({
+  size = 10000,
+  name = undefined,
+  identifier = undefined,
+  identifiers = undefined,
+  search = undefined,
+}) => {
+  const res = await axiosLink.get<IElrondNFT[]>("/nfts", {
+    params: {
+      identifier,
+      identifiers,
+      name,
+      size,
+      search,
+    },
+  });
+
+  return res.data;
+};

@@ -25,6 +25,8 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import React, { useState } from 'react';
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import useGetNft from '@/hooks/useGetNft';
+import useGetNfts from '@/hooks/useGetNfts';
+import { createIndentifierByCollectionAndNonce } from '@/utils/functions/tokens';
 
 // Array interface
 interface Gym {
@@ -67,8 +69,15 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
 
-  const { nft, isLoadingNft, isErrorNft } = useGetNft("GYMTEST-16958a", 6);
-  console.log("TEST", nft);
+  const nonces = [5,6,7];
+  const collection = "GYMTEST-16958a";
+  const nftsInScArr: string[] = nonces.map((nonce) =>
+    createIndentifierByCollectionAndNonce(collection, nonce)
+  );
+  const { nfts, isLoading } = useGetNfts(nftsInScArr.join(","));
+
+  // const { nft, isLoadingNft, isErrorNft } = useGetNft("GYMTEST-16958a", 6);
+  console.log("TEST", nfts);
 
   if (isLoggedIn) {
     console.log(stakedGymNfts, isLoadingStakedGymNfts, isErrorStakedGymNfts)
