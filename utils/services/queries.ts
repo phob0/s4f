@@ -140,9 +140,11 @@ export const fetchUnbondingDuration = async (): Promise<IScUnbondingDuration> =>
 
 };
 
-export const fetchUserStakedInfo = async (): Promise<IScUserStakedInfo[]> => {
+export const fetchUserStakedInfo = async (address: string): Promise<IScUserStakedInfo[]> => {
 
-    const scRes = await scQuery("gymStakingWsp", "getUserStakedInfo", []);
+    const scRes = await scQuery("gymStakingWsp", "getUserStakedInfo", [
+        new AddressValue(new Address(address))
+    ]);
 
     const data = scRes?.firstValue?.valueOf();
 

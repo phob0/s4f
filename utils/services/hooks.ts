@@ -183,7 +183,7 @@ export const useGetUserStakedInfo = (address: string) => {
     } = useSwr<IScUserStakedInfo[]>(
         `gymStakingWsp:getUserStakedInfo:${address}`,
         async () => {
-            return await fetchUserStakedInfo();
+            return await fetchUserStakedInfo(address);
         },
         {
             fallbackData: [],
