@@ -61,12 +61,18 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   // NFTs BALANCE IN WALLET
   const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
-  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0].token);
+  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
 
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
 
-  console.log(sfitLegendsNfts, gym1Nfts, stakedGymNfts);
+  if (isLoggedIn) {
+    console.log(stakedGymNfts, isLoadingStakedGymNfts, isErrorStakedGymNfts)
+  }
+
+  const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0
+  const gymNftsLength = gym1Nfts ? gym1Nfts.length : 0
+
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
@@ -186,6 +192,9 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           ))}
           </Grid>  
         </Box>
+        { 
+          isLoggedIn ? 
+
         <Box sx={{ 
             flexGrow: 1,
             mt: 15
@@ -210,6 +219,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             </Grid>
           </Grid>
         </Box>
+        : null }
+
+        { 
+          isLoggedIn ? 
         <Box sx={{ 
             flexGrow: 1,
             mt: 15
@@ -228,13 +241,12 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   <Grid xs={3}>
                     <Grid container>
                       <Grid xs={6}>
-                        <Image
-                          src="/demo_imgs/1nft.jpg"
-                          width={100}
-                          height={100}
-                          alt="Picture of the author"
+                        <img
+                          src={ sfitLegendsNfts != undefined ? sfitLegendsNfts[0]?.url : ""}
+                          alt="sfitLegendNFT"
+                          loading="lazy"
                           className="nftImage nftAccordionImage"
-                        />  
+                        />
                       </Grid>
                       <Grid xs={6} className="vAlign">
                         <Typography  
@@ -252,44 +264,32 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        4
+                        { sfitLegendsNftsLength }
                       </Typography>  
                   </Grid>
                   <Grid xs={5}>
                     <Grid container>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/2nft.jpg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/3nft.jpg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/4nft.jpg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
+                      {
+                        sfitLegendsNfts != undefined ?
+                        sfitLegendsNfts.slice(0, 3).map((nft, key) => (
+                          <Grid xs={3}>
+                            <img
+                              src={nft.url}
+                              width={100}
+                              height={100}
+                              alt="Picture of the author"
+                              className="nftImage"
+                            />
+                          </Grid>
+                        )) : null
+                      }
+                      
                       <Grid xs={3} className="vAlign">
                       <Typography  
                             variant="h4" 
                             sx={{ color: 'common.white'}}
                           >
-                            +1 more
+                            +{ (sfitLegendsNftsLength - (sfitLegendsNftsLength - 1)) } more
                           </Typography> 
                       </Grid>
                     </Grid>
@@ -303,132 +303,52 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             </AccordionSummary>
             <AccordionDetails>
               <Box>
-                <Grid container spacing={2}>
-                  <Grid xs={3}>
-                    <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/5nft.jpg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/5nft.jpg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/5nft.jpg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/5nft.jpg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
+                <Grid container spacing={2}>     
+                  {
+                    sfitLegendsNfts != undefined ?
+                    sfitLegendsNfts.map((nft, key) => (
+                      <Grid xs={3} mb={2}>
+                        <Card sx={{ maxWidth: 260 }} className="nftCard">
+                          <CardMedia
+                            sx={{ height: 200, width: 200 }}
+                            image={nft.url}
+                            className="nftImage nftCardImage"
+                          />
+                          <CardContent sx={{ paddingTop: 3 }}>
+                            <Grid container spacing={2}>
+                              <Grid xs={6} sx={{ textAlign: 'center' }}>
+                                <Typography  
+                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                                >
+                                  SFITLEGEND
+                                </Typography>
+                              </Grid>
+                              <Grid xs={6} sx={{ textAlign: 'center' }}>
+                                <Typography  
+                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                                >
+                                  #2002
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                          <CardActions>
+                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    )) : null
+                  }
                 </Grid>  
               </Box>
             </AccordionDetails>
           </Accordion>
         </Box>
+
+        : null }
+          
+        { 
+        isLoggedIn ? 
         <Box sx={{ 
             flexGrow: 1,
             mt: 15
@@ -453,6 +373,9 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             </Grid>
           </Grid>
         </Box>
+        : null }
+        { 
+        isLoggedIn ? 
         <Box sx={{ 
             flexGrow: 1,
             mt: 15
@@ -471,13 +394,26 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   <Grid xs={3}>
                     <Grid container>
                       <Grid xs={6}>
-                        <Image
-                          src="/demo_imgs/gym_nft.jpeg"
-                          width={100}
-                          height={100}
-                          alt="Picture of the author"
-                          className="nftImage nftAccordionImage"
-                        />  
+                        <img
+                            src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""}
+                            alt="sfitLegendNFT"
+                            loading="lazy"
+                            className="nftImage nftAccordionImage"
+                          /> 
+                        {/* {
+                         gym1Nfts?.shift()?.media?.shift()?.fileType === 'image/jpeg' ? 
+                          <img
+                            src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""}
+                            alt="sfitLegendNFT"
+                            loading="lazy"
+                            className="nftImage nftAccordionImage"
+                          /> 
+                          :
+                          <video className="nftImage nftAccordionImage">
+                            <source src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""} type="video/mp4"></source>
+                          </video>
+                        } */}
+
                       </Grid>
                       <Grid xs={6} className="vAlign">
                         <Grid container>
@@ -507,46 +443,49 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        4
+                        { gymNftsLength }
                       </Typography>  
                   </Grid>
                   <Grid xs={5}>
                     <Grid container>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/gym_nft.jpeg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/gym_nft.jpeg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
-                      <Grid xs={3}>
-                      <Image
-                        src="/demo_imgs/gym_nft.jpeg"
-                        width={100}
-                        height={100}
-                        alt="Picture of the author"
-                        className="nftImage"
-                      />
-                      </Grid>
-                      <Grid xs={3} className="vAlign">
-                      <Typography  
-                            variant="h4" 
-                            sx={{ color: 'common.white'}}
-                          >
-                            +1 more
-                          </Typography> 
-                      </Grid>
+                    {
+                        gym1Nfts != undefined ?
+                        gym1Nfts.slice(0, 3).map((nft, key) => (
+                          <Grid xs={3}>
+                            <img
+                                src={nft.url}
+                                width={100}
+                                height={100}
+                                alt="Picture of the author"
+                                className="nftImage"
+                              /> 
+                          {/* {nft != undefined && nft?.media?.shift()?.fileType === 'image/jpeg' ? 
+                            <img
+                                src={nft.url}
+                                width={100}
+                                height={100}
+                                alt="Picture of the author"
+                                className="nftImage"
+                              /> 
+                            :
+                            <video className="nftImage nftAccordionImage">
+                              <source src={nft.url} type="video/mp4"></source>
+                            </video>} */}
+                          </Grid>
+                        )) : null
+                      }
+
+                      { gymNftsLength >= 3 ?
+                        <Grid xs={3} className="vAlign">
+                          <Typography  
+                              variant="h4" 
+                              sx={{ color: 'common.white'}}
+                            >
+                              +{ (gymNftsLength - (gymNftsLength - 1)) } more
+                            </Typography> 
+                        </Grid>
+                      : null
+                      }
                     </Grid>
                   </Grid>
                   <Grid xs={2} className="vAlign">
@@ -559,131 +498,67 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <AccordionDetails>
               <Box>
                 <Grid container spacing={2}>
-                  <Grid xs={3}>
-                    <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/gym_nft.jpeg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/gym_nft.jpeg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/gym_nft.jpeg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid xs={3}>
-                  <Card sx={{ maxWidth: 260 }} className="nftCard">
-                      <CardMedia
-                        sx={{ height: 200, width: 200 }}
-                        image="/demo_imgs/gym_nft.jpeg"
-                        className="nftImage nftCardImage"
-                      />
-                      <CardContent sx={{ paddingTop: 3 }}>
-                        <Grid container spacing={2}>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              SFITLEGEND
-                            </Typography>
-                          </Grid>
-                          <Grid xs={6} sx={{ textAlign: 'center' }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #2002
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="contained" size="medium" className="nftCardButton">Stake</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
+
+                  {
+                    gym1Nfts != undefined ?
+                    gym1Nfts.map((nft, key) => (
+                      <Grid xs={3} mb={2}>
+                        <Card sx={{ maxWidth: 260 }} className="nftCard">
+                            <CardMedia
+                              sx={{ height: 200, width: 200 }}
+                              image={nft.url}
+                              className="nftImage nftCardImage"
+                            />
+                          {/* {nft?.media?.shift()?.fileType === 'image/jpeg' ? 
+                            <CardMedia
+                              sx={{ height: 200, width: 200 }}
+                              image={nft.url}
+                              className="nftImage nftCardImage"
+                            />
+                            :
+                            <video className="nftImage nftCardImage">
+                              <source src={nft.url} type="video/mp4"></source>
+                            </video>} */}
+                          <CardContent sx={{ paddingTop: 3 }}>
+                            <Grid container spacing={2}>
+                              <Grid xs={6} sx={{ textAlign: 'center' }}>
+                                <Typography  
+                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                                >
+                                  SFITLEGEND
+                                </Typography>
+                              </Grid>
+                              <Grid xs={6} sx={{ textAlign: 'center' }}>
+                                <Typography  
+                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                                >
+                                  #2002
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                          <CardActions>
+                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    )) : null
+                  }
+                  
                 </Grid>  
               </Box>
             </AccordionDetails>
           </Accordion>
         </Box>
+
+        : null }
+        { 
+        !isLoggedIn ? 
+        <Typography align="center" variant="h3" color="#48eeed" gutterBottom mt={8}>
+          Connect to your wallet to see your NFTs.
+        </Typography>
+      : null
+      }
     </Container>
   )
 }

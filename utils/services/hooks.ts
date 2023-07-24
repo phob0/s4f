@@ -1,6 +1,6 @@
 import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUnbondingDuration, IScUserClaimable, IScUserStakedInfo, OwnedSFIT } from "../types/sc.interface";
 import useSwr from "swr";
-import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchSFITToken, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo } from "./queries";
+import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo } from "./queries";
 
 
 export const useGetTotalClaimed = (address: string) => {

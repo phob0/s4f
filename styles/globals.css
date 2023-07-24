@@ -99,6 +99,11 @@ body {
   width: 100%;
 }
 
+.footer {
+  border-top: 1px solid;
+  border-image: linear-gradient(to right,#b380ff,#48efefa8) 1 0 0 0;
+}
+
 .nftAccordion {
   background: none!important;
 }
@@ -114,6 +119,8 @@ body {
 
 .nftAccordionImage {
   margin: 0 auto!important;
+  width: 100px;
+  height: 100px;
 }
 
 .nftCardImage {
@@ -142,4 +149,9 @@ body {
 .vAlign {
   display: flex;
   align-items: center;
+}
+
+.blurFilter {
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blue(10px);
 }
