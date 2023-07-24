@@ -7,7 +7,7 @@ const axiosLink = axios.create({
   baseURL: BASE_URL,
 });
 
-export const getNfts = async ({
+export const getAddressNfts = async ({
   address,
   parameters,
 }: {
@@ -23,5 +23,14 @@ export const getNfts = async ({
       ...parameters,
     },
   });
+  return res.data;
+};
+
+export const getNft = async ({
+  identifier,
+}: {
+  identifier: string;
+}) => {
+  const res = await axiosLink.get<IElrondNFT[]>(`/nfts/${identifier}`);
   return res.data;
 };

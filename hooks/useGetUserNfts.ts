@@ -1,4 +1,4 @@
-import { getNfts } from "../pages/api/accounts/index";
+import { getAddressNfts } from "../pages/api/accounts/index";
 import useSWR from "swr";
 import useUser from "../lib/useUser";
 
@@ -10,7 +10,7 @@ const useGetUserNfts = (user: string, collections?: string) => {
           parameters: { collections: collections },
         }
       : null,
-    getNfts,
+    getAddressNfts,
     {}
   );
 
