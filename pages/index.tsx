@@ -23,7 +23,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import useGetNft from '@/hooks/useGetNft';
 import useGetNfts from '@/hooks/useGetNfts';
@@ -45,6 +45,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const [panel1, setPanel1] = useState(true);
   const [panel2, setPanel2] = useState(true);
+  const [gymStacked, setGymStacked] = useState<any[]>([]);
 
   const connectedUserAddress = accountInfo.address;
 
@@ -64,9 +65,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   }
 
   // NFTs BALANCE IN WALLET
+  
   const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
-  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
-
+  
+  console.log(sfitLegendsNfts, isLoadingSfitLegendsNfts) // <=========== upon browser refresh only, here it should be 4 entries in my case but return 6 (4 + the 2 gyms which are not stacked)
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
 
@@ -76,17 +78,21 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     createIndentifierByCollectionAndNonce(collection, nonce)
   );
   const { nfts, isLoading } = useGetNfts(nftsInScArr.join(","));
-
-  const gymStacked = nfts ? gym1Nfts.concat(nfts) : gym1Nfts 
-
+  
   const uDuration = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
 
-  console.log("TEST", gymStacked);
+  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
 
+  // console.log(nfts, gym1Nfts, isLoadingSfitLegendsNfts)
+
+  useEffect(() => {
+    const gymStackedNFT = nfts ? gym1Nfts.concat(nfts) : gym1Nfts;
+    setGymStacked(gymStackedNFT);
+  }, []);
 
 
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0
-  const gymNftsLength = gym1Nfts ? gym1Nfts.length : 0
+  const gymNftsLength = gymStacked ? gymStacked.length : 0
 
 
   function handleColorAvailability(status: string) {
@@ -287,7 +293,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       {
                         sfitLegendsNfts != undefined ?
                         sfitLegendsNfts.slice(0, 3).map((nft, key) => (
-                          <Grid xs={3}>
+                          <Grid key={key} xs={3}>
                             <img
                               src={nft.url}
                               width={100}
@@ -322,7 +328,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   {
                     sfitLegendsNfts != undefined ?
                     sfitLegendsNfts.map((nft, key) => (
-                      <Grid xs={3} mb={2}>
+                      <Grid key={key} xs={3} mb={2}>
                         <Card sx={{ maxWidth: 260 }} className="nftCard">
                           <CardMedia
                             sx={{ height: 200, width: 200 }}
@@ -466,7 +472,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                     {
                         gymStacked != undefined ?
                         gymStacked.slice(0, 3).map((nft, key) => (
-                          <Grid xs={3}>
+                          <Grid key={key} xs={3}>
                             <img
                                 src={nft.url}
                                 width={100}
@@ -517,7 +523,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   {
                     gymStacked != undefined ?
                     gymStacked.map((nft, key) => (
-                      <Grid xs={3} mb={2}>
+                      <Grid key={key} xs={3} mb={2}>
                         <Card sx={{ maxWidth: 260 }} className="nftCard">
                             <CardMedia
                               sx={{ height: 200, width: 200 }}
