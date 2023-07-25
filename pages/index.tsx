@@ -8,6 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
+import Tooltip from '@mui/joy/Tooltip';
 import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
@@ -76,12 +77,13 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   );
   const { nfts, isLoading } = useGetNfts(nftsInScArr.join(","));
 
-  // const { nft, isLoadingNft, isErrorNft } = useGetNft("GYMTEST-16958a", 6);
-  console.log("TEST", nfts);
+  const gymStacked = nfts ? gym1Nfts.concat(nfts) : gym1Nfts 
 
-  if (isLoggedIn) {
-    console.log(stakedGymNfts, isLoadingStakedGymNfts, isErrorStakedGymNfts)
-  }
+  const uDuration = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
+
+  console.log("TEST", gymStacked);
+
+
 
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0
   const gymNftsLength = gym1Nfts ? gym1Nfts.length : 0
@@ -462,8 +464,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   <Grid xs={5}>
                     <Grid container>
                     {
-                        gym1Nfts != undefined ?
-                        gym1Nfts.slice(0, 3).map((nft, key) => (
+                        gymStacked != undefined ?
+                        gymStacked.slice(0, 3).map((nft, key) => (
                           <Grid xs={3}>
                             <img
                                 src={nft.url}
@@ -513,8 +515,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 <Grid container spacing={2}>
 
                   {
-                    gym1Nfts != undefined ?
-                    gym1Nfts.map((nft, key) => (
+                    gymStacked != undefined ?
+                    gymStacked.map((nft, key) => (
                       <Grid xs={3} mb={2}>
                         <Card sx={{ maxWidth: 260 }} className="nftCard">
                             <CardMedia
@@ -551,7 +553,17 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                             </Grid>
                           </CardContent>
                           <CardActions>
-                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                            {
+                              nft.timestamp ? 
+                              <Tooltip title={uDuration}>
+                                <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { unstake(connectedUserAddress, nft.collection, nft.nonce) }}>Unstake</Button>
+                              </Tooltip>
+
+                              :
+
+                              <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                            }
+                            
                           </CardActions>
                         </Card>
                       </Grid>
