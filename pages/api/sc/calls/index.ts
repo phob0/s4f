@@ -45,7 +45,7 @@ export const ScCallwithNoTransfer = async ({
 
   let tx = interaction
     .withSender(senderAddress)
-    .useThenIncrementNonceOf(new Account(senderAddress)) // den xerw an xreiazetai auto
+    .useThenIncrementNonceOf(new Account(senderAddress))
     .withValue(0)
     .withGasLimit(gasLimit)
     .withChainID(ChainID)

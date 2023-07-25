@@ -82,12 +82,14 @@ export const stakeMulti = async (connectedUser: string, nft_tokens: string[], nf
 };
 
 export const unstake = async (connectedUser: string, nft_token: string, nft_nonce: number) => {
-    // console.log(connectedUser, nft_token, nft_nonce)
     const res = await ScCallwithNoTransfer({
         workspace: "gymStakingWsp",
         sender: connectedUser,
         funcName: "unstake",
-        args: [nft_token, nft_nonce],
+        args: [
+            BytesValue.fromUTF8(nft_token),
+            new BigUIntValue(new BigNumber(nft_nonce))
+        ],
         gasLimit: 20_000_000
     });
 
