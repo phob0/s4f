@@ -386,39 +386,57 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Box>
-                <Grid container spacing={2}>     
-                  {
-                    sfitLegendsNfts != undefined ?
-                    sfitLegendsNfts.map((nft, key) => (
-                      <Grid key={key} xs={3} my={2}>
-                        <Card sx={{ maxWidth: 260, borderRadius: 2 }} className="nftCard">
-                          <CardMedia
-                            sx={{ height: 200, width: 200 }}
-                            image={nft.url}
-                            className="nftImage nftCardImage"
-                          />
-                          <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              {nft.name}
-                            </Typography>
-                            <Typography  
-                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                            >
-                              #{nft.nonce}
-                            </Typography>
-                          </CardContent>
-                          {/* <CardActions>
-                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
-                          </CardActions> */}
-                        </Card>
-                      </Grid>
-                    )) : null
-                  }
-                </Grid>  
+              {sfitLegendsNfts.length > 0 ?
+              <Grid container spacing={2}>     
+                {
+                  sfitLegendsNfts != undefined ?
+                  sfitLegendsNfts.map((nft, key) => (
+                    <Grid key={key} xs={3} my={2}>
+                      <Card sx={{ maxWidth: 260, borderRadius: 2 }} className="nftCard">
+                        <CardMedia
+                          sx={{ height: 200, width: 200 }}
+                          image={nft.url}
+                          className="nftImage nftCardImage"
+                        />
+                        <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
+                          <Typography  
+                            sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                          >
+                            {nft.name}
+                          </Typography>
+                          <Typography  
+                            sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                          >
+                            #{nft.nonce}
+                          </Typography>
+                        </CardContent>
+                        {/* <CardActions>
+                          <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                        </CardActions> */}
+                      </Card>
+                    </Grid>
+                  )) : null
+                }
+              </Grid> :
+              <Box className="warningBox" maxWidth={"500px"} flexDirection="column" display="flex" height="100%" justifyContent="center" alignItems="center">
+                <Typography align="center" p={5} fontSize={"18px"}>
+                  IN ORDER TO PARTICIPATE, YOU NEED TO HAVE AT LEAST ONE SFITLEGEND NFT.
+                </Typography>
+                <Box width={"150px"} display="flex" justifyContent="center" alignItems="center" my={1}>
+                  <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      width: "150px",
+                      justifyContent: 'center',
+                      display: 'inline-flex',
+                      alignItems: 'center'
+                    }}>
+                    <Button variant="outlined" className="buyButton">Buy NFT</Button>
+                  </a>
+                </Box>
               </Box>
+              }
             </AccordionDetails>
           </Accordion>
         </Box>
@@ -584,65 +602,83 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Box>
-                <Grid container spacing={2}>
-                  {
-                    allGymNfts != undefined ?
-                    allGymNfts.map((nft, key) => (
-                      <Grid key={key} xs={3} mb={2}>
-                        <Card sx={{ maxWidth: 260 }} className="nftCard">
-                            {nft.media && <CardMedia
-                              sx={{ height: 200, width: 200 }}
-                              image={nft.media[0].thumbnailUrl}
-                              className="nftImage nftCardImage"
-                            />}
-                          <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
-                                <Typography  
-                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                                >
-                                  {nft.name}
-                                </Typography>
-                                <Typography  
-                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                                >
-                                  #{nft.nonce}
-                                </Typography>
-                          </CardContent>
-                          <CardActions>
-                            {
-                              nft.unbondedInSeconds >= 0 ? 
-                              <Tooltip
-                              title={nft.unbondedInSeconds == 0 ? null
-                                : `${getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}`}
+              {allGymNfts.length > 0 ? 
+              <Grid container spacing={2}>
+                {
+                  allGymNfts != undefined ?
+                  allGymNfts.map((nft, key) => (
+                    <Grid key={key} xs={3} mb={2}>
+                      <Card sx={{ maxWidth: 260 }} className="nftCard">
+                          {nft.media && <CardMedia
+                            sx={{ height: 200, width: 200 }}
+                            image={nft.media[0].thumbnailUrl}
+                            className="nftImage nftCardImage"
+                          />}
+                        <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
+                              <Typography  
+                                sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                               >
-                                <Button
-                                  variant="contained"
-                                  style={{
-                                    opacity: 5
-                                  }}
-                                  size="medium"
-                                  className={nft.unbondedInSeconds > 0 ? "nftCardButtonDisabled" : "nftCardButton"}
-                                  onClick={() => {
-                                    if (nft.unbondedInSeconds == 0) {
-                                      unstake(connectedUserAddress, nft.collection, nft.nonce);
-                                    }
-                                  }}
-                                >
-                                Unstake
-                              </Button>
-                            </Tooltip>
-                              :
-                              <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
-                            }
-                            
-                          </CardActions>
-                        </Card>
-                      </Grid>
-                    )) : null
-                  }
-                  
-                </Grid>  
-              </Box>
+                                {nft.name}
+                              </Typography>
+                              <Typography  
+                                sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                              >
+                                #{nft.nonce}
+                              </Typography>
+                        </CardContent>
+                        <CardActions>
+                          {
+                            nft.unbondedInSeconds >= 0 ? 
+                            <Tooltip
+                            title={nft.unbondedInSeconds == 0 ? null
+                              : `${getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}`}
+                            >
+                              <Button
+                                variant="contained"
+                                style={{
+                                  opacity: 5
+                                }}
+                                size="medium"
+                                className={nft.unbondedInSeconds > 0 ? "nftCardButtonDisabled" : "nftCardButton"}
+                                onClick={() => {
+                                  if (nft.unbondedInSeconds == 0) {
+                                    unstake(connectedUserAddress, nft.collection, nft.nonce);
+                                  }
+                                }}
+                              >
+                              Unstake
+                            </Button>
+                          </Tooltip>
+                            :
+                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
+                          }
+                          
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  )) : null
+                }
+                
+              </Grid> :
+              <Box className="warningBox" maxWidth={"500px"} flexDirection="column" display="flex" height="100%" justifyContent="center" alignItems="center">
+                <Typography align="center" p={5} fontSize={"18px"}>
+                  IN ORDER TO PARTICIPATE, YOU NEED TO HAVE AT LEAST ONE GYM NFT.
+                </Typography>
+                <Box width={"150px"} display="flex" justifyContent="center" alignItems="center" my={1}>
+                <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" 
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    width: "150px",
+                    justifyContent: 'center',
+                    display: 'inline-flex',
+                    alignItems: 'center'
+                  }}>
+                  <Button variant="outlined" className="buyButton">Buy NFT</Button>
+                </a>
+                </Box>
+              </Box>            
+              }
             </AccordionDetails>
           </Accordion>
         </Box>

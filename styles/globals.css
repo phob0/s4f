@@ -174,3 +174,25 @@ body {
   background-color: rgba(255, 255, 255, 0.4);
   backdrop-filter: blue(10px);
 }
+
+.warningBox {
+  margin: 0 auto !important;
+  width: 80%;
+  box-shadow: 0px 0px 5px 1px rgba(72, 239, 238, 0.8) !important;
+  border-radius: 25px !important;
+  border: 2px solid rgba(72, 239, 238, 0.8) !important;
+  padding: 7px;
+  background-color: #091332; /* Dark grey background with alpha (opacity) value of 0.9 */
+  color: #ffffff; /* Set the text color to white */
+}
+
+.buyButton {
+  margin: 0 auto!important;
+  width: 80%;
+  background: -webkit-linear-gradient(#6100EC, #5201C8)!important;
+  box-shadow: 0px 0px 5px 1px #48EFEE!important;
+  border-radius: 15px!important;
+  border: 2px solid #48EFEE!important;
+  color: #ffffff;
+  text-transform: none; /* Prevent text transformation to uppercase */
+}
