@@ -47,9 +47,12 @@ body {
 }
 
 .gymSubTitle {
-  color: white;
-  margin: 0;
-  font-size: x-large!important;
+  font-size: 22px!important;
+  font-weight: bold!important;
+  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
 }
 
 .gymStatus {
@@ -136,14 +139,30 @@ body {
   border: 2px solid #48EFEE!important;
 }
 
-.nftButton {
-  color: #fff!important;
-  border-color: #fff!important;
+.nftCardButtonDisabled {
+  margin: 0 auto!important;
+  width: 80%;
+  background: -webkit-linear-gradient(#6100EC, #5201C8)!important;
+  border-radius: 10px!important;
+}
+
+.actionButton {
+  margin: 0 auto !important;
+  width: 80%;
+  box-shadow: 0px 0px 5px 1px #48EFEE !important;
+  border-radius: 25px !important;
+  border: 2px solid #48EFEE !important;
+  padding: 7px; /* Add the units (px) for padding values */
+  color: #ffffff; /* Set the text color to white */
+}
+
+.disabledButton {
+  opacity: 0;
 }
 
 .nftCard {
   background: rgba(26, 30, 248, 0.2)!important;
-  padding: 10px 5px 5px 5px;
+  padding: 25px 5px 5px 5px;
 }
 
 .vAlign {

@@ -28,6 +28,8 @@ import useGetUserNfts from '@/hooks/useGetUserNfts';
 import useGetNft from '@/hooks/useGetNft';
 import useGetNfts from '@/hooks/useGetNfts';
 import { createIndentifierByCollectionAndNonce } from '@/utils/functions/tokens';
+import { getTimeString } from '@/utils/functions/timeToString';
+import NextImage from "../components/NextImage/NextImage";
 
 // Array interface
 interface Gym {
@@ -38,6 +40,12 @@ interface Gym {
   }[]
 }
 
+const getCurrentTimestampInSeconds = () => {
+  const currentTimestampInMilliseconds = new Date().getTime();
+  const currentTimestampInSeconds = Math.floor(currentTimestampInMilliseconds / 1000);
+  return currentTimestampInSeconds;
+};
+
 const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const { isLoggedIn } = useGetLoginInfo();
@@ -45,7 +53,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const [panel1, setPanel1] = useState(true);
   const [panel2, setPanel2] = useState(true);
-  const [gymStacked, setGymStacked] = useState<any[]>([]);
+  const [allGymNfts, setAllGymNfts] = useState<any[]>([]);
 
   const connectedUserAddress = accountInfo.address;
 
@@ -64,40 +72,77 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     // sfitTokenIdentifier = tokensInfo[2]?.token;
   }
 
-  // NFTs BALANCE IN WALLET
-  
+  console.log(" ");
+
+  // SFITLEGENDS BALANCE IN WALLET
   const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
-  
-  console.log(sfitLegendsNfts, isLoadingSfitLegendsNfts) // <=========== upon browser refresh only, here it should be 4 entries in my case but return 6 (4 + the 2 gyms which are not stacked)
+  console.log("SFITLEGENDS in wallet", sfitLegendsNfts);
+
+  // GYM1 BALANCE IN WALLET
+  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
+  console.log("GYM1 in wallet", gym1Nfts);
+
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
+  console.log("GYM1 staked", stakedGymNfts);
 
-  const nonces = [5,6,7];
-  const collection = "GYMTEST-16958a";
-  const nftsInScArr: string[] = nonces.map((nonce) =>
-    createIndentifierByCollectionAndNonce(collection, nonce)
+  // GYM NFTs STAKED FULL VERSION
+  const stakedNonces = stakedGymNfts?.map((obj) => {
+    return obj.nonce;
+  });
+  let gym1Identifier = "";
+  if (!isLoadingGymNftsInfo && gymNftsInfo?.length > 0) {
+    gym1Identifier = gymNftsInfo?.[0]?.token;
+  }
+  const nftsInScArr: string[] = stakedNonces?.map((nonce) =>
+    createIndentifierByCollectionAndNonce(gym1Identifier, nonce)
   );
-  const { nfts, isLoading } = useGetNfts(nftsInScArr.join(","));
-  
-  const uDuration = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
+  const { nfts: stakedGymNftsFullInfo, isLoading } = useGetNfts(nftsInScArr.join(","));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  let stakedGymNftsFinal = stakedGymNftsFullInfo;
+  // After fetching stakedGymNftsFinal, add the desired attribute to its elements
+  if (stakedGymNfts && stakedGymNftsFullInfo && !isLoading && !isLoadingStakedGymNfts) {
+    const updatedStakedGymNftsFull = stakedGymNftsFullInfo.map((nftFull) => {
+      // Find the corresponding object in stakedGymNfts based on the shared identifier (e.g., nonce)
+      const matchingStakedNft = stakedGymNfts.find((nft) => nft.nonce === nftFull.nonce);
 
-  const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
+      const unbondingTimestamp = matchingStakedNft ? matchingStakedNft.unbondingTimestamp : 0;
+      const timestampInSeconds = getCurrentTimestampInSeconds();
+      let finalUnbondingTimestamp = 0;
+      if (unbondingTimestamp > timestampInSeconds) {
+        finalUnbondingTimestamp = unbondingTimestamp - timestampInSeconds;
+      }
 
-  // console.log(nfts, gym1Nfts, isLoadingSfitLegendsNfts)
+      return {
+        ...nftFull,
+        unbondedInSeconds: finalUnbondingTimestamp,
+      };
+    });
+    stakedGymNftsFinal = updatedStakedGymNftsFull;
+  }
+  console.log("GYM1 staked FULL", stakedGymNftsFinal);
 
   useEffect(() => {
-    const gymStackedNFT = nfts ? gym1Nfts.concat(nfts) : gym1Nfts;
-    setGymStacked(gymStackedNFT);
-  }, []);
+    const allGym1Nfts = stakedGymNftsFinal ? gym1Nfts.concat(stakedGymNftsFinal) : gym1Nfts;
+    setAllGymNfts(allGym1Nfts);
+  }, [gym1Nfts, stakedGymNftsFullInfo]);
+  console.log("ALL GYM  NFTs", allGymNfts);
 
+  console.log(" ");
 
-  const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0
-  const gymNftsLength = gymStacked ? gymStacked.length : 0
+  const unbondingDurationFinal = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
 
+  const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0;
+  const gym1NftsLength = gym1Nfts ? gym1Nfts.length : 0;
+  const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
+  const allGymNftsLength = allGymNfts ? allGymNfts.length : 0;
 
   function handleColorAvailability(status: string) {
     return status === "OPEN" ? "green" : "red"
   }
+
+  const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
+  const sfitLegendImage = '/demo_imgs/sfitlegend.png';
 
   return (
     <Container maxWidth="xl">
@@ -232,7 +277,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 align="center" 
                 component="div"
               >
-                SFIT LEGEND
+                SFIT LEGEND NFTs
               </Typography>
             </Grid>
             <Grid xs={4} sx={{ position: "relative" }}>
@@ -251,35 +296,52 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         >
           <Accordion expanded={panel1} onChange={(e, expanded) => setPanel1(expanded)} className="nftAccordion">
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color:"common.white", fontSize: 50, fontStyle: "bold" }} />}
+              expandIcon={<ExpandMoreIcon
+                sx={{ color:"common.white", fontSize: 50, fontStyle: "bold" }}
+              />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
               <Box sx={{ 
-                flexGrow: 1
-              }}>
-                <Grid container spacing={2}>
+                flexGrow: 1,
+                pr: 5
+              }}
+              >
+                <Grid container spacing={2} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}>
                   <Grid xs={3}>
                     <Grid container>
-                      <Grid xs={6}>
-                        <img
-                          src={ sfitLegendsNfts != undefined ? sfitLegendsNfts[0]?.url : ""}
-                          alt="sfitLegendNFT"
-                          loading="lazy"
-                          className="nftImage nftAccordionImage"
-                        />
+                      <Grid xs={4}>
+                        <NextImage
+                              src={sfitLegendImage}
+                              alt={"sfitLegendNFT"}
+                              width={100}
+                              height={100}
+                              loading='lazy'
+                              className={"nftImage nftAccordionImage"}
+                            />
                       </Grid>
-                      <Grid xs={6} className="vAlign">
+                      <Grid xs={1} className="vAlign">
                         <Typography  
                           variant="h4" 
                           sx={{ color: 'common.white'}}
+                          whiteSpace={"nowrap"}
                         >
-                          SFITLEGEND
+                          SFIT LEGEND
                         </Typography>  
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid xs={2} className="vAlign">
+                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
+                      <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        Available
+                      </Typography>  
                       <Typography  
                         variant="h4"
                         align="center"
@@ -288,36 +350,37 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         { sfitLegendsNftsLength }
                       </Typography>  
                   </Grid>
-                  <Grid xs={5}>
+                  <Grid xs={4}>
                     <Grid container>
                       {
                         sfitLegendsNfts != undefined ?
                         sfitLegendsNfts.slice(0, 3).map((nft, key) => (
-                          <Grid key={key} xs={3}>
-                            <img
+                          <Grid key={key} px={0.5} >
+                            <NextImage
                               src={nft.url}
+                              alt={"SFITLEGEND"}
                               width={100}
                               height={100}
-                              alt="Picture of the author"
-                              className="nftImage"
+                              className={"nftImage nftAccordionImage"}
                             />
                           </Grid>
                         )) : null
                       }
-                      
                       <Grid xs={3} className="vAlign">
-                      <Typography  
-                            variant="h4" 
-                            sx={{ color: 'common.white'}}
-                          >
-                            +{ (sfitLegendsNftsLength - (sfitLegendsNftsLength - 1)) } more
-                          </Typography> 
+                        { sfitLegendsNftsLength > 3 && <Typography  
+                          variant="h4" 
+                          sx={{ color: 'common.white'}}
+                        >
+                          +{sfitLegendsNftsLength - 3} more
+                        </Typography>}
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid xs={2} className="vAlign">
-                    <Button variant="outlined" className="nftButton">Stake all</Button>
-                    <Button variant="outlined" className="nftButton" sx={{ ml: 2 }}>Buy</Button>
+                  <Grid xs={2} className="vAlign" gap={4}>
+                    {/* <Button variant="outlined" className="nftButton">Stake all</Button> */}
+                    <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Button variant="outlined" className="actionButton" sx={{ ml: 2 }}>Buy</Button>
+                    </a>
                   </Grid>
                 </Grid>  
               </Box>
@@ -328,34 +391,28 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   {
                     sfitLegendsNfts != undefined ?
                     sfitLegendsNfts.map((nft, key) => (
-                      <Grid key={key} xs={3} mb={2}>
-                        <Card sx={{ maxWidth: 260 }} className="nftCard">
+                      <Grid key={key} xs={3} my={2}>
+                        <Card sx={{ maxWidth: 260, borderRadius: 2 }} className="nftCard">
                           <CardMedia
                             sx={{ height: 200, width: 200 }}
                             image={nft.url}
                             className="nftImage nftCardImage"
                           />
-                          <CardContent sx={{ paddingTop: 3 }}>
-                            <Grid container spacing={2}>
-                              <Grid xs={6} sx={{ textAlign: 'center' }}>
-                                <Typography  
-                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                                >
-                                  SFITLEGEND
-                                </Typography>
-                              </Grid>
-                              <Grid xs={6} sx={{ textAlign: 'center' }}>
-                                <Typography  
-                                  sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
-                                >
-                                  #2002
-                                </Typography>
-                              </Grid>
-                            </Grid>
+                          <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
+                            <Typography  
+                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                            >
+                              {nft.name}
+                            </Typography>
+                            <Typography  
+                              sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
+                            >
+                              #{nft.nonce}
+                            </Typography>
                           </CardContent>
-                          <CardActions>
+                          {/* <CardActions>
                             <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
-                          </CardActions>
+                          </CardActions> */}
                         </Card>
                       </Grid>
                     )) : null
@@ -367,7 +424,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         </Box>
 
         : null }
-          
         { 
         isLoggedIn ? 
         <Box sx={{ 
@@ -375,11 +431,14 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 15
           }}
         >
-          <Grid container spacing={2}>
+          <Grid container spacing={2} style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
             <Grid xs={4} sx={{ position: "relative" }}>
               <div className="breakLine" />
             </Grid>
-            <Grid xs={4}>
+            <Grid xs={4} direction={"column"}>
               <Typography 
                 gutterBottom 
                 className="gymTitle"
@@ -387,6 +446,14 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 component="div"
               >
                 GYM NFTs
+              </Typography>
+              <Typography 
+                gutterBottom 
+                className="gymSubTitle"
+                align="center" 
+                component="div"
+              >
+                STAKABLE &nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;STAKED
               </Typography>
             </Grid>
             <Grid xs={4} sx={{ position: "relative" }}>
@@ -409,32 +476,23 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               id="panel2a-header"
             >
               <Box sx={{ 
-                flexGrow: 1
+                flexGrow: 1,
+                pr: 5
               }}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}>
                   <Grid xs={3}>
                     <Grid container>
-                      <Grid xs={6}>
-                        <img
-                            src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""}
-                            alt="sfitLegendNFT"
-                            loading="lazy"
-                            className="nftImage nftAccordionImage"
-                          /> 
-                        {/* {
-                         gym1Nfts?.shift()?.media?.shift()?.fileType === 'image/jpeg' ? 
-                          <img
-                            src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""}
-                            alt="sfitLegendNFT"
-                            loading="lazy"
-                            className="nftImage nftAccordionImage"
-                          /> 
-                          :
-                          <video className="nftImage nftAccordionImage">
-                            <source src={ gym1Nfts != undefined ? gym1Nfts[0]?.url : ""} type="video/mp4"></source>
-                          </video>
-                        } */}
-
+                      <Grid xs={4}>
+                        <NextImage
+                          src={gymPiperaImage}
+                          alt={"Pipera GYM"}
+                          width={150}
+                          height={150}
+                          className={"nftImage nftAccordionImage"}
+                        />
                       </Grid>
                       <Grid xs={6} className="vAlign">
                         <Grid container>
@@ -458,60 +516,69 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid xs={2} className="vAlign">
+                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
+                    <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        Stakable
+                      </Typography>  
                       <Typography  
                         variant="h4"
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        { gymNftsLength }
-                      </Typography>  
+                        { gym1NftsLength }
+                      </Typography>
                   </Grid>
-                  <Grid xs={5}>
+                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
+                    <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        Staked
+                      </Typography>  
+                      <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        { stakedGymNftsLength }
+                      </Typography>
+                  </Grid>
+                  <Grid px={5}>
                     <Grid container>
                     {
-                        gymStacked != undefined ?
-                        gymStacked.slice(0, 3).map((nft, key) => (
-                          <Grid key={key} xs={3}>
-                            <img
-                                src={nft.url}
-                                width={100}
-                                height={100}
-                                alt="Picture of the author"
-                                className="nftImage"
-                              /> 
-                          {/* {nft != undefined && nft?.media?.shift()?.fileType === 'image/jpeg' ? 
-                            <img
-                                src={nft.url}
-                                width={100}
-                                height={100}
-                                alt="Picture of the author"
-                                className="nftImage"
-                              /> 
-                            :
-                            <video className="nftImage nftAccordionImage">
-                              <source src={nft.url} type="video/mp4"></source>
-                            </video>} */}
+                        allGymNfts != undefined ?
+                        allGymNfts.slice(0, 2).map((nft, key) => (
+                          <Grid key={key} px={0.5}>
+                            <NextImage
+                              src={allGymNfts?.[0].media[0].thumbnailUrl}
+                              alt={allGymNfts?.[0].name}
+                              width={100}
+                              height={100}
+                              className={"nftImage nftAccordionImage"}
+                            />
                           </Grid>
                         )) : null
                       }
-
-                      { gymNftsLength >= 3 ?
                         <Grid xs={3} className="vAlign">
-                          <Typography  
-                              variant="h4" 
-                              sx={{ color: 'common.white'}}
-                            >
-                              +{ (gymNftsLength - (gymNftsLength - 1)) } more
-                            </Typography> 
+                          { allGymNftsLength > 2 && <Typography  
+                            variant="h4" 
+                            sx={{ color: 'common.white'}}
+                          >
+                            +{allGymNftsLength - 2} more
+                          </Typography>}
                         </Grid>
-                      : null
-                      }
                     </Grid>
                   </Grid>
-                  <Grid xs={2} className="vAlign">
-                    <Button variant="outlined" className="nftButton">Stake all</Button>
-                    <Button variant="outlined" className="nftButton" sx={{ ml: 2 }}>Buy</Button>
+                  <Grid xs={2} className="vAlign" gap={4}>
+                    <Button variant="outlined" className="actionButton">Stake all</Button>
+                    <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Button variant="outlined" className="actionButton" sx={{ ml: 2 }}>Buy</Button>
+                    </a>
                   </Grid>
                 </Grid>  
               </Box>
@@ -519,54 +586,52 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <AccordionDetails>
               <Box>
                 <Grid container spacing={2}>
-
                   {
-                    gymStacked != undefined ?
-                    gymStacked.map((nft, key) => (
+                    allGymNfts != undefined ?
+                    allGymNfts.map((nft, key) => (
                       <Grid key={key} xs={3} mb={2}>
                         <Card sx={{ maxWidth: 260 }} className="nftCard">
-                            <CardMedia
+                            {nft.media && <CardMedia
                               sx={{ height: 200, width: 200 }}
-                              image={nft.url}
+                              image={nft.media[0].thumbnailUrl}
                               className="nftImage nftCardImage"
-                            />
-                          {/* {nft?.media?.shift()?.fileType === 'image/jpeg' ? 
-                            <CardMedia
-                              sx={{ height: 200, width: 200 }}
-                              image={nft.url}
-                              className="nftImage nftCardImage"
-                            />
-                            :
-                            <video className="nftImage nftCardImage">
-                              <source src={nft.url} type="video/mp4"></source>
-                            </video>} */}
-                          <CardContent sx={{ paddingTop: 3 }}>
-                            <Grid container spacing={2}>
-                              <Grid xs={6} sx={{ textAlign: 'center' }}>
+                            />}
+                          <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
                                 <Typography  
                                   sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                                 >
-                                  SFITLEGEND
+                                  {nft.name}
                                 </Typography>
-                              </Grid>
-                              <Grid xs={6} sx={{ textAlign: 'center' }}>
                                 <Typography  
                                   sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                                 >
-                                  #2002
+                                  #{nft.nonce}
                                 </Typography>
-                              </Grid>
-                            </Grid>
                           </CardContent>
                           <CardActions>
                             {
-                              nft.timestamp ? 
-                              <Tooltip title={uDuration}>
-                                <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { unstake(connectedUserAddress, nft.collection, nft.nonce) }}>Unstake</Button>
-                              </Tooltip>
-
+                              nft.unbondedInSeconds >= 0 ? 
+                              <Tooltip
+                              title={nft.unbondedInSeconds == 0 ? null
+                                : `${getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}`}
+                              >
+                                <Button
+                                  variant="contained"
+                                  style={{
+                                    opacity: 5
+                                  }}
+                                  size="medium"
+                                  className={nft.unbondedInSeconds > 0 ? "nftCardButtonDisabled" : "nftCardButton"}
+                                  onClick={() => {
+                                    if (nft.unbondedInSeconds == 0) {
+                                      unstake(connectedUserAddress, nft.collection, nft.nonce);
+                                    }
+                                  }}
+                                >
+                                Unstake
+                              </Button>
+                            </Tooltip>
                               :
-
                               <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
                             }
                             
@@ -586,7 +651,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         { 
         !isLoggedIn ? 
         <Typography align="center" variant="h3" color="#48eeed" gutterBottom mt={8}>
-          Connect to your wallet to see your NFTs.
+          Connect with your wallet to see your NFTs.
         </Typography>
       : null
       }
