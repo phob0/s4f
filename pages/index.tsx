@@ -90,14 +90,16 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const stakedNonces = stakedGymNfts?.map((obj) => {
     return obj.nonce;
   });
-  let gym1Identifier = "";
-  if (!isLoadingGymNftsInfo && gymNftsInfo?.length > 0) {
+  let gym1Identifier:any = "";
+  let gymNFTInfoLength:any = gymNftsInfo?.length != undefined
+  
+  if (!isLoadingGymNftsInfo && gymNFTInfoLength > 0) {
     gym1Identifier = gymNftsInfo?.[0]?.token;
   }
-  const nftsInScArr: string[] = stakedNonces?.map((nonce) =>
+  const nftsInScArr: string[]|undefined = stakedNonces?.map((nonce) =>
     createIndentifierByCollectionAndNonce(gym1Identifier, nonce)
   );
-  const { nfts: stakedGymNftsFullInfo, isLoading } = useGetNfts(nftsInScArr.join(","));
+  const { nfts: stakedGymNftsFullInfo, isLoading } = useGetNfts(nftsInScArr?.join(","));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   let stakedGymNftsFinal = stakedGymNftsFullInfo;
   // After fetching stakedGymNftsFinal, add the desired attribute to its elements
