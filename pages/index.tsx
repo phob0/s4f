@@ -30,6 +30,24 @@ import useGetNfts from '@/hooks/useGetNfts';
 import { createIndentifierByCollectionAndNonce } from '@/utils/functions/tokens';
 import { getTimeString } from '@/utils/functions/timeToString';
 import NextImage from "../components/NextImage/NextImage";
+import { Tabs, Tab } from '@mui/material';
+
+const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
+const sfitLegendImage = '/demo_imgs/sfitlegend.png';
+
+function TabPanel(props: { children: any; value: any; index: any; }) {
+  const { children, value, index } = props;
+
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`}>
+      {value === index && (
+        <Box p={3}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
 // Array interface
 interface Gym {
@@ -54,6 +72,9 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const [panel1, setPanel1] = useState(true);
   const [panel2, setPanel2] = useState(true);
   const [allGymNfts, setAllGymNfts] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
+  const [gymNfts, setGymNfts] = useState<any[]>([]);
+  const [gymNftsLength, setGymNftsLength] = useState(0);
 
   const connectedUserAddress = accountInfo.address;
 
@@ -137,14 +158,19 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0;
   const gym1NftsLength = gym1Nfts ? gym1Nfts.length : 0;
   const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
-  const allGymNftsLength = allGymNfts ? allGymNfts.length : 0;
+  const allGymNftsLength = allGymNfts ? gymNftsLength : 0;
 
-  function handleColorAvailability(status: string) {
-    return status === "OPEN" ? "green" : "red"
-  }
+  const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
+    setActiveTab(newValue);
 
-  const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
-  const sfitLegendImage = '/demo_imgs/sfitlegend.png';
+    if (newValue === 0) {
+      setGymNfts(gym1Nfts);
+      setGymNftsLength(gym1NftsLength);
+    } else if (newValue === 1) {
+      setGymNfts(stakedGymNftsFinal);
+      setGymNftsLength(stakedGymNftsLength);
+    }
+  };
 
   return (
     <Container maxWidth="xl">
@@ -467,14 +493,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               >
                 GYM NFTs
               </Typography>
-              <Typography 
-                gutterBottom 
-                className="gymSubTitle"
-                align="center" 
-                component="div"
-              >
-                STAKABLE &nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;STAKED
-              </Typography>
             </Grid>
             <Grid xs={4} sx={{ position: "relative" }}>
               <div className="breakLine" />
@@ -482,6 +500,14 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           </Grid>
         </Box>
         : null }
+        <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48eeed'} }}>
+          <Tab label="Stakeable" id="tab-0" className="gymSubTitle"/>
+          <Tab label="Staked" id="tab-1" className="gymSubTitle"/>
+        </Tabs>
+        <TabPanel value={activeTab} index={0}>
+        </TabPanel>
+        <TabPanel value={activeTab} index={1}>
+        </TabPanel>
         { 
         isLoggedIn ? 
         <Box sx={{ 
@@ -542,41 +568,25 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        Stakable
+                        Available
                       </Typography>  
                       <Typography  
                         variant="h4"
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        { gym1NftsLength }
-                      </Typography>
-                  </Grid>
-                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
-                    <Typography  
-                        variant="h4"
-                        align="center"
-                        sx={{ color: 'common.white', width: '100%'}}
-                      >
-                        Staked
-                      </Typography>  
-                      <Typography  
-                        variant="h4"
-                        align="center"
-                        sx={{ color: 'common.white', width: '100%'}}
-                      >
-                        { stakedGymNftsLength }
+                        { gymNftsLength }
                       </Typography>
                   </Grid>
                   <Grid px={5}>
                     <Grid container>
                     {
-                        allGymNfts != undefined ?
-                        allGymNfts.slice(0, 2).map((nft, key) => (
+                        gymNfts != undefined ?
+                        gymNfts.slice(0, 2).map((nft, key) => (
                           <Grid key={key} px={0.5}>
                             <NextImage
-                              src={allGymNfts?.[0].media[0].thumbnailUrl}
-                              alt={allGymNfts?.[0].name}
+                              src={gymNfts?.[0].media[0].thumbnailUrl}
+                              alt={gymNfts?.[0].name}
                               width={100}
                               height={100}
                               className={"nftImage nftAccordionImage"}
@@ -585,11 +595,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         )) : null
                       }
                         <Grid xs={3} className="vAlign">
-                          { allGymNftsLength > 2 && <Typography  
+                          { gymNftsLength > 2 && <Typography  
                             variant="h4" 
                             sx={{ color: 'common.white'}}
                           >
-                            +{allGymNftsLength - 2} more
+                            +{gymNftsLength - 2} more
                           </Typography>}
                         </Grid>
                     </Grid>
@@ -604,11 +614,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              {allGymNfts.length > 0 ? 
+              {gym1NftsLength + stakedGymNftsLength > 0 ? 
               <Grid container spacing={2}>
                 {
-                  allGymNfts != undefined ?
-                  allGymNfts.map((nft, key) => (
+                  gymNfts != undefined ?
+                  gymNfts.map((nft, key) => (
                     <Grid key={key} xs={3} mb={2}>
                       <Card sx={{ maxWidth: 260 }} className="nftCard">
                           {nft.media && <CardMedia
