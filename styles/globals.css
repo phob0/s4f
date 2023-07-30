@@ -122,8 +122,8 @@ body {
 
 .nftAccordionImage {
   margin: 0 auto!important;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
 }
 
 .nftCardImage {
@@ -152,6 +152,16 @@ body {
   box-shadow: 0px 0px 5px 1px #48EFEE !important;
   border-radius: 25px !important;
   border: 2px solid #48EFEE !important;
+  padding: 7px; /* Add the units (px) for padding values */
+  color: #ffffff; /* Set the text color to white */
+}
+
+.actionButtonDisabled {
+  margin: 0 auto !important;
+  width: 80%;
+  /* box-shadow: 0px 0px 5px 1px #48EFEE !important; */
+  border-radius: 25px !important;
+  /* border: 2px solid #48EFEE !important; */
   padding: 7px; /* Add the units (px) for padding values */
   color: #ffffff; /* Set the text color to white */
 }

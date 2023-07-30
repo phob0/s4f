@@ -41,7 +41,7 @@ function TabPanel(props: { children: any; value: any; index: any; }) {
   return (
     <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`}>
       {value === index && (
-        <Box p={3}>
+        <Box p={0}>
           {children}
         </Box>
       )}
@@ -160,6 +160,24 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
   const allGymNftsLength = allGymNfts ? gymNftsLength : 0;
 
+  const maxNonZeroValue = gymNfts.reduce((maxValue, nft) => {
+    const unbondedInSeconds = nft.unbondedInSeconds;
+    if (unbondedInSeconds !== 0 && unbondedInSeconds > maxValue) {
+      return unbondedInSeconds;
+    }
+    return maxValue;
+  }, 0);
+
+  const canUnstakeAll = maxNonZeroValue === 0;
+  const canStakeAll = gym1NftsLength === 0;
+
+  useEffect(() => {
+    if (gymNftsLength == 0 && !isLoadingGym1Nfts && activeTab == 0) {
+      setGymNfts(gym1Nfts);
+      setGymNftsLength(gym1NftsLength);
+    }
+  }, [activeTab, gym1Nfts, gym1NftsLength, gymNfts, gymNftsLength, isLoadingGym1Nfts]);
+
   const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
     setActiveTab(newValue);
 
@@ -171,6 +189,20 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
       setGymNftsLength(stakedGymNftsLength);
     }
   };
+
+  if (isLoadingTokensInfo || isLoadingSfitLegendsNfts || isLoadingGym1Nfts || isLoadingStakedGymNfts || isLoadingUnbondingDuration) {
+    return (
+      <Box
+        sx={{
+          mt: 20
+        }}
+      >
+        <Typography align="center" variant="h1" color="common.white" gutterBottom>
+          Loading...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="xl">
@@ -341,7 +373,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 }}>
                   <Grid xs={3}>
                     <Grid container>
-                      <Grid xs={4}>
+                      <Grid container justifyContent="center" alignItems="center" xs={4}>
                         <NextImage
                               src={sfitLegendImage}
                               alt={"sfitLegendNFT"}
@@ -382,8 +414,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                     <Grid container>
                       {
                         sfitLegendsNfts != undefined ?
-                        sfitLegendsNfts.slice(0, 3).map((nft, key) => (
-                          <Grid key={key} px={0.5} >
+                        sfitLegendsNfts.slice(0, 2).map((nft, key) => (
+                          <Grid key={key} px={1} >
                             <NextImage
                               src={nft.url}
                               alt={"SFITLEGEND"}
@@ -395,11 +427,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         )) : null
                       }
                       <Grid xs={3} className="vAlign">
-                        { sfitLegendsNftsLength > 3 && <Typography  
+                        { sfitLegendsNftsLength > 2 && <Typography  
                           variant="h4" 
                           sx={{ color: 'common.white'}}
                         >
-                          +{sfitLegendsNftsLength - 3} more
+                          +{sfitLegendsNftsLength - 2} more
                         </Typography>}
                       </Grid>
                     </Grid>
@@ -407,7 +439,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   <Grid xs={2} className="vAlign" gap={4}>
                     {/* <Button variant="outlined" className="nftButton">Stake all</Button> */}
                     <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Button variant="outlined" className="actionButton" sx={{ ml: 2 }}>Buy</Button>
+                      <Button variant="outlined" className="actionButton" onClick={(e) => e.stopPropagation()} sx={{ ml: 2 }}>Buy</Button>
                     </a>
                   </Grid>
                 </Grid>  
@@ -530,8 +562,12 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   justifyContent: 'space-between',
                 }}>
                   <Grid xs={3}>
-                    <Grid container>
-                      <Grid xs={4}>
+                    <Grid container style={{
+                      display: 'flex',
+                      justifyContent: 'left',
+                      alignContent: "center"
+                    }}>
+                      <Grid container justifyContent="center" alignItems="center" xs={4}>
                         <NextImage
                           src={gymPiperaImage}
                           alt={"Pipera GYM"}
@@ -605,9 +641,38 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                     </Grid>
                   </Grid>
                   <Grid xs={2} className="vAlign" gap={4}>
-                    <Button variant="outlined" className="actionButton">Stake all</Button>
+                    {activeTab == 0 ?
+                      <Tooltip
+                        title={gym1NftsLength > 0 ? null : "No NFTs available to stake."}
+                      >
+                        <Button
+                          variant="outlined"
+                          className={gym1NftsLength > 0 ? "actionButton" : "actionButtonDisabled"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle the click event for the "Stake all" button here
+                          }}
+                        >
+                          Stake all
+                        </Button>
+                      </Tooltip>
+                    :
+                    <Tooltip
+                    title={canUnstakeAll ? null
+                      : `${getTimeString(maxNonZeroValue, "left for unbonding.")}`}
+                    >
+                      <Button variant="outlined"
+                        className={canUnstakeAll ? "actionButton" : "actionButtonDisabled"}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        Unstake all
+                      </Button>
+                    </Tooltip>
+                    }
                     <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Button variant="outlined" className="actionButton" sx={{ ml: 2 }}>Buy</Button>
+                      <Button variant="outlined" className="actionButton" onClick={(e) => e.stopPropagation()} sx={{ ml: 2 }}>Buy</Button>
                     </a>
                   </Grid>
                 </Grid>  
