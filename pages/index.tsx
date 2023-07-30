@@ -191,20 +191,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     }
   };
 
-  if (isLoadingTokensInfo || isLoadingSfitLegendsNfts || isLoadingGym1Nfts || isLoadingStakedGymNfts || isLoadingUnbondingDuration) {
-    return (
-      <Box
-        sx={{
-          mt: 20
-        }}
-      >
-        <Typography align="center" variant="h1" color="common.white" gutterBottom>
-          Loading...
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
     <Container maxWidth="xl">
         <Box
@@ -533,14 +519,16 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           </Grid>
         </Box>
         : null }
-        <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48eeed'} }}>
-          <Tab label="Stakeable" id="tab-0" className="gymSubTitle"/>
-          <Tab label="Staked" id="tab-1" className="gymSubTitle"/>
-        </Tabs>
-        <TabPanel value={activeTab} index={0}>
-        </TabPanel>
-        <TabPanel value={activeTab} index={1}>
-        </TabPanel>
+        { isLoggedIn ?
+          (<>
+          <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48eeed' } }}>
+          <Tab label="Stakeable" id="tab-0" className="gymSubTitle" />
+          <Tab label="Staked" id="tab-1" className="gymSubTitle" />
+          </Tabs><TabPanel value={activeTab} index={0}>
+          </TabPanel><TabPanel value={activeTab} index={1}>
+          </TabPanel>
+          </>) : null
+        }
         { 
         isLoggedIn ? 
         <Box sx={{ 

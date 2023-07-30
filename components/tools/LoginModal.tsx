@@ -151,12 +151,13 @@ import {
     }
   
     const handleLogout = () => {
-      logout('/').then(async () => {
-        await fetch("/api/logout", { method: "POST" })
-        router.push('/')
-      });
-    };
-
+      if (loggedIn && user?.isLoggedIn) {
+        logout('/').then(async () => {
+          await fetch("/api/logout", { method: "POST" });
+          router.push('/');
+        });
+      }
+    };    
 
     return (
       <>
