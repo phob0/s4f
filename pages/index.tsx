@@ -185,7 +185,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
       setGymNfts(gym1Nfts);
       setGymNftsLength(gym1NftsLength);
     } else if (newValue === 1) {
-      setGymNfts(stakedGymNftsFinal);
+      const finalStake =  stakedGymNftsFinal != undefined ? stakedGymNftsFinal : []
+      setGymNfts(finalStake);
       setGymNftsLength(stakedGymNftsLength);
     }
   };
