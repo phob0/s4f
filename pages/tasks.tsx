@@ -38,6 +38,7 @@ import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGe
 import { completeTasks, claim } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
+import { formatBalance } from '@/utils/functions/formatBalance';
 
 
 function generate(element: React.ReactElement) {
@@ -222,6 +223,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   }
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
+  const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -307,7 +309,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
-                        467,050
+                        {
+                          formatBalance(
+                            {
+                              balance: Number(claimableAmount),
+                              decimals: 18,
+                            },
+                            true
+                          )
+                        }
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
@@ -341,7 +351,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
-                        467,050
+                        {
+                          formatBalance(
+                            {
+                              balance: Number(totalClaimedAmount),
+                              decimals: 18,
+                            },
+                            true
+                          )
+                        }
                       </Typography>
                     </Grid>
                   </Grid>

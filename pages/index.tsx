@@ -169,7 +169,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   }, 0);
 
   const canUnstakeAll = maxNonZeroValue === 0;
-  const canStakeAll = gym1NftsLength === 0;
 
   useEffect(() => {
     if (gymNftsLength == 0 && !isLoadingGym1Nfts && activeTab == 0) {
@@ -248,6 +247,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           align="center" 
                           component="div"
                           className="gymSubTitle"
+                          pb={2}
                         >
                           Metaverse Gym
                         </Typography>
@@ -282,6 +282,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           className="gymSubTitle"
                           align="center" 
                           component="div"
+                          pb={2}
                         >
                           Metaverse Gym
                         </Typography>
@@ -291,7 +292,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           color="common.white"
                           sx={{
                             fontWeight: 'bold',
-                            width: gym.status === "OPEN" ? '50%' : '100%'
+                            width: gym.status === "OPEN" ? '50%' : '100%',
                           }}
                           className='gymStatus'
                         >
