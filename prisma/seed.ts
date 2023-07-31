@@ -8,6 +8,7 @@ async function main() {
     await prisma.gym.create({
         data: {
                 name: "PIPERA",
+                address: "erd1qqqqqqqqqqqqqpgq45xtljt6j2a0vrnck68zfcln5nx0m5t7u7zsnwj48x",
                 tasks: {
                     createMany: {
                         data: taskList
@@ -18,6 +19,7 @@ async function main() {
     await prisma.gym.create({
         data: {
                 name: "CLUJ",
+                address: "",
                 tasks: {
                     createMany: {
                         data: taskList
@@ -28,6 +30,7 @@ async function main() {
     await prisma.gym.create({
         data: {
                 name: "IASI",
+                address: "",
                 status: 'COMMING_SOON',
                 tasks: {
                     createMany: {
@@ -39,6 +42,7 @@ async function main() {
     await prisma.gym.create({
         data: {
                 name: "DUBAI",
+                address: "",
                 status: 'COMMING_SOON',
                 tasks: {
                     createMany: {
@@ -50,6 +54,7 @@ async function main() {
     await prisma.gym.create({
         data: {
                 name: "PARIS",
+                address: "",
                 status: 'COMMING_SOON',
                 tasks: {
                     createMany: {

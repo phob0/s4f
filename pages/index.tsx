@@ -770,6 +770,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const gyms = await prisma?.gym.findMany({
     select: {
       name: true,
+      address: true,
       id: true,
       status: true
     }
