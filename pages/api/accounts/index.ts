@@ -54,3 +54,14 @@ export const getNFTs = async ({
 
   return res.data;
 };
+
+export const getUserToken = async ({
+  address,
+  token
+}: {
+  address: string;
+  token: string;
+}) => {
+  const res = await axiosLink.get(`/accounts/${address}/tokens/${token}`);
+  return res.data;
+}

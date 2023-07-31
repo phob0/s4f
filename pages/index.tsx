@@ -71,7 +71,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const [panel1, setPanel1] = useState(true);
   const [panel2, setPanel2] = useState(true);
-  const [allGymNfts, setAllGymNfts] = useState<any[]>([]);
+  // const [allGymNfts, setAllGymNfts] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState(0);
   const [gymNfts, setGymNfts] = useState<any[]>([]);
   const [gymNftsLength, setGymNftsLength] = useState(0);
@@ -145,10 +145,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   }
   // console.log("GYM1 staked FULL", stakedGymNftsFinal);
 
-  useEffect(() => {
-    const allGym1Nfts = stakedGymNftsFinal ? gym1Nfts.concat(stakedGymNftsFinal) : gym1Nfts;
-    setAllGymNfts(allGym1Nfts);
-  }, [gym1Nfts, stakedGymNftsFullInfo]);
+  // useEffect(() => {
+  //   const allGym1Nfts = stakedGymNftsFinal ? gym1Nfts.concat(stakedGymNftsFinal) : gym1Nfts;
+  //   setAllGymNfts(allGym1Nfts);
+  // }, [gym1Nfts, stakedGymNftsFinal, stakedGymNftsFullInfo]);
   // console.log("ALL GYM  NFTs", allGymNfts);
 
   // console.log(" ");
@@ -158,7 +158,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0;
   const gym1NftsLength = gym1Nfts ? gym1Nfts.length : 0;
   const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
-  const allGymNftsLength = allGymNfts ? gymNftsLength : 0;
+  // const allGymNftsLength = allGymNfts ? gymNftsLength : 0;
 
   const maxNonZeroValue = gymNfts.reduce((maxValue, nft) => {
     const unbondedInSeconds = nft.unbondedInSeconds;
@@ -314,7 +314,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 15
           }}
         >
-          <Grid container spacing={2}>
+          <Grid container spacing={2} >
             <Grid xs={4} sx={{ position: "relative" }}>
               <div className="breakLine" />
             </Grid>
@@ -360,7 +360,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   justifyContent: 'space-between',
                 }}>
                   <Grid xs={3}>
-                    <Grid container>
+                    <Grid container style={{
+                      display: 'flex',
+                      justifyContent: 'left',
+                      alignContent: "center"
+                    }}>
                       <Grid container justifyContent="center" alignItems="center" xs={4}>
                         <NextImage
                               src={sfitLegendImage}
@@ -382,7 +386,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
+                  <Grid>
+                    <Grid container flexDirection={"column"} px={5} className="vAlign" py={1}>
                       <Typography  
                         variant="h4"
                         align="center"
@@ -395,10 +400,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         align="center"
                         sx={{ color: 'common.white', width: '100%'}}
                       >
-                        { sfitLegendsNftsLength }
-                      </Typography>  
+                        {sfitLegendsNftsLength}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid xs={4}>
+                  <Grid xs={3}>
                     <Grid container>
                       {
                         sfitLegendsNfts != undefined ?
@@ -424,7 +430,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid xs={2} className="vAlign" gap={4}>
+                  <Grid xs={1} className="vAlign" gap={4}>
                     {/* <Button variant="outlined" className="nftButton">Stake all</Button> */}
                     <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
                       <Button variant="outlined" className="actionButton" onClick={(e) => e.stopPropagation()} sx={{ ml: 2 }}>Buy</Button>
@@ -504,7 +510,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <Grid xs={4} sx={{ position: "relative" }}>
               <div className="breakLine" />
             </Grid>
-            <Grid xs={4} direction={"column"}>
+            <Grid xs={4}>
               <Typography 
                 gutterBottom 
                 className="gymTitle"
@@ -572,37 +578,39 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                             <Typography  
                             className="gymTitle" 
                             sx={{ color: 'common.white'}}
-                          >
-                            PIPERA
-                          </Typography>  
+                            >
+                              PIPERA
+                            </Typography>  
                           </Grid>
                           <Grid xs={12}>
-                          <Typography  
-                            variant="h6" 
-                            sx={{ color: 'common.white'}}
-                          >
-                            METAVERSE GYM
-                          </Typography> 
+                            <Typography  
+                              variant="h6" 
+                              sx={{ color: 'common.white'}}
+                            >
+                              METAVERSE GYM
+                            </Typography> 
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid px={5} className="vAlign" direction={"column"} justifyContent="center">
+                  <Grid>
+                  <Grid container flexDirection={"column"} px={5} className="vAlign" py={1}>
                     <Typography  
-                        variant="h4"
-                        align="center"
-                        sx={{ color: 'common.white', width: '100%'}}
-                      >
-                        Available
-                      </Typography>  
-                      <Typography  
-                        variant="h4"
-                        align="center"
-                        sx={{ color: 'common.white', width: '100%'}}
-                      >
-                        { gymNftsLength }
-                      </Typography>
+                      variant="h4"
+                      align="center"
+                      sx={{ color: 'common.white', width: '100%'}}
+                    >
+                      Available
+                    </Typography>  
+                    <Typography  
+                      variant="h4"
+                      align="center"
+                      sx={{ color: 'common.white', width: '100%'}}
+                    >
+                      {gymNftsLength}
+                    </Typography>
+                  </Grid>
                   </Grid>
                   <Grid px={5}>
                     <Grid container>

@@ -34,11 +34,13 @@ import {
     StackedCarouselSlideProps
   } from 'react-stacked-center-carousel';
 
-import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable } from '../utils/services/hooks'
+import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo } from '../utils/services/hooks'
 import { completeTasks, claim } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
 import { formatBalance } from '@/utils/functions/formatBalance';
+import { Tooltip } from '@mui/material';
+import useGetUserToken from '@/hooks/useGetUserToken';
 
 
 function generate(element: React.ReactElement) {
@@ -91,15 +93,14 @@ interface SlideProps extends StackedCarouselSlideProps {
 }
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  const roundedValue = Math.round(props.value * 100) / 100;
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress variant="determinate" {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value,
-        )}`}</Typography>
+        <Typography variant="body2" color="text.secondary">{`${roundedValue} %`}</Typography>
       </Box>
     </Box>
   );
@@ -129,12 +130,10 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   >(null);
 
   const [taskProps, setTaskProps] = useState<Task | null>();
-
   const [reward, setReward] = useState<boolean>(false);
-
-  // const [sfitLegendNfts, setSfitLegendNfts] = useState<IElrondNFT>([]);
-
   const [eventSignal, setEventSignal] = useState<Task | null>(null);
+  const [claimedRewards, setClaimedRewards] = useState<boolean>(false);
+  const [completedTasks, setCompletedTasks] = useState<boolean>(false);
 
   useEffect(() => {
     if (eventSignal != null) {
@@ -202,29 +201,24 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   // QUERIES
   const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
-  // useGetOwnedSFIT
   const { totalClaimed, isLoadingTotalClaimed, errorTotalClaimed} = useGetTotalClaimed(connectedUserAddress);
 
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
-  const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress, tokensInfo?.[0]?.token);
+  const { nfts: gymNfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress, tokensInfo?.[0]?.token);
+  const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
+  const sfitIdentifier = tokensInfo ? tokensInfo[2]?.token : "";
+  const {userToken: userSfitTokenInfo, isLoadingUserToken, isErrorUserToken} = useGetUserToken(connectedUserAddress, sfitIdentifier);
 
-  const numberOfGymNfts = nfts.length > 0 ? nfts.length : 0;
+  const numberOfGymNftsInWallet = gymNfts.length > 0 ? gymNfts.length : 0;
+  const numberOfGymNftsStaked = stakedGymNfts ? stakedGymNfts?.length : 0;
 
-  // CALLS
-  // completeTasks(connectedUserAddress)
-  // claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce)
+  const { nfts: sfitLegendNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, tokensInfo?.[1]?.token);
 
-  let sfitLegendNfts: IElrondNFT[] = [];
-
-  if (tokensInfo != undefined) {
-    if (tokensInfo.length > 1 && nfts.length > 0) {
-      sfitLegendNfts = nfts.filter(nft => nft.collection === tokensInfo[1].token);
-    }
-  }
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
+  const userSfitBalance = userSfitTokenInfo ? userSfitTokenInfo.balance : 0;
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -237,6 +231,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
         <Grid container spacing={2} 
             sx={{
               pb: 5,
+              pt: 15,
               justify: "flex-end",
               alignItems: "center"
             }}
@@ -259,7 +254,16 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
-                        32,467,050
+                        {
+                          formatBalance(
+                            {
+                              balance: Number(userSfitBalance),
+                              decimals: 18,
+                              withDots: false
+                            },
+                            false
+                          )
+                        }
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
@@ -277,17 +281,23 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       alignItems="center"
                       spacing={12}
                     >
-                      <Button 
-                        className="claimButton"
-                        variant="contained" 
-                        size="large" 
-                        disabled={claimableAmount == 0 || sfitLegendNfts.length == 0} onClick={ () => { claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce) } }
-                        sx={{
-                          marginTop: 3
-                        }}  
-                      >
-                        Claim Reward
-                      </Button>
+                      <Tooltip title={claimableAmount == 0 ? "33d" : "fdfd"}>
+                        <Button 
+                          className="claimButton"
+                          variant="contained" 
+                          size="large" 
+                          disabled={claimableAmount == 0 || sfitLegendNfts.length == 0 || claimedRewards}
+                          onClick={ () => {
+                            claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce);
+                            setClaimedRewards(true);
+                          }}
+                          sx={{
+                            marginTop: 3
+                          }}  
+                        >
+                          Claim Reward
+                        </Button>
+                      </Tooltip>
                       </Stack>
                     </Grid>
                   </Grid>
@@ -303,6 +313,14 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                 </CardContent>  
                 <CardContent>
                 <Grid container spacing={2} >
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        ACTIVE TASKS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={activeTasks.length * 100 / tasks.length}/>
+                    </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
                         CLAIMABLE SFIT
@@ -323,32 +341,6 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
-                        ACTIVE TASKS
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <LinearProgressWithLabel value={activeTasks.length} />
-                    </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        GYM NFTS IN WALLET
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        {numberOfGymNfts}
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        OWNERSHIP PERCENTAGE
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <LinearProgressWithLabel value={16} />
-                    </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
                         SFIT EARNED SO FAR
                       </Typography>
                     </Grid>
@@ -364,6 +356,24 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           )
                         }
                       </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        GYM NFTS IN WALLET
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        {numberOfGymNftsInWallet}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        OWNERSHIP PERCENTAGE
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={numberOfGymNftsStaked / 10} />
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -490,7 +500,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   mb={3}
                 >
 
-                <Button className="claimButton" variant="contained" size="large" disabled={!canCompleteTasks?.canCompleteTasks || !isComplete} onClick={() => { completeTasks(connectedUserAddress) }}>
+                <Button className="claimButton" variant="contained" size="large"
+                  disabled={!canCompleteTasks?.canCompleteTasks || !isComplete || completedTasks}
+                  onClick={() => {
+                    completeTasks(connectedUserAddress);
+                    setCompletedTasks(true);
+                  }}
+                >
                   Complete Tasks
                 </Button>
 
