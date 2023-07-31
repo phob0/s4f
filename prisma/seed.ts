@@ -9,6 +9,7 @@ async function main() {
         data: {
                 name: "PIPERA",
                 address: "erd1qqqqqqqqqqqqqpgq45xtljt6j2a0vrnck68zfcln5nx0m5t7u7zsnwj48x",
+                status: 'OPEN',
                 tasks: {
                     createMany: {
                         data: taskList
@@ -20,6 +21,7 @@ async function main() {
         data: {
                 name: "CLUJ",
                 address: "",
+                status: 'COMMING_SOON',
                 tasks: {
                     createMany: {
                         data: taskList

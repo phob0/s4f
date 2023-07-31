@@ -199,7 +199,6 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   
   const connectedUserAddress = accountInfo.address;
 
-  // console.log('adddress', connectedUserAddress)
 
   // QUERIES
   const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
@@ -208,7 +207,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   const { canCompleteTasks, isLoadingCanCompleteTasks, errorCanCompleteTasks} = useGetCanUserCompleteTasks(connectedUserAddress);
   const { userClaimable, isLoadingUserClaimable, errorUserClaimable} = useGetUserClaimable(connectedUserAddress);
-  const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress);
+  const { nfts, isLoadingNfts, isErrorNfts } = useGetUserNfts(connectedUserAddress, tokensInfo?.[0]?.token);
+
+  const numberOfGymNfts = nfts.length > 0 ? nfts.length : 0;
 
   // CALLS
   // completeTasks(connectedUserAddress)
@@ -330,11 +331,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
-                        NUMBER OF NFTS
+                        GYM NFTS IN WALLET
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <LinearProgressWithLabel value={56} />
+                      <Typography color="common.white" align="center">
+                        {numberOfGymNfts}
+                      </Typography>
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">

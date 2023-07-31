@@ -93,19 +93,19 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     // sfitTokenIdentifier = tokensInfo[2]?.token;
   }
 
-  console.log(" ");
+  // console.log(" ");
 
   // SFITLEGENDS BALANCE IN WALLET
   const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
-  console.log("SFITLEGENDS in wallet", sfitLegendsNfts);
+  // console.log("SFITLEGENDS in wallet", sfitLegendsNfts);
 
   // GYM1 BALANCE IN WALLET
   const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
-  console.log("GYM1 in wallet", gym1Nfts);
+  // console.log("GYM1 in wallet", gym1Nfts);
 
   // GYM NFTs STAKED
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
-  console.log("GYM1 staked", stakedGymNfts);
+  // console.log("GYM1 staked", stakedGymNfts);
 
   // GYM NFTs STAKED FULL VERSION
   const stakedNonces = stakedGymNfts?.map((obj) => {
@@ -143,15 +143,15 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     });
     stakedGymNftsFinal = updatedStakedGymNftsFull;
   }
-  console.log("GYM1 staked FULL", stakedGymNftsFinal);
+  // console.log("GYM1 staked FULL", stakedGymNftsFinal);
 
   useEffect(() => {
     const allGym1Nfts = stakedGymNftsFinal ? gym1Nfts.concat(stakedGymNftsFinal) : gym1Nfts;
     setAllGymNfts(allGym1Nfts);
   }, [gym1Nfts, stakedGymNftsFullInfo]);
-  console.log("ALL GYM  NFTs", allGymNfts);
+  // console.log("ALL GYM  NFTs", allGymNfts);
 
-  console.log(" ");
+  // console.log(" ");
 
   const unbondingDurationFinal = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
 
