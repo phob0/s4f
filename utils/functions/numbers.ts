@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 
-export function numberWithCommas(x, decimals = false) {
+export function numberWithCommas(x: any, decimals = false) {
   const number = Number(x);
   if (number < 1) {
     return x;
