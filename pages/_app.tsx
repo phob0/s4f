@@ -50,6 +50,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           apiTimeout: process.env.NEXT_PUBLIC_API_TIMEOUT,
           walletConnectV2ProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID
         }}
+        dappConfig={{
+          shouldUseWebViewProvider: true,
+        }}
       >
         <Layout>
             <style global jsx>{`
@@ -61,7 +64,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                 min-height: 100vh;
               }
             `}</style>
-            <TransactionsToastList/>
+            <TransactionsToastList
+              className = 'transactions-toast-list'
+              transactionToastClassName="transactions-toast-class"
+              successfulToastLifetime={300000}
+            />
             <NotificationModal />
             <SignTransactionsModals/>
             <Component {...pageProps} />

@@ -1,9 +1,11 @@
 import {
+  Box,
     Button,
+    Grid,
     Stack,
     Typography
   } from '@mui/material';
-import { useState, memo, useEffect } from 'react';
+import { useState, memo, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import dynamic from 'next/dynamic';
@@ -66,24 +68,18 @@ const LedgerLoginButton: any = dynamic(
   { ssr: false }
 );
 
-const WebWalletLoginButton = dynamic(
+import { WebWalletLoginButtonPropsType } from '@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton';
+
+const WebWalletLoginButton: any = dynamic(
   async () => {
     return (
       await import('@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton')
     ).WebWalletLoginButton;
   },
   { ssr: false }
-);
+) as WebWalletLoginButtonPropsType;
 
 import useUser from "../../lib/useUser";
-// import { LedgerLoginButtonPropsType } from '@multiversx/sdk-dapp/UI/ledger/LedgerLoginButton';
-// import { WebWalletLoginButtonPropsType } from '@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton';
-  
-  interface LoginModalButtonProps {
-    onClose?: () => void;
-    onOpen?: () => void;
-    showButton?: string;
-  }
   
   const useModal = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -116,12 +112,12 @@ import useUser from "../../lib/useUser";
     const loggedIn = useGetIsLoggedIn();
     const logginInfo = useGetLoginInfo();
 
-    const commonProps = {
-        // callbackRoute: routeNames.dashboard,
-        nativeAuth: true // optional
-      };
+    // const commonProps = {
+    //     // callbackRoute: routeNames.dashboard,
+    //     nativeAuth: true // optional
+    //   };
   
-    let router= useRouter();
+    let router = useRouter();
   
     const {
       isOpen: opened,
@@ -192,19 +188,6 @@ import useUser from "../../lib/useUser";
             </Button>
           )
         ) :
-          // <Button
-          //   onClick={open}
-          //   sx={{
-          //     fontWeight: 'bold',
-          //     width: '50%',
-          //     color: 'white',
-          //     fontSize: '16px',
-          //     m: 0
-          //   }}
-          //   className='gymStatus'
-          // >
-          //   {showButton}
-          // </Button>
           <Typography 
             variant="h6" 
             align="center" 
@@ -219,6 +202,7 @@ import useUser from "../../lib/useUser";
             {showButton}
           </Typography>
         }
+        {!loggedIn &&
         <DappModal
           visible={opened}
           onHide={close}
@@ -239,16 +223,18 @@ import useUser from "../../lib/useUser";
                   loginButtonText='MultiversX Browser Extension'
                   // {...commonProps}
                 />
-                <Link
-                  className="dappLoginButton dappLinkButton"
-                  href="https://devnet-wallet.multiversx.com/unlock"
-                  target="_blank"
-                >MultiversX Web wallet</Link>
+                <WebWalletLoginButton
+                  className="dappLoginButton"
+                  callbackRoute="/"
+                  shouldRenderDefaultCss={false}
+                  loginButtonText="Web Wallet"
+                  nativeAuth
+                />
                 <LedgerLoginButton
                   loginButtonText='Ledger'
                   className='dappLoginButton'
                   shouldRenderDefaultCss={false}
-                  {...commonProps}
+                  // {...commonProps}
                 />
                 <WalletConnectLoginButton
                   className="dappLoginButton"
@@ -260,12 +246,11 @@ import useUser from "../../lib/useUser";
                       }
                     : {})
                   }
-                  nativeAuth
                 />
               </Stack>
   
             </DappModalBody>
-        </DappModal>
+        </DappModal>}
       </>
     );
   };

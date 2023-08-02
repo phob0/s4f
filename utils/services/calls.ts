@@ -102,7 +102,6 @@ export const unstakeMulti = async (connectedUser: string, nft_token: string, nft
         return new BigUIntValue(new BigNumber(nonce));
     });
 
-    console.log([ BytesValue.fromUTF8(nft_token), nonces ]);
     const res = await ScCallwithNoTransfer({
         workspace: "gymStakingWsp",
         sender: connectedUser,

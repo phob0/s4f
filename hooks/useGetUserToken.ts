@@ -3,7 +3,7 @@ import useSWR from "swr";
 import useUser from "../lib/useUser";
 
 const useGetUserToken = (user: string, token: string) => {
-  console.log('user address ', user)
+  // console.log('user address ', user)
   const { data, error } = useSWR(
     user
       ? {

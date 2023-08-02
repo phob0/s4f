@@ -35,7 +35,17 @@ body {
 }
 
 .dapp-modal-dialog-content-body {
-  background-color: white;
+  background-color: rgb(37, 37, 37);
+  color: white;
+  background-image: linear-gradient(rgba(42, 1, 116,  1), rgba(100, 15, 225,  1));
+}
+
+.transactions-toast-class {
+  background-color: rgb(37, 37, 37);
+  color: white;
+  background-image: linear-gradient(rgba(42, 1, 116, 0.9), rgba(100, 15, 225, 0.9)); /* Adjust opacity here */
+  border-radius: 19px!important;
+  border: 2px solid #48EFEE;
 }
 
 .gymTab {

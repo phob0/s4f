@@ -20,6 +20,10 @@ export const getTimeString = (seconds: number, msg: string = ''): string => {
       timeString += `${minutes} ${minutes === 1 ? 'minute, ' : 'minutes, '}`;
     }
   
+    if (minutes === 0 && hours === 0 && days === 0) {
+      timeString += `A few seconds`;
+    }
+
     // Replace multiple consecutive "and" with a single comma, except for the last one
     timeString = timeString.replace(/(, )+/g, ', ').replace(/(, )$/, '');
   
