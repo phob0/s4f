@@ -15,7 +15,7 @@ import Image from 'next/image'
 import { purple } from '@mui/material/colors';
 import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
 import { useGetAllowedGymNfts, useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUnbondingDuration, useGetUserClaimable, useGetUserStakedInfo } from '@/utils/services/hooks';
-import { claim, completeTasks, stake, stakeMulti, unstake } from '@/utils/services/calls';
+import { claim, completeTasks, stake, stakeMulti, unstake, unstakeMulti } from '@/utils/services/calls';
 import { Button } from '@mui/material';
 // import { useGetTotalClaimed } from '@/utils/hooks/hooks';
 import Accordion from '@mui/material/Accordion';
@@ -31,6 +31,7 @@ import { createIndentifierByCollectionAndNonce } from '@/utils/functions/tokens'
 import { getTimeString } from '@/utils/functions/timeToString';
 import NextImage from "../components/NextImage/NextImage";
 import { Tabs, Tab } from '@mui/material';
+import LoginModalButton from '@/components/tools/LoginModal';
 
 const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
 const sfitLegendImage = '/demo_imgs/sfitlegend.png';
@@ -69,8 +70,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const { isLoggedIn } = useGetLoginInfo();
   const accountInfo = useGetAccount();
 
-  const [panel1, setPanel1] = useState(true);
-  const [panel2, setPanel2] = useState(true);
+  const [panel1, setPanel1] = useState(false);
+  const [panel2, setPanel2] = useState(false);
   // const [allGymNfts, setAllGymNfts] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState(0);
   const [gymNfts, setGymNfts] = useState<any[]>([]);
@@ -145,12 +146,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   }
   // console.log("GYM1 staked FULL", stakedGymNftsFinal);
 
-  // useEffect(() => {
-  //   const allGym1Nfts = stakedGymNftsFinal ? gym1Nfts.concat(stakedGymNftsFinal) : gym1Nfts;
-  //   setAllGymNfts(allGym1Nfts);
-  // }, [gym1Nfts, stakedGymNftsFinal, stakedGymNftsFullInfo]);
-  // console.log("ALL GYM  NFTs", allGymNfts);
-
   // console.log(" ");
 
   const unbondingDurationFinal = unbondingDuration?.seconds ? "Unstake can be done in around " + new Date(unbondingDuration?.seconds * 1000).toISOString().slice(11, 19) : "Stake it!"
@@ -158,7 +153,6 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0;
   const gym1NftsLength = gym1Nfts ? gym1Nfts.length : 0;
   const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
-  // const allGymNftsLength = allGymNfts ? gymNftsLength : 0;
 
   const maxNonZeroValue = gymNfts.reduce((maxValue, nft) => {
     const unbondedInSeconds = nft.unbondedInSeconds;
@@ -262,6 +256,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           }}
                         >
                           {gym.status  === "OPEN" ? "ENTER" : "COMING SOON"}
+                          
                         </Typography>
                       </CardContent>
                     </Link>
@@ -286,18 +281,23 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         >
                           Metaverse Gym
                         </Typography>
+                        {gym.status === "OPEN" ? 
+                        <Grid container justifyContent="center" alignItems="center">
+                          <LoginModalButton showButton={"OPEN"}/>
+                        </Grid> 
+                        :
                         <Typography 
                           variant="h6" 
                           align="center" 
                           color="common.white"
                           sx={{
                             fontWeight: 'bold',
-                            width: gym.status === "OPEN" ? '50%' : '100%',
+                            width: '100%',
                           }}
                           className='gymStatus'
                         >
-                          {gym.status === "OPEN" ? "ENTER" : "COMING SOON"}
-                        </Typography>
+                          COMING SOON
+                        </Typography>}
                       </CardContent>
                   )
                 }
@@ -645,10 +645,18 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       >
                         <Button
                           variant="outlined"
-                          className={gym1NftsLength > 0 ? "actionButton" : "actionButtonDisabled"}
+                          className={gymNftsLength > 0 ? "actionButton" : "actionButtonDisabled"}
                           onClick={(e) => {
                             e.stopPropagation();
-                            // Handle the click event for the "Stake all" button here
+                            if (gymNftsLength > 0) {
+                              const nftIds = gymNfts.map((nft, key) => {
+                                return nft.collection
+                              });
+                              const nftNonces = gymNfts.map((nft, key) => {
+                                return nft.nonce
+                              });
+                              stakeMulti(connectedUserAddress, nftIds, nftNonces);
+                            }
                           }}
                         >
                           Stake all
@@ -663,6 +671,15 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         className={canUnstakeAll ? "actionButton" : "actionButtonDisabled"}
                         onClick={(e) => {
                           e.stopPropagation();
+                          if (canUnstakeAll) {
+                            const nftIds = stakedGymNfts.map((nft, key) => {
+                              return nft.token
+                            });
+                            const nftNonces = stakedGymNfts.map((nft, key) => {
+                              return nft.nonce
+                            });
+                            unstakeMulti(connectedUserAddress, nftIds[0], nftNonces);
+                          }
                         }}
                       >
                         Unstake all

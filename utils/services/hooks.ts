@@ -45,7 +45,7 @@ export const useGetTokensInfo = () => {
     );
 
     return {
-        tokensInfo: tokensInfo,
+        tokensInfo: tokensInfo || [],
         isLoadingTokensInfo: isLoading,
         errorTokensInfo: error,
     };
@@ -143,7 +143,7 @@ export const useGetAllowedGymNfts = () => {
     );
 
     return {
-        gymNftsInfo: allwedGymNfts,
+        gymNftsInfo: allwedGymNfts || [],
         isLoadingGymNftsInfo: isLoading,
         errorGymNftsInfo: error,
     };
@@ -191,7 +191,7 @@ export const useGetUserStakedInfo = (address: string) => {
     );
 
     return {
-        userStakedInfo: userStakedInfo,
+        userStakedInfo: userStakedInfo || [],
         isLoadingUserStakedInfo: isLoading,
         errorUserStakedInfo: error,
     };

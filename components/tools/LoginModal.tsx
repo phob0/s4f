@@ -1,83 +1,87 @@
 import {
     Button,
-    Stack
+    Stack,
+    Typography
   } from '@mui/material';
-  import { useState, memo, useEffect } from 'react';
-  import { useRouter } from 'next/router'
-  import dynamic from 'next/dynamic';
-  import { walletConnectV2ProjectId } from '../../config/config';
-  import { useGetIsLoggedIn, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
-  import { logout, getAddress } from '@multiversx/sdk-dapp/utils';
+import { useState, memo, useEffect } from 'react';
+import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic';
+import { walletConnectV2ProjectId } from '../../config/config';
+import { useGetIsLoggedIn, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
+import { logout, getAddress } from '@multiversx/sdk-dapp/utils';
 
-  const DappModal = dynamic(
-    async () => {
-      return (
-        await import('@multiversx/sdk-dapp/UI/DappModal')
-      ).DappModal;
-    },
-    { ssr: false }
-  );
+const DappModal = dynamic(
+  async () => {
+    return (
+      await import('@multiversx/sdk-dapp/UI/DappModal')
+    ).DappModal;
+  },
+  { ssr: false }
+);
 
-  const DappModalBody = dynamic(
-    async () => {
-      return (
-        await import('@multiversx/sdk-dapp/UI/DappModal/components/DappModalBody')
-      ).DappModalBody;
-    },
-    { ssr: false }
-  );
+const DappModalBody = dynamic(
+  async () => {
+    return (
+      await import('@multiversx/sdk-dapp/UI/DappModal/components/DappModalBody')
+    ).DappModalBody;
+  },
+  { ssr: false }
+);
 
-  const DappModalHeader = dynamic(
-    async () => {
-      return (
-        await import('@multiversx/sdk-dapp/UI/DappModal/components/DappModalHeader')
-      ).DappModalHeader;
-    },
-    { ssr: false }
-  );
+const DappModalHeader = dynamic(
+  async () => {
+    return (
+      await import('@multiversx/sdk-dapp/UI/DappModal/components/DappModalHeader')
+    ).DappModalHeader;
+  },
+  { ssr: false }
+);
 
-  const ExtensionLoginButton = dynamic(
-    async () => {
-      return (
-        await import('@multiversx/sdk-dapp/UI/extension/ExtensionLoginButton')
-      ).ExtensionLoginButton;
-    },
-    { ssr: false }
-  );
-  
-  const WalletConnectLoginButton = dynamic(
-    async () => {
-      return (
-        await import(
-          '@multiversx/sdk-dapp/UI/walletConnect/WalletConnectLoginButton'
-        )
-      ).WalletConnectLoginButton;
-    },
-    { ssr: false }
-  );
-  
-  const LedgerLoginButton = dynamic(
-    async () => {
-      return (await import('@multiversx/sdk-dapp/UI/ledger/LedgerLoginButton'))
-        .LedgerLoginButton;
-    },
-    { ssr: false }
-  );
-  
-  const WebWalletLoginButton = dynamic(
-    async () => {
-      return (
-        await import('@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton')
-      ).WebWalletLoginButton;
-    },
-    { ssr: false }
-  );
-  
-  import useUser from "../../lib/useUser";
+const ExtensionLoginButton = dynamic(
+  async () => {
+    return (
+      await import('@multiversx/sdk-dapp/UI/extension/ExtensionLoginButton')
+    ).ExtensionLoginButton;
+  },
+  { ssr: false }
+);
+
+const WalletConnectLoginButton = dynamic(
+  async () => {
+    return (
+      await import(
+        '@multiversx/sdk-dapp/UI/walletConnect/WalletConnectLoginButton'
+      )
+    ).WalletConnectLoginButton;
+  },
+  { ssr: false }
+);
+
+const LedgerLoginButton: any = dynamic(
+  async () => {
+    return (await import('@multiversx/sdk-dapp/UI/ledger/LedgerLoginButton'))
+      .LedgerLoginButton;
+  },
+  { ssr: false }
+);
+
+const WebWalletLoginButton = dynamic(
+  async () => {
+    return (
+      await import('@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton')
+    ).WebWalletLoginButton;
+  },
+  { ssr: false }
+);
+
+import useUser from "../../lib/useUser";
+// import { LedgerLoginButtonPropsType } from '@multiversx/sdk-dapp/UI/ledger/LedgerLoginButton';
+// import { WebWalletLoginButtonPropsType } from '@multiversx/sdk-dapp/UI/webWallet/WebWalletLoginButton';
   
   interface LoginModalButtonProps {
     onClose?: () => void;
     onOpen?: () => void;
+    showButton?: string;
   }
   
   const useModal = () => {
@@ -101,6 +105,7 @@ import {
   const LoginModalButton = ({
     // onClose,
     // onOpen
+    showButton = ""
   }) => {
     // If you need the auth signature and token pas your unique token in useLogin
     // all auth providers will return the signature, it will be saved in localstorage and global state
@@ -161,23 +166,58 @@ import {
 
     return (
       <>
-        {loggedIn ? (
-          <Button variant="outlined" onClick={handleLogout}
-            sx={{ 
-              color: 'white',
-              borderColor: 'white'
-            }}
-          >
-            Disconnect
+        {showButton == "" ? (
+          loggedIn ? (
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              sx={{
+                color: 'white',
+                borderColor: 'white',
+              }}
+            >
+              Disconnect
             </Button>
-        ) : (
-          <Button variant="outlined" onClick={open} sx={{ 
-            color: 'white',
-            borderColor: 'white'
-          }}>
-            Connect
-          </Button>
-        )}
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={open}
+              sx={{
+                color: 'white',
+                borderColor: 'white',
+              }}
+            >
+              Connect
+            </Button>
+          )
+        ) :
+          // <Button
+          //   onClick={open}
+          //   sx={{
+          //     fontWeight: 'bold',
+          //     width: '50%',
+          //     color: 'white',
+          //     fontSize: '16px',
+          //     m: 0
+          //   }}
+          //   className='gymStatus'
+          // >
+          //   {showButton}
+          // </Button>
+          <Typography 
+            variant="h6" 
+            align="center" 
+            color="common.white"
+            onClick={open}
+            sx={{
+              fontWeight: 'bold',
+              width: '50%',
+            }}
+            className='gymStatus'
+          >
+            {showButton}
+          </Typography>
+        }
         <DappModal
           visible={opened}
           onHide={close}
@@ -196,28 +236,31 @@ import {
                  <ExtensionLoginButton
                   className="dappLoginButton"
                   loginButtonText='MultiversX Browser Extension'
-                  {...commonProps}
+                  // {...commonProps}
                 />
 
                 <WebWalletLoginButton
                   className="dappLoginButton"
                   loginButtonText='MultiversX Web wallet'
-                  {...commonProps}
+                  // {...commonProps}
                 />
                 <LedgerLoginButton
                   loginButtonText='Ledger'
                   className='dappLoginButton'
+                  shouldRenderDefaultCss={false}
                   {...commonProps}
                 />
                 <WalletConnectLoginButton
                   className="dappLoginButton"
                   loginButtonText='xPortal Mobile App'
-                  {...commonProps}
+                  // {...commonProps}
                   {...(walletConnectV2ProjectId
                     ? {
                         isWalletConnectV2: true
                       }
-                    : {})}
+                    : {})
+                  }
+                  nativeAuth
                 />
               </Stack>
   

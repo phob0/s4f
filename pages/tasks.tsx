@@ -95,11 +95,11 @@ interface SlideProps extends StackedCarouselSlideProps {
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   const roundedValue = Math.round(props.value * 100) / 100;
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }} ml={2}>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress variant="determinate" {...props} />
       </Box>
-      <Box sx={{ minWidth: 35 }}>
+      <Box sx={{ minWidth: 40 }}>
         <Typography variant="body2" color="text.secondary">{`${roundedValue} %`}</Typography>
       </Box>
     </Box>
@@ -306,21 +306,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
               <Card className="statsWell">
                 <CardContent>
-                  <Typography color="common.white" variant="h5" component="div" align="center">
+                  <Typography color="common.white" variant="h5" component="div" align="center" px={5}>
                     YOUR PARTICIPATION IN { gymName } GYM
                   </Typography>
                   
                 </CardContent>  
                 <CardContent>
-                <Grid container spacing={2} >
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        ACTIVE TASKS
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <LinearProgressWithLabel value={activeTasks.length * 100 / tasks.length}/>
-                    </Grid>
+                <Grid container spacing={2}>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
                         CLAIMABLE SFIT
@@ -369,11 +361,37 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
+                        GYM NFTS STAKED
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        {numberOfGymNftsStaked}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
                         OWNERSHIP PERCENTAGE
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
                       <LinearProgressWithLabel value={numberOfGymNftsStaked / 10} />
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        ACTIVE TASKS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={activeTasks.length * 100 / tasks.length}/>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography color="common.white" align="center">
+                        COMPLETED TASKS
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <LinearProgressWithLabel value={totalCompleted * 100 / tasks.length}/>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -465,9 +483,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
             <Box className="sliderBox">
 
-                <Typography variant="h6" component="div" color="common.white" align="right" sx={{ mr: 5, mt: 2, mb: 2 }}>
+                {/* <Typography variant="h6" component="div" color="common.white" align="right" sx={{ mr: 5, mt: 2, mb: 2 }}>
                   Completed Tasks: { totalCompleted }/{ tasks.length }
-                </Typography>
+                </Typography> */}
                 
               <div className='twitch'>
                 <div style={{ width: '100%', position: 'relative' }}>
