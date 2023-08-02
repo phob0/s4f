@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo, useContext } from 'react';
+import React, { useState, useEffect, useRef, memo, useContext, use } from 'react';
 import type { NextPage } from 'next'
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
@@ -215,10 +215,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   const { nfts: sfitLegendNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, tokensInfo?.[1]?.token);
 
-
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
-  const userSfitBalance = userSfitTokenInfo ? userSfitTokenInfo.balance : 0;
+  const userSfitBalance = userSfitTokenInfo.balance ? userSfitTokenInfo.balance : 0;
+
+  console.log(userSfitBalance);
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
