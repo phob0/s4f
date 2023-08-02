@@ -5,6 +5,7 @@ import {
   } from '@mui/material';
 import { useState, memo, useEffect } from 'react';
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import dynamic from 'next/dynamic';
 import { walletConnectV2ProjectId } from '../../config/config';
 import { useGetIsLoggedIn, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
@@ -238,12 +239,11 @@ import useUser from "../../lib/useUser";
                   loginButtonText='MultiversX Browser Extension'
                   // {...commonProps}
                 />
-
-                <WebWalletLoginButton
-                  className="dappLoginButton"
-                  loginButtonText='MultiversX Web wallet'
-                  // {...commonProps}
-                />
+                <Link
+                  className="dappLoginButton dappLinkButton"
+                  href="https://devnet-wallet.multiversx.com/unlock"
+                  target="_blank"
+                >MultiversX Web wallet</Link>
                 <LedgerLoginButton
                   loginButtonText='Ledger'
                   className='dappLoginButton'

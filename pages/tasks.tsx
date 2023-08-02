@@ -217,9 +217,10 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
-  const userSfitBalance = userSfitTokenInfo.balance ? userSfitTokenInfo.balance : 0;
+  const userSfitBalance = userSfitTokenInfo?.balance ? userSfitTokenInfo?.balance : 0;
 
-  console.log(userSfitBalance);
+  // console.log(sfitIdentifier)
+  // console.log(canCompleteTasks?.canCompleteTasks , isComplete , completedTasks);
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -282,22 +283,26 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       alignItems="center"
                       spacing={12}
                     >
-                      <Tooltip title={claimableAmount == 0 ? "33d" : "fdfd"}>
-                        <Button 
-                          className="claimButton"
-                          variant="contained" 
-                          size="large" 
-                          disabled={claimableAmount == 0 || sfitLegendNfts.length == 0 || claimedRewards}
-                          onClick={ () => {
-                            claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce);
-                            setClaimedRewards(true);
-                          }}
-                          sx={{
-                            marginTop: 3
-                          }}  
-                        >
-                          Claim Reward
-                        </Button>
+                      <Tooltip 
+                        title={claimableAmount == 0 ? "33d" : "fdfd"}
+                      >
+                        <span>
+                          <Button 
+                            className="claimButton"
+                            variant="contained" 
+                            size="large" 
+                            disabled={claimableAmount == 0 || sfitLegendNfts.length == 0 || claimedRewards}
+                            onClick={ () => {
+                              claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce);
+                              setClaimedRewards(true);
+                            }}
+                            sx={{
+                              marginTop: 3
+                            }}  
+                          >
+                            Claim Reward
+                          </Button>
+                        </span>
                       </Tooltip>
                       </Stack>
                     </Grid>
