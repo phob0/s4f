@@ -25,6 +25,14 @@ const NotificationModal = dynamic(
   { ssr: false }
 );
 
+const TransactionsToastList: any = dynamic(
+  async () => {
+    return (await import("@multiversx/sdk-dapp/UI/TransactionsToastList"))
+      .TransactionsToastList;
+  },
+  { ssr: false }
+);
+
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <SWRConfig
@@ -53,8 +61,9 @@ const App = ({ Component, pageProps }: AppProps) => {
                 min-height: 100vh;
               }
             `}</style>
+            <TransactionsToastList/>
             <NotificationModal />
-            <SignTransactionsModals className='custom-class-for-modals' />
+            <SignTransactionsModals/>
             <Component {...pageProps} />
           </Layout>
         </DappProvider>
