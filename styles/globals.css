@@ -30,6 +30,10 @@ body {
   box-shadow: inset 0 0 0 3000px rgba(12, 8, 67,  0.786);
 }
 
+#dapp-modal {
+  color: rgb(37, 37, 37);
+}
+
 .gymTab {
   background-image: linear-gradient(rgba(42, 1, 116,  1), rgba(100, 15, 225,  1));
   width: 250px;
