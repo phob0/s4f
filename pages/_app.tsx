@@ -44,7 +44,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       }}
     >
       <DappProvider
-        environment={EnvironmentsEnum.devnet}
+        environment={EnvironmentsEnum.mainnet}
         customNetworkConfig={{
           name: 'customConfig',
           apiTimeout: process.env.NEXT_PUBLIC_API_TIMEOUT,
@@ -67,7 +67,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <TransactionsToastList
               className = 'transactions-toast-list'
               transactionToastClassName="transactions-toast-class"
-              successfulToastLifetime={300000}
+              successfulToastLifetime={30000}
             />
             <NotificationModal />
             <SignTransactionsModals/>

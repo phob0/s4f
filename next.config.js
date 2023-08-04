@@ -34,7 +34,7 @@ const nextConfig = {
       dirs: ['components', 'config', 'hooks', 'pages', 'store', 'types', 'utils'],
     },
     images: {
-      domains: ["media.elrond.com", "devnet-media.elrond.com"],
+      domains: ["media.elrond.com", "media.elrond.com"],
     },
   };
 

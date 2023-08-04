@@ -162,10 +162,10 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     return maxValue;
   }, 0);
 
-  const canUnstakeAll = maxNonZeroValue === 0;
+  const canUnstakeAll = maxNonZeroValue === 0 && stakedGymNftsLength > 0;
 
   useEffect(() => {
-    if (gymNftsLength == 0 && !isLoadingGym1Nfts && activeTab == 0) {
+    if (!isLoadingGym1Nfts && activeTab == 0) {
       setGymNfts(gym1Nfts);
       setGymNftsLength(gym1NftsLength);
     }
@@ -665,7 +665,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                     :
                     <Tooltip
                     title={canUnstakeAll ? null
-                      : `${getTimeString(maxNonZeroValue, "left for unbonding.")}`}
+                      : (
+                        stakedGymNftsLength > 0 && maxNonZeroValue ?
+                        `${getTimeString(maxNonZeroValue, "left for unbonding.")}` :
+                        "No NFTs available to unstake."
+                      )}
                     >
                       <Button variant="outlined"
                         className={canUnstakeAll ? "actionButton" : "actionButtonDisabled"}
@@ -686,7 +690,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                       </Button>
                     </Tooltip>
                     }
-                    <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <a href="https://xoxno.com/collection/FVGYM1-94fff1" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
                       <Button variant="outlined" className="actionButton" onClick={(e) => e.stopPropagation()} sx={{ ml: 2 }}>Buy</Button>
                     </a>
                   </Grid>
@@ -757,7 +761,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   IN ORDER TO PARTICIPATE, YOU NEED TO HAVE AT LEAST ONE GYM NFT.
                 </Typography>
                 <Box width={"150px"} display="flex" justifyContent="center" alignItems="center" my={1}>
-                <a href="https://xoxno.com/collection/SFITLEGEND-5da9dd" target="_blank" rel="noopener noreferrer" 
+                <a href="https://xoxno.com/collection/FVGYM1-94fff1" target="_blank" rel="noopener noreferrer" 
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',

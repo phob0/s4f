@@ -8,7 +8,7 @@ export default async function handler(
   const {email} = req.body
 
   try {
-    const response = await fetch('https://devnet-launch-api.xportal.com/hello', {
+    const response = await fetch('https://launch-api.xportal.com/hello', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
