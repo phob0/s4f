@@ -26,7 +26,7 @@ export const completeTasks = async (connectedUser: string) => {
         sender: connectedUser,
         funcName: "completeTasks",
         args: [],
-        gasLimit: 10_000_000
+        gasLimit: 6_000_000
     });
 
     return res;
@@ -41,7 +41,7 @@ export const claim = async (connectedUser: string, nft_token: string, nft_nonce:
         token_identifier: nft_token,
         token_nonce: nft_nonce,
         args: [],
-        gasLimit: 20_000_000
+        gasLimit: 8_000_000
     });
 
     return res;
@@ -56,7 +56,7 @@ export const stake = async (connectedUser: string, nft_token: string, nft_nonce:
         token_identifier: nft_token,
         token_nonce: nft_nonce,
         args: [],
-        gasLimit: 20_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
@@ -76,7 +76,7 @@ export const stakeMulti = async (connectedUser: string, nft_tokens: string[], nf
         token_identifiers: nft_tokens,
         token_nonces: nft_nonces,
         args: [],
-        gasLimit: 20_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
@@ -91,7 +91,7 @@ export const unstake = async (connectedUser: string, nft_token: string, nft_nonc
             BytesValue.fromUTF8(nft_token),
             new BigUIntValue(new BigNumber(nft_nonce))
         ],
-        gasLimit: 20_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
@@ -111,7 +111,7 @@ export const unstakeMulti = async (connectedUser: string, nft_token: string, nft
             BytesValue.fromUTF8(nft_token),
             ...nft_nonces.map((nonce) => new BigUIntValue(new BigNumber(nonce)))
         ],
-        gasLimit: 20_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
