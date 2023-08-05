@@ -166,23 +166,25 @@ import useUser from "../../lib/useUser";
         {showButton == "" ? (
           loggedIn ? (
             <Button
-              variant="outlined"
+              // variant="outlined"
               onClick={handleLogout}
               sx={{
                 color: 'white',
-                borderColor: 'white',
+                // borderColor: 'white',
               }}
+              className='dappDisconnectButton'
             >
               Disconnect
             </Button>
           ) : (
             <Button
-              variant="outlined"
+              // variant="outlined"
               onClick={open}
               sx={{
                 color: 'white',
-                borderColor: 'white',
+                // borderColor: 'white',
               }}
+              className='dappConnectButton'
             >
               Connect
             </Button>
@@ -207,11 +209,13 @@ import useUser from "../../lib/useUser";
           visible={opened}
           onHide={close}
         >
-            <DappModalHeader
-              headerText="Connect your wallet"
-            />
-            <DappModalBody>
-  
+            {/* <DappModalHeader
+              visible={false}
+              headerText="Connect Wallet"
+              showHeader={false}
+            /> */}
+            <DappModalBody
+            >
               <Stack 
                 sx = {{
                   direction: "column",
@@ -248,7 +252,6 @@ import useUser from "../../lib/useUser";
                   }
                 />
               </Stack>
-  
             </DappModalBody>
         </DappModal>}
       </>

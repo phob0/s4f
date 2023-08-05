@@ -19,7 +19,6 @@ import { prisma } from '../lib/prisma'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { purple } from '@mui/material/colors';
-
 import useUser from "../lib/useUser";
 
 import { withSessionSsr } from "../lib/session";
@@ -41,7 +40,14 @@ import { IElrondNFT } from '@/utils/types/sc.interface';
 import { formatBalance } from '@/utils/functions/formatBalance';
 import { Tooltip } from '@mui/material';
 import useGetUserToken from '@/hooks/useGetUserToken';
+import NextImage from '@/components/NextImage/NextImage';
 
+import { FaCheckCircle, FaHourglass } from 'react-icons/fa';
+import { MdCheckCircle, MdHourglassEmpty } from 'react-icons/md';
+import { IoMdCheckmarkCircleOutline, IoMdCheckmarkCircle } from 'react-icons/io';
+import { AiOutlineCheckCircle, AiOutlineHourglass } from 'react-icons/ai';
+import { BsCheckCircle, BsHourglass } from 'react-icons/bs';
+import { adminAddresses } from '@/config/constants';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
@@ -209,18 +215,17 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const { userStakedInfo: stakedGymNfts, isLoadingUserStakedInfo: isLoadingStakedGymNfts, errorUserStakedInfo: isErrorStakedGymNfts }  = useGetUserStakedInfo(connectedUserAddress);
   const sfitIdentifier = tokensInfo ? tokensInfo[2]?.token : "";
   const {userToken: userSfitTokenInfo, isLoadingUserToken, isErrorUserToken} = useGetUserToken(connectedUserAddress, sfitIdentifier);
+  const { nfts: sfitLegendNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, tokensInfo?.[1]?.token);
 
   const numberOfGymNftsInWallet = gymNfts.length > 0 ? gymNfts.length : 0;
   const numberOfGymNftsStaked = stakedGymNfts ? stakedGymNfts?.length : 0;
-
-  const { nfts: sfitLegendNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, tokensInfo?.[1]?.token);
+  const numberOfSfitLegendNftsInWallet = sfitLegendNfts ? sfitLegendNfts.length : 0;
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
   const userSfitBalance = userSfitTokenInfo?.balance ? userSfitTokenInfo?.balance : 0;
 
-  // console.log(sfitIdentifier)
-  // console.log(canCompleteTasks?.canCompleteTasks , isComplete , completedTasks);
+  const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && numberOfGymNftsStaked > 0;
 
   return (
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
@@ -239,7 +244,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
             }}
         >
           <Grid xs={4} sx={{ pr: 3 }}>
-            <Stack spacing={2} sx={{ pr: 3 }}>
+            <Stack spacing={3} sx={{ pr: 3 }}>
               <Card className="statsWell">
                 <CardContent>
                   <Typography color="common.white" variant="h5" component="div" align="center">
@@ -254,7 +259,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                         OWNED SFIT
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
                       <Typography color="common.white" align="center">
                         {
                           formatBalance(
@@ -267,6 +272,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           )
                         }
                       </Typography>
+                      <NextImage 
+                        src={"/demo_imgs/sfit.png"}
+                        alt={"sfitLegendNFT"}
+                        width={24}
+                        height={24}
+                        loading='lazy'
+                      />
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
@@ -276,40 +288,96 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     <Grid xs={6}>
                       <LinearProgressWithLabel value={76} />
                     </Grid>
+                    
+                  </Grid>
+                </CardContent>
+              </Card>
+              <Card className="statsWell">
+                <CardContent>
+                  <Typography color="common.white" variant="h5" component="div" align="center">
+                    CONDITIONS TO CLAIM
+                  </Typography>
+                </CardContent>
+                <CardContent>
+                  <Grid container spacing={2} direction={"column"} px={2} gap={1}>
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography color="common.white" align="center">
+                          1. OWN AT LEAST 1 SFITLEGEND NFT
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        {numberOfSfitLegendNftsInWallet > 0 ?
+                          <BsCheckCircle size={20}/> :
+                          <BsHourglass size={20}/>
+                        }
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography color="common.white" align="center">
+                          2. HAVE STAKED AT LEAST 1 GYM NFT
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        {numberOfGymNftsStaked > 0 ?
+                          <BsCheckCircle size={20}/> :
+                          <BsHourglass size={20}/>
+                        }
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography color="common.white" align="center">
+                          3. COMPLETE ALL TASKS
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        {totalCompleted == tasks.length ?
+                          <BsCheckCircle size={20}/> :
+                          <BsHourglass size={20}/>
+                        }
+                      </Grid>
+                    </Grid>
                     <Grid xs={12}>
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="center"
-                      spacing={12}
-                    >
-                      <Tooltip 
-                        title={claimableAmount == 0 ? "33d" : "fdfd"}
+                      <Stack
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={12}
                       >
-                        <span>
-                          <Button 
-                            className="claimButton"
-                            variant="contained" 
-                            size="large" 
-                            disabled={claimableAmount == 0 || sfitLegendNfts.length == 0 || claimedRewards}
-                            onClick={ () => {
-                              claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce);
-                              setClaimedRewards(true);
-                            }}
-                            sx={{
-                              marginTop: 3
-                            }}  
-                          >
-                            Claim Reward
-                          </Button>
-                        </span>
-                      </Tooltip>
+                        <Tooltip 
+                          title={canClickClaim ? (
+                            claimableAmount > 0 ?
+                              "Claim" :
+                              "Nothing to claim"
+                          ) : (
+                            "You must complete all the the above conditions."
+                          )}
+                        >
+                          <span>
+                            <Button 
+                              className="claimButton"
+                              variant="contained" 
+                              size="large" 
+                              disabled={claimableAmount == 0 || sfitLegendNfts.length == 0 || claimedRewards}
+                              onClick={ () => {
+                                claim(connectedUserAddress, sfitLegendNfts[0].collection, sfitLegendNfts[0].nonce);
+                                setClaimedRewards(true);
+                              }}
+                              sx={{
+                                marginTop: 3
+                              }}  
+                            >
+                              Claim Reward
+                            </Button>
+                          </span>
+                        </Tooltip>
                       </Stack>
                     </Grid>
                   </Grid>
                 </CardContent>
               </Card>
-
               <Card className="statsWell">
                 <CardContent>
                   <Typography color="common.white" variant="h5" component="div" align="center" px={5}>
@@ -324,7 +392,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                         CLAIMABLE SFIT
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
                       <Typography color="common.white" align="center">
                         {
                           formatBalance(
@@ -336,13 +404,20 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           )
                         }
                       </Typography>
+                      <NextImage 
+                        src={"/demo_imgs/sfit.png"}
+                        alt={"sfitLegendNFT"}
+                        width={24}
+                        height={24}
+                        loading='lazy'
+                      />
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
                         SFIT EARNED SO FAR
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
                       <Typography color="common.white" align="center">
                         {
                           formatBalance(
@@ -354,6 +429,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           )
                         }
                       </Typography>
+                      <NextImage 
+                        src={"/demo_imgs/sfit.png"}
+                        alt={"sfitLegendNFT"}
+                        width={24}
+                        height={24}
+                        loading='lazy'
+                      />
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
@@ -457,30 +539,44 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                         TOTAL SFIT GENERATED
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
                       <Typography color="common.white" align="center">
                         1,557,465
                       </Typography>
+                      <NextImage 
+                        src={"/demo_imgs/sfit.png"}
+                        alt={"sfitLegendNFT"}
+                        width={24}
+                        height={24}
+                        loading='lazy'
+                      />
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
                         TOTAL SFIT LAST MONTH
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
                       <Typography color="common.white" align="center">
                         57,465
                       </Typography>
+                      <NextImage 
+                        src={"/demo_imgs/sfit.png"}
+                        alt={"sfitLegendNFT"}
+                        width={24}
+                        height={24}
+                        loading='lazy'
+                      />
                     </Grid>
                   </Grid>
                 </CardContent>
               </Card>
             </Stack>  
           </Grid>
-          <Grid xs={8}>
-            <Box className="titleBox" sx={{ my: 2, border: '1px solid #fff' }}>
+          <Grid xs={8} justifyContent={"center"}>
+            <Box className="titleBox" sx={{ my: 1, border: '1px solid #fff', py: 3 }}>
               <Typography variant="h4" color="common.white" align="center">
-                Welcome to your
+                Welcome to your Gym!
               </Typography>
               <Typography variant="h2" color="common.black" align="center">
                 { gymName } Metaverse Gym
@@ -515,7 +611,6 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   />
                 </div>
               </div>
-
                 <Stack
                   direction="row"
                   justifyContent="center"
@@ -523,7 +618,6 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   spacing={12}
                   mb={3}
                 >
-
                 <Button className="claimButton" variant="contained" size="large"
                   disabled={!canCompleteTasks?.canCompleteTasks || !isComplete || completedTasks}
                   onClick={() => {
@@ -536,6 +630,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
                 </Stack> 
             </Box>
+            {adminAddresses.includes(connectedUserAddress) && <div style={{ padding: "25px", display: "flex", justifyContent: "center" }}>
+                <Button className='depositButton'>
+                  Deposit Rewards (not ready yet)
+                </Button>
+            </div>}
           </Grid>
         </Grid>
       </Box>
