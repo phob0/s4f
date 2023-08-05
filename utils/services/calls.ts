@@ -26,6 +26,7 @@ export const completeTasks = async (connectedUser: string) => {
         sender: connectedUser,
         funcName: "completeTasks",
         args: [],
+        gasLimit: 10_000_000
     });
 
     return res;

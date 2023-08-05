@@ -239,11 +239,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
             sx={{
               pb: 5,
               pt: 15,
-              justify: "flex-end",
-              alignItems: "center"
+              justifyContent: "center",
+              alignItems: "start",
             }}
         >
-          <Grid xs={4} sx={{ pr: 3 }}>
+          <Grid xs={4} pr={5}>
             <Stack spacing={3} sx={{ pr: 3 }}>
               <Card className="statsWell">
                 <CardContent>
@@ -286,7 +286,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <LinearProgressWithLabel value={76} />
+                      <LinearProgressWithLabel value={
+                        numberOfGymNftsStaked ? 100 : 0
+                      } />
                     </Grid>
                     
                   </Grid>
@@ -573,13 +575,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
               </Card>
             </Stack>  
           </Grid>
-          <Grid xs={8} justifyContent={"center"}>
-            <Box className="titleBox" sx={{ my: 1, border: '1px solid #fff', py: 3 }}>
+          <Grid xs={8} pl={5} justifyContent={"center"}>
+            <Box className="titleBox" sx={{ mb: 5, border: '1px solid #fff', py: 3 }}>
               <Typography variant="h4" color="common.white" align="center">
-                Welcome to your Gym!
+                WELCOME TO YOUR GYM!
               </Typography>
               <Typography variant="h2" color="common.black" align="center">
-                { gymName } Metaverse Gym
+                { gymName } METAVERSE GYM
               </Typography>
             </Box>
 
