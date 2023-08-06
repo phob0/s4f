@@ -138,7 +138,7 @@ import useUser from "../../lib/useUser";
       getAddress().then(async (address) => {
         const payload = {
           address: address,
-          signature: logginInfo.tokenLogin?.loginToken,
+          // signature: logginInfo.tokenLogin?.loginToken,
           expiresAt: new Date(new Date(Date.now()).getTime() + 60 * 60 * 24 * 1000).toISOString()
         }
         

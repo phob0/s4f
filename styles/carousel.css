@@ -33,7 +33,11 @@
   .twitch-card:hover {
     transform: scale(1.05);
   }
-  
+
+  .react-stacked-center-carousel-slide-1 > .twitch-card .glow-card > .cover, .fill, .on > .card-overlay, .fill {
+    border-radius: 20px;
+  }
+
   .react-stacked-center-carousel-slide-0 .twitch-card {
     cursor: default;
   }

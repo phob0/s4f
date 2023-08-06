@@ -13,7 +13,7 @@ interface TasksUsers {
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
-    const {address, signature, expiresAt} = req.body
+    const {address, expiresAt} = req.body
 
     if (address !== "") {
   
@@ -31,12 +31,12 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
           address: address
         },
         update: {
-          signature: signature,
+          // signature: signature,
           expiresAt: expiresAt
         },
         create: {
           address: address,
-          signature: signature,
+          // signature: signature,
           expiresAt: expiresAt
         }
       })

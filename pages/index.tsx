@@ -33,6 +33,10 @@ import NextImage from "../components/NextImage/NextImage";
 import { Tabs, Tab } from '@mui/material';
 import LoginModalButton from '@/components/tools/LoginModal';
 
+import { useAxiosInterceptorContext } from '@multiversx/sdk-dapp/wrappers/AxiosInterceptorContext';
+import { useSelector } from '@multiversx/sdk-dapp/reduxStore/DappProviderContext';
+import { isLoggedInSelector, loginInfoSelector } from '@multiversx/sdk-dapp/reduxStore/selectors';
+
 const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
 const sfitLegendImage = '/demo_imgs/sfitlegend.png';
 
