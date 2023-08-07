@@ -80,7 +80,13 @@ const WebWalletLoginButton: any = dynamic(
 ) as WebWalletLoginButtonPropsType;
 
 import useUser from "../../lib/useUser";
-  
+
+interface LoginModalButtonProps {
+  onClose?: () => void;
+  onOpen?: () => void;
+  showButton?: string;
+}
+
   const useModal = () => {
     const [isOpen, setIsOpen] = useState(false);
   
@@ -101,7 +107,7 @@ import useUser from "../../lib/useUser";
   
   const LoginModalButton = ({
     // onClose,
-    // onOpen
+    // onOpen,
     showButton = ""
   }) => {
     // If you need the auth signature and token pas your unique token in useLogin
@@ -112,6 +118,8 @@ import useUser from "../../lib/useUser";
     const loggedIn = useGetIsLoggedIn();
     const logginInfo = useGetLoginInfo();
 
+    console.log("LOGS:", user, loggedIn);
+  
     const commonProps = {
         // callbackRoute: routeNames.dashboard,
         nativeAuth: true // optional
@@ -224,7 +232,7 @@ import useUser from "../../lib/useUser";
                  <ExtensionLoginButton
                   className="dappLoginButton"
                   loginButtonText='MultiversX Browser Extension'
-                  // {...commonProps}
+                  {...commonProps}
                 />
                 <WebWalletLoginButton
                   className="dappLoginButton"
@@ -237,18 +245,19 @@ import useUser from "../../lib/useUser";
                   loginButtonText='Ledger'
                   className='dappLoginButton'
                   shouldRenderDefaultCss={false}
-                  // {...commonProps}
+                  {...commonProps}
                 />
                 <WalletConnectLoginButton
                   className="dappLoginButton"
                   loginButtonText='xPortal Mobile App'
-                  // {...commonProps}
+                  {...commonProps}
                   {...(walletConnectV2ProjectId
                     ? {
                         isWalletConnectV2: true
                       }
                     : {})
                   }
+                  nativeAuth
                 />
               </Stack>
             </DappModalBody>
