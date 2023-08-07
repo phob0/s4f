@@ -69,6 +69,14 @@ const getCurrentTimestampInSeconds = () => {
   return currentTimestampInSeconds;
 };
 
+const splitNftName = (nftName: string) => {
+  const splitParts = nftName.split(' ');
+  const firstPart = splitParts.slice(0, -1).join(' ');
+  const secondPart = splitParts[splitParts.length - 1];
+  
+  return [firstPart, secondPart];
+}
+
 const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const { isLoggedIn } = useGetLoginInfo();
@@ -102,7 +110,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   // SFITLEGENDS BALANCE IN WALLET
   const { nfts: sfitLegendsNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, sfitLegendsNftsIdentifier);
-  // console.log("SFITLEGENDS in wallet", sfitLegendsNfts);
+  console.log("SFITLEGENDS in wallet", sfitLegendsNfts);
 
   // GYM1 BALANCE IN WALLET
   const { nfts: gym1Nfts, isLoadingNfts: isLoadingGym1Nfts, isErrorNfts: isErrorGym1Nfts }  = useGetUserNfts(connectedUserAddress, gymNftsInfo?.[0]?.token);
@@ -148,7 +156,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     });
     stakedGymNftsFinal = updatedStakedGymNftsFull;
   }
-  // console.log("GYM1 staked FULL", stakedGymNftsFinal);
+  console.log("GYM1 staked FULL", stakedGymNftsFinal);
 
   // console.log(" ");
 
@@ -460,12 +468,12 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           <Typography  
                             sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                           >
-                            {nft.name}
+                            {splitNftName(nft.name)[0]}
                           </Typography>
                           <Typography  
                             sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                           >
-                            #{nft.nonce}
+                            {splitNftName(nft.name)[1]}
                           </Typography>
                         </CardContent>
                         {/* <CardActions>
@@ -718,12 +726,12 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                               <Typography  
                                 sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                               >
-                                {nft.name}
+                                {splitNftName(nft.name)[0]}
                               </Typography>
                               <Typography  
                                 sx={{ display: 'inline-block', color: 'common.white', fontSize: 13  }}
                               >
-                                #{nft.nonce}
+                                {splitNftName(nft.name)[1]}
                               </Typography>
                         </CardContent>
                         <CardActions>
