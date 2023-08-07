@@ -10,6 +10,7 @@ import {
   runTransactions
 } from "../sc";
 import { SmartContract, Interaction, Account} from "@multiversx/sdk-core";
+import BigNumber from "bignumber.js";
 
 /* Messages */
 const defaultProcessingMessage = "Processing transaction";
@@ -98,90 +99,88 @@ export const ScCallwithNoTransfer = async ({
 //   return await runTransactions(transactionInput);
 // };
 
-// export const ScCallwithESDTTransfer = async ({
-//   workspace,
-//   funcName,
-//   token,
-//   args = [],
-//   gasLimit = 50000000,
-//   bigAmount = null,
-//   sender = null,
-// } : {
-//   workspace: WspTypes;
-//   funcName: string;
-//   token: any;
-//   args?: any[];
-//   gasLimit?: number;
-//   bigAmount?: number | null;
-//   sender?: any;
-// }) => {
-//   let { simpleAddress } = getInterface(workspace);
+export const ScCallwithESDTTransfer = async ({
+  workspace,
+  funcName,
+  token_identifier,
+  bigAmount,
+  args = [],
+  gasLimit = 50000000,
+  sender = null,
+} : {
+  workspace: WspTypes;
+  funcName: string;
+  token_identifier: any;
+  args?: any[];
+  gasLimit?: number;
+  bigAmount: number;
+  sender?: any;
+}) => {
+  let { simpleAddress } = getInterface(workspace);
 
-//   if (simpleAddress === "") {
-//     simpleAddress = workspace;
-//   }
+  if (simpleAddress === "") {
+    simpleAddress = workspace;
+  }
 
-//   const connectedAddress = store.getState().userAccount.connectedAddress;
-//   const senderAddress = new Address(sender ?? connectedAddress);
+  const senderAddress = new Address(sender);
 
-//   const contract = new SmartContract({ address: new Address(simpleAddress)});
-//   let interaction = new Interaction(contract, new ContractFunction(funcName), args);
+  const contract = new SmartContract({ address: new Address(simpleAddress)});
+  let interaction = new Interaction(contract, new ContractFunction(funcName), args);
 
-//   let tx = interaction
-//     .withSender(senderAddress)
-//     .withSingleESDTTransfer(TokenTransfer.fungibleFromBigInteger(token.identifier, bigAmount, token.decimals))
-//     .useThenIncrementNonceOf(new Account(senderAddress)) // den xerw an xreiazetai auto
-//     .withValue(0)
-//     .withGasLimit(gasLimit)
-//     .withChainID(ChainID)
-//     .buildTransaction();
+  let tx = interaction
+    .withSender(senderAddress)
+    .withSingleESDTTransfer(TokenTransfer.fungibleFromBigInteger(token_identifier, new BigNumber(bigAmount)))
+    .useThenIncrementNonceOf(new Account(senderAddress))
+    .withValue(0)
+    .withGasLimit(gasLimit)
+    .withChainID(ChainID)
+    .buildTransaction();
 
-//   let transactionInput = { transactions: [tx] };
+  let transactionInput = { transactions: [tx] };
 
-//   return await runTransactions(transactionInput);
-// };
-
+  return await runTransactions(transactionInput);
+};
 
 export const ScCallwithESDTNFTTransfer = async ({
-    workspace,
-    sender,
-    funcName,
-    token_identifier,
-    token_nonce,
-    args = [],
-    gasLimit = 50000000,
-  } : {
-    workspace: WspTypes;
-    sender: string;
-    funcName: string;
-    token_identifier: any;
-    token_nonce: any;
-    args?: any[];
-    gasLimit?: number;
-  }) => {
-    let { simpleAddress } = getInterface(workspace);
+  workspace,
+  sender,
+  funcName,
+  token_identifier,
+  token_nonce,
+  args = [],
+  gasLimit = 50000000,
+} : {
+  workspace: WspTypes;
+  sender: string;
+  funcName: string;
+  token_identifier: any;
+  token_nonce: any;
+  args?: any[];
+  gasLimit?: number;
+}) => {
+  let { simpleAddress } = getInterface(workspace);
 
-    if (simpleAddress === "") {
-      simpleAddress = workspace;
-    }
+  if (simpleAddress === "") {
+    simpleAddress = workspace;
+  }
 
-    const senderAddress = new Address(sender);
+  const senderAddress = new Address(sender);
 
-    const contract = new SmartContract({ address: new Address(simpleAddress)});
-    let interaction = new Interaction(contract, new ContractFunction(funcName), args);
+  const contract = new SmartContract({ address: new Address(simpleAddress)});
+  let interaction = new Interaction(contract, new ContractFunction(funcName), args);
 
-    let tx = interaction
-      .withSender(senderAddress)
-      .withSingleESDTNFTTransfer(TokenTransfer.nonFungible(token_identifier, token_nonce))
-      .withValue(0)
-      .withGasLimit(gasLimit)
-      .withChainID(ChainID)
-      .buildTransaction();
+  let tx = interaction
+    .withSender(senderAddress)
+    .withSingleESDTNFTTransfer(TokenTransfer.nonFungible(token_identifier, token_nonce))
+    .withValue(0)
+    .withGasLimit(gasLimit)
+    .withChainID(ChainID)
+    .buildTransaction();
 
-    let transactionInput = { transactions: [tx] };
+  let transactionInput = { transactions: [tx] };
 
-    return await runTransactions(transactionInput);
-    };
+  return await runTransactions(transactionInput);
+};
 
 export const ScCallwithMultiESDTNFTTransfer = async ({
   workspace,

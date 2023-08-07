@@ -194,17 +194,6 @@ body {
   color: #ffffff; /* Set the text color to white */
 }
 
-.depositButton {
-  background-image: linear-gradient(to right, #44e3f0 0%, #3038fb 30%, #3038fb 70%, #d234a4 100%)!important;
-  border-radius: 45px!important;
-  border: 3px solid #48EFEE!important;
-  padding-top: 10px!important; /* Add the units (px) for padding values */
-  padding-bottom: 10px!important; /* Add the units (px) for padding values */
-  padding-left: 30px!important; /* Add the units (px) for padding values */
-  padding-right: 30px!important; /* Add the units (px) for padding values */
-  color: #ffffff!important; /* Set the text color to white */
-}
-
 .actionButtonDisabled {
   margin: 0 auto !important;
   width: 80%;
@@ -262,4 +251,34 @@ body {
   border-radius: 19px!important;
   border: 2px solid #48EFEE;
   font-family: 'Roboto', sans-serif;
+}
+
+.adminBox {
+  margin-top: 40px;
+  border: 4px solid #48EFEE;
+  border-radius: 20px;
+  background-color: rgba(72, 239, 238, 0.35);
+}
+
+.amountField{
+  border: 4px solid #48EFEE;
+  border-radius: 5px;
+  background-color: rgba(72, 239, 238, 0.35);
+  width: 500px;
+  /* height: 60px; */
+}
+
+.maxButton {
+  font-size: medium!important;
+  border-radius: 20px!important;
+  /* border: 3px solid #fff!important; */
+  height: 30px!important;
+}
+
+.depositButton {
+  font-size: large!important;
+  border-radius: 20px!important;
+  border: 3px solid #fff!important;
+  height: 45px!important;
+  width: 300px!important;
 }

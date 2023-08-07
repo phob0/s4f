@@ -29,11 +29,11 @@ import {
   } from 'react-stacked-center-carousel';
 
 import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo } from '../utils/services/hooks'
-import { completeTasks, claim } from '../utils/services/calls'
+import { completeTasks, claim, depositRewards } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
 import { formatBalance } from '@/utils/functions/formatBalance';
-import { Tooltip } from '@mui/material';
+import { FormControl, FormLabel, Input, TextField, Tooltip } from '@mui/material';
 import useGetUserToken from '@/hooks/useGetUserToken';
 import NextImage from '@/components/NextImage/NextImage';
 
@@ -135,6 +135,34 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const [eventSignal, setEventSignal] = useState<Task | null>(null);
   const [claimedRewards, setClaimedRewards] = useState<boolean>(false);
   const [completedTasks, setCompletedTasks] = useState<boolean>(false);
+  // const [depositAmount, setDepositAmount] = useState(0);
+
+  const [depositAmount, setDepositAmount] = useState('');
+
+  const handleDeposit = () => {
+    if (depositAmount === '') {
+      alert('Please enter a valid amount.');
+    } else if (Number(depositAmount) <= 0) {
+      alert('Please enter a positive number.');
+    } else {
+      depositRewards(connectedUserAddress, tokensInfo?.[2]?.token, Number(depositAmount) * (10**18));
+      console.log('depositAmount', depositAmount);
+      console.log('depositAmount', Number(depositAmount) * (10**18));
+    }
+  };
+
+  const handleMaxButton = () => {
+    setDepositAmount(
+      formatBalance(
+        {
+          balance: Number(userSfitBalance),
+          decimals: 18,
+          withDots: false
+        },
+        false
+      )
+    );
+  };
 
   useEffect(() => {
     if (eventSignal != null) {
@@ -632,11 +660,33 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
                 </Stack> 
             </Box>
-            {adminAddresses.includes(connectedUserAddress) && <div style={{ padding: "25px", display: "flex", justifyContent: "center" }}>
-                <Button className='depositButton'>
-                  Deposit Rewards (not ready yet)
+            {adminAddresses.includes(connectedUserAddress) && (
+              <Box
+                sx={{
+                  padding: '60px',
+                  display: 'flex',
+                  justifyContent: 'space-between', // Set to 'space-between'
+                  gap: 2,
+                  alignItems: 'center',
+                }}
+                className="adminBox"
+              >
+                <TextField
+                  label="SFIT Amount"
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  type="number"
+                  inputProps={{ step: '0.01', min: '0' }}
+                  className='amountField'
+                />
+                <Button variant="contained" className='maxButton' onClick={handleMaxButton}>
+                  max
                 </Button>
-            </div>}
+                <Button variant="contained" className='depositButton' onClick={handleDeposit}>
+                  Deposit Rewards
+                </Button>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Box>

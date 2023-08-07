@@ -16,7 +16,7 @@ import {
 } from "@multiversx/sdk-core/out";
 // import { EGLDPayment } from "api/sc/calls";
 import { IScPayment } from "../types/sc.interface";
-import { ScCallwithESDTNFTTransfer, ScCallwithMultiESDTNFTTransfer, ScCallwithNoTransfer } from "../../pages/api/sc/calls/index";
+import { ScCallwithESDTNFTTransfer, ScCallwithESDTTransfer, ScCallwithMultiESDTNFTTransfer, ScCallwithNoTransfer } from "../../pages/api/sc/calls/index";
 import BigNumber from "bignumber.js";
 
 export const completeTasks = async (connectedUser: string) => {
@@ -111,6 +111,22 @@ export const unstakeMulti = async (connectedUser: string, nft_token: string, nft
             BytesValue.fromUTF8(nft_token),
             ...nft_nonces.map((nonce) => new BigUIntValue(new BigNumber(nonce)))
         ],
+        gasLimit: 10_000_000
+    });
+
+    return res;
+};
+
+export const depositRewards = async (connectedUser: string, token: string, bigAmount: number) => {
+
+    console.log("depositRewards", token, bigAmount);
+    const res = await ScCallwithESDTTransfer({
+        workspace: "claimWsp",
+        sender: connectedUser,
+        funcName: "deposit",
+        token_identifier: token,
+        bigAmount: bigAmount,
+        args: [],
         gasLimit: 10_000_000
     });
 
