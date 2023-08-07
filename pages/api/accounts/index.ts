@@ -55,6 +55,7 @@ export const getNFTs = async ({
   return res.data;
 };
 
+
 export const getUserToken = async ({
   address,
   token
@@ -62,6 +63,11 @@ export const getUserToken = async ({
   address: string;
   token: string;
 }) => {
-  const res = await axiosLink.get(`/accounts/${address}/tokens/${token}`);
+  
+  const res = await axiosLink.get(`/accounts/${address}/tokens`, {
+  params: {
+    identifier: token
+  }});
+
   return res.data;
 }

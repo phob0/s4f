@@ -209,11 +209,10 @@ import useUser from "../../lib/useUser";
           visible={opened}
           onHide={close}
         >
-            {/* <DappModalHeader
+            <DappModalHeader
               visible={false}
               headerText="Connect Wallet"
-              showHeader={false}
-            /> */}
+            />
             <DappModalBody
             >
               <Stack 
