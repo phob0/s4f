@@ -117,8 +117,6 @@ interface LoginModalButtonProps {
 
     const loggedIn = useGetIsLoggedIn();
     const logginInfo = useGetLoginInfo();
-
-    console.log("LOGS:", user, loggedIn);
   
     const commonProps = {
         // callbackRoute: routeNames.dashboard,
