@@ -135,30 +135,30 @@ interface LoginModalButtonProps {
   
     useEffect(() => {
       if (loggedIn && user?.isLoggedIn == false) {
-        // upsertAccount();
+        upsertAccount();
         close();
       } else if(!loggedIn && user?.isLoggedIn == true) {
         handleLogout();
       }
     });
   
-    // const upsertAccount = async () => {
-    //   getAddress().then(async (address) => {
-    //     const payload = {
-    //       address: address,
-    //       // signature: logginInfo.tokenLogin?.loginToken,
-    //       expiresAt: new Date(new Date(Date.now()).getTime() + 60 * 60 * 24 * 1000).toISOString()
-    //     }
+    const upsertAccount = async () => {
+      getAddress().then(async (address) => {
+        const payload = {
+          address: address,
+          // signature: logginInfo.tokenLogin?.loginToken,
+          expiresAt: new Date(new Date(Date.now()).getTime() + 60 * 60 * 24 * 1000).toISOString()
+        }
         
-    //     await fetch(`api/login`, {
-    //       body: JSON.stringify(payload),
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       method: 'POST'
-    //     })
-    //   })
-    // }
+        await fetch(`api/login`, {
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST'
+        })
+      })
+    }
   
     const handleLogout = () => {
       if (loggedIn && user?.isLoggedIn) {
