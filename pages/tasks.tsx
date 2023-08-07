@@ -218,11 +218,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
-  const userSfitBalance = userSfitTokenInfo?.balance ? userSfitTokenInfo?.balance : 0;
-  // const userSfitBalance = 0;
-  console.log("sfitIdentifier", sfitIdentifier);
-  console.log("userSfitTokenInfo", userSfitTokenInfo);
-  console.log("userSfitBalance", userSfitBalance);
+  const userSfitBalance = userSfitTokenInfo.length > 0 ? userSfitTokenInfo[0].balance : 0;
 
   const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && numberOfGymNftsStaked > 0;
 
