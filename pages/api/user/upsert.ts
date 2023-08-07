@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {address, signature, expiresAt} = req.body
+  const {address,  expiresAt} = req.body
 
   if (address !== "") {
 
@@ -28,12 +28,12 @@ export default async function handler(
         address: address
       },
       update: {
-        signature: signature,
+        // signature: signature,
         expiresAt: expiresAt
       },
       create: {
         address: address,
-        signature: signature,
+        // signature: signature,
         expiresAt: expiresAt
       }
     })
