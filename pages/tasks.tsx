@@ -817,7 +817,8 @@ export const getServerSideProps = withSessionSsr(
         tasks: {
           where: {
             task: {
-              gymID: Number(query.gym)
+              gymID: Number(query.gym),
+              status: "NEW"
             }
           },
           include: {
