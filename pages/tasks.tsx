@@ -451,7 +451,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   {/* <Grid container direction="row" justifyContent="space-between" alignItems="center"> */}
                     <Grid xs={6}>
                       <Typography color="common.white" align="left">
-                        CLAIMABLE SFIT
+                        CLAIMABLE
                       </Typography>
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
@@ -477,7 +477,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="left">
-                        SFIT EARNED SO FAR
+                        TOTAL EARNED
                       </Typography>
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
@@ -502,12 +502,12 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="left">
-                        GYM NFTS IN WALLET
+                        GYM NFTS OWNED
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="right">
-                        {numberOfGymNftsInWallet}
+                        {numberOfGymNftsInWallet + numberOfGymNftsStaked} / 1000
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
@@ -517,7 +517,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="right">
-                        {numberOfGymNftsStaked}
+                        {numberOfGymNftsStaked} / {numberOfGymNftsInWallet + numberOfGymNftsStaked}
                       </Typography>
                     </Grid>
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -527,24 +527,26 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                         </Typography>
                       </Grid>
                       <Grid xs={5}>
-                        <LinearProgressWithPercentage value={numberOfGymNftsStaked / 10} />
+                        <LinearProgressWithPercentage value={(numberOfGymNftsInWallet + numberOfGymNftsStaked) / 10} />
                       </Grid>
                     </Grid>
-                    <Grid xs={6}>
+                    {/* <Grid xs={6}>
                       <Typography color="common.white" align="center">
                         ACTIVE TASKS
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
                       <LinearProgressWithPercentage value={activeTasks.length * 100 / tasks.length}/>
-                    </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        COMPLETED TASKS
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <LinearProgressWithPercentage value={totalCompleted * 100 / tasks.length}/>
+                    </Grid> */}
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid xs={5}>
+                        <Typography color="common.white" align="left">
+                          COMPLETED TASKS
+                        </Typography>
+                      </Grid>
+                      <Grid xs={5}>
+                        <LinearProgressWithLabel value={totalCompleted} total={tasks.length}/>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -646,15 +648,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                 { gymName } METAVERSE GYM
               </Typography>
             </Box>
-
-            <Box className="sliderBox">
-
-                {/* <Typography variant="h6" component="div" color="common.white" align="right" sx={{ mr: 5, mt: 2, mb: 2 }}>
-                  Completed Tasks: { totalCompleted }/{ tasks.length }
-                </Typography> */}
-                
-              <div className='twitch'>
-                <div style={{ width: '100%', position: 'relative' }}>
+            <Box className="sliderBox" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className='twitch' style={{ width: '100%', position: 'relative'}}>
                   <ResponsiveContainer
                     carouselRef={ref}
                     render={(width, carouselRef) => {
@@ -669,30 +664,21 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           customScales={[1, 0.85, 0.7, 0.55]}
                           transitionTime={450}
                           useGrabCursor={true}
+                          height={700}
                         />
                       );
                     }}
                   />
-                </div>
               </div>
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={12}
-                  mb={3}
-                >
-                <Button className="claimButton" variant="contained" size="large"
-                  disabled={!canCompleteTasks?.canCompleteTasks || !isComplete || completedTasks}
-                  onClick={() => {
-                    completeTasks(connectedUserAddress);
-                    setCompletedTasks(true);
-                  }}
-                >
-                  Complete Tasks
-                </Button>
-
-                </Stack> 
+              <Button className="completeTasksButton" variant="contained" size="large"
+                disabled={!canCompleteTasks?.canCompleteTasks || !isComplete || completedTasks}
+                onClick={() => {
+                  completeTasks(connectedUserAddress);
+                  setCompletedTasks(true);
+                }}
+              >
+                Complete Tasks
+              </Button>
             </Box>
             {adminAddresses.includes(connectedUserAddress) && (
               <Box

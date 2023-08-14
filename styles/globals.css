@@ -310,3 +310,9 @@ body {
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
 }
+
+.claimButton {
+  font-size: large!important;
+  border-radius: 20px!important;
+  border: 3px solid #fff!important;
+}
