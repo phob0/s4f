@@ -146,8 +146,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
       alert('Please enter a positive number.');
     } else {
       depositRewards(connectedUserAddress, tokensInfo?.[2]?.token, Number(depositAmount) * (10**18));
-      console.log('depositAmount', depositAmount);
-      console.log('depositAmount', Number(depositAmount) * (10**18));
+      // console.log('depositAmount', depositAmount);
+      // console.log('depositAmount', Number(depositAmount) * (10**18));
     }
   };
 
@@ -159,7 +159,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
           decimals: 18,
           withDots: false
         },
-        false
+        true
       )
     );
   };

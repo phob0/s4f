@@ -119,7 +119,6 @@ export const unstakeMulti = async (connectedUser: string, nft_token: string, nft
 
 export const depositRewards = async (connectedUser: string, token: string, bigAmount: number) => {
 
-    console.log("depositRewards", token, bigAmount);
     const res = await ScCallwithESDTTransfer({
         workspace: "claimWsp",
         sender: connectedUser,
