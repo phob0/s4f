@@ -165,6 +165,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   const sfitLegendsNftsLength = sfitLegendsNfts ? sfitLegendsNfts.length : 0;
   const gym1NftsLength = gym1Nfts ? gym1Nfts.length : 0;
   const stakedGymNftsLength = stakedGymNfts ? stakedGymNfts.length : 0;
+  const isEligible = sfitLegendsNftsLength > 0 && (gym1NftsLength > 0 || stakedGymNftsLength > 0);
 
   const maxNonZeroValue = gymNfts.reduce((maxValue, nft) => {
     const unbondedInSeconds = nft.unbondedInSeconds;
@@ -235,44 +236,55 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         } 
                       }}
                     >
-                      <CardContent>
-                        <Typography 
-                          gutterBottom 
-                          variant="h5" 
-                          align="center" 
-                          component="div"
-                          sx={{
-                            fontWeight: 'bold'
-                          }}
-                          className="gymTitle"
-                        >
-                          {gym.name}
-                        </Typography>
-                        <Typography 
-                          gutterBottom 
-                          align="center" 
-                          component="div"
-                          className="gymSubTitle"
-                          pb={2}
-                        >
-                          Metaverse Gym
-                        </Typography>
-                        <Typography 
-                          variant="h6" 
-                          align="center" 
-                          color="common.white"
-                          className='gymStatus'
-                          sx={{
-                            fontWeight: 'bold',
-                            width: gym.status === "OPEN" ? '50%' : '100%'
-                          }}
-                        >
-                          {gym.status  === "OPEN" ? "ENTER" : "COMING SOON"}
-                          
-                        </Typography>
-                      </CardContent>
+                      <Grid container justifyContent="center" alignItems="center">
+                        <CardContent>
+                          <Typography 
+                            gutterBottom 
+                            variant="h5" 
+                            align="center" 
+                            component="div"
+                            sx={{
+                              fontWeight: 'bold'
+                            }}
+                            className="gymTitle"
+                          >
+                            {gym.name}
+                          </Typography>
+                          <Typography 
+                            gutterBottom 
+                            align="center" 
+                            component="div"
+                            className="gymSubTitle"
+                            pb={2}
+                          >
+                            METAVERSE GYM
+                          </Typography>
+                          <Typography 
+                            variant="h6" 
+                            align="center" 
+                            color="common.white"
+                            className='gymStatus'
+                            sx={{
+                              fontWeight: 'bold',
+                              width: gym.status === "OPEN" ? '50%' : '100%'
+                            }}
+                          >
+                            {gym.status  === "OPEN" ? "LIVE" : "COMING SOON"}
+                            
+                          </Typography>
+                        </CardContent>
+                        <Grid
+                          className={isEligible ? "eligibleButton" : "eligibleButtonHidden"}
+                          position={"absolute"}
+                          top={775}>
+                          <Typography fontSize={"14px"} color={"black"} align='center'>
+                            You are eligible
+                          </Typography>
+                        </Grid>
+                      </Grid>
                     </Link>
                   ) : (
+                    <Grid container justifyContent="center" alignItems="center">
                       <CardContent>
                         <Typography 
                           gutterBottom 
@@ -291,11 +303,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           component="div"
                           pb={2}
                         >
-                          Metaverse Gym
+                          METAVERSE GYM
                         </Typography>
                         {gym.status === "OPEN" ? 
                         <Grid container justifyContent="center" alignItems="center">
-                          <LoginModalButton showButton={"OPEN"}/>
+                          <LoginModalButton showButton={"LIVE"}/>
                         </Grid> 
                         :
                         <Typography 
@@ -311,6 +323,15 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           COMING SOON
                         </Typography>}
                       </CardContent>
+                      <Grid
+                        className={"eligibleButtonHidden"}
+                        position={"absolute"}
+                        top={778}>
+                        <Typography fontSize={"14px"} color={"black"} align='center'>
+                          You are eligible
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   )
                 }
               </Card>
@@ -541,8 +562,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         { isLoggedIn ?
           (<>
           <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48eeed' } }}>
-          <Tab label="Stakeable" id="tab-0" className="gymSubTitle" />
-          <Tab label="Staked" id="tab-1" className="gymSubTitle" />
+          <Tab label="Stakeable" id="tab-0" className="stakeableStakedTabs" />
+          <Tab label="Staked" id="tab-1" className="stakeableStakedTabs" />
           </Tabs><TabPanel value={activeTab} index={0}>
           </TabPanel><TabPanel value={activeTab} index={1}>
           </TabPanel>

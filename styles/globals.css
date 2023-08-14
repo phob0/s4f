@@ -42,9 +42,10 @@ body {
 
 .gymTab {
   background-image: linear-gradient(rgba(42, 1, 116,  1), rgba(100, 15, 225,  1));
-  width: 250px;
+  width: 220px!important;
   border-radius: 19px!important;
   border: 4px solid #48EFEE;
+  padding-bottom: 10px;
 }
 
 .gymTitle {
@@ -59,7 +60,7 @@ body {
 .gymSubTitle {
   font-size: 22px!important;
   font-weight: bold!important;
-  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  background: #ffffff;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
@@ -281,4 +282,29 @@ body {
   border: 3px solid #fff!important;
   height: 45px!important;
   width: 300px!important;
+}
+
+.eligibleButton {
+  font-size: large!important;
+  border-radius: 20px!important;
+  width: 150px!important;
+  background-color: #49ef8b!important;
+  opacity: 1!important;
+}
+
+.eligibleButtonHidden {
+  font-size: large!important;
+  border-radius: 20px!important;
+  width: 150px!important;
+  background-color: #49ef8b!important;
+  opacity: 0!important;
+}
+
+.stakeableStakedTabs {
+  font-size: 22px!important;
+  font-weight: bold!important;
+  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
 }
