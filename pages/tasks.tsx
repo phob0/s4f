@@ -33,7 +33,7 @@ import { completeTasks, claim, depositRewards } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
 import { formatBalance } from '@/utils/functions/formatBalance';
-import { FormControl, FormLabel, Input, TextField, Tooltip } from '@mui/material';
+import { CssBaseline, FormControl, FormLabel, Input, TextField, ThemeProvider, Tooltip, createTheme } from '@mui/material';
 import useGetUserToken from '@/hooks/useGetUserToken';
 import NextImage from '@/components/NextImage/NextImage';
 
@@ -93,15 +93,41 @@ interface SlideProps extends StackedCarouselSlideProps {
   signal: string
 }
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithPercentage(props: LinearProgressProps & { value: number }) {
   const roundedValue = Math.round(props.value * 100) / 100;
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }} ml={2}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center' }} mr={0}>
       <Box sx={{ minWidth: 40 }}>
-        <Typography variant="body2" color="text.secondary">{`${roundedValue} %`}</Typography>
+        <Typography variant="body2" color="common.white">{`${roundedValue} %`}</Typography>
+      </Box>
+      <Box sx={{ width: '100%', ml: 1 }}>
+      <LinearProgress
+          variant="determinate"
+          value={roundedValue}
+          // {...props}
+          sx={{ backgroundColor: 'grey', '& .MuiLinearProgress-bar': { backgroundColor: '#6f00f0' } }}
+        />      </Box>
+    </Box>
+  );
+}
+
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number, total: number }) {
+  const { value, total, ...otherProps } = props;
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }} mr={0}>
+      <Box sx={{ minWidth: 40 }}>
+        <Typography variant="body2" color="common.white">
+          {value} / {total}
+        </Typography>
+      </Box>
+      <Box sx={{ width: '100%', ml: 1 }}>
+        <LinearProgress
+          variant="determinate"
+          value={(value / total) * 100}
+          {...otherProps}
+          sx={{ backgroundColor: 'grey', '& .MuiLinearProgress-bar': { backgroundColor: '#6e00f0' } }}
+        />
       </Box>
     </Box>
   );
@@ -114,6 +140,12 @@ interface SlideContextValue {
 
 const SlideContext = React.createContext<SlideContextValue 
 | undefined>(undefined);
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Oswald, Roboto, sans-serif',
+  },
+});
 
 const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tasks, userReward }) => {
   const router = useRouter()
@@ -249,8 +281,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const userSfitBalance = userSfitTokenInfo.length > 0 ? userSfitTokenInfo[0].balance : 0;
 
   const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && numberOfGymNftsStaked > 0;
+  const isEligible = numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsInWallet > 0 || numberOfGymNftsStaked > 0);
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
     <Container maxWidth="xl">
 
@@ -278,11 +313,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   <Grid container direction={"column"} px={2} gap={1}>
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                       <Grid xs={6}>
-                        <Typography color="common.white" align="center">
+                        <Typography color="common.white" align="left">
                           OWNED SFIT
                         </Typography>
                       </Grid>
-                      <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
+                      <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                         <Typography color="common.white" align="center">
                           {
                             formatBalance(
@@ -293,7 +328,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                               },
                               false
                             )
-                          }
+                          } SFIT
                         </Typography>
                         <NextImage 
                           src={"/demo_imgs/sfit.png"}
@@ -306,14 +341,12 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     </Grid>
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                       <Grid xs={6}>
-                        <Typography color="common.white" align="center" whiteSpace={"nowrap"}>
+                        <Typography color="common.white" align="left" whiteSpace={"nowrap"}>
                           PARTICIPATION IN GYMS
                         </Typography>
                       </Grid>
-                      <Grid xs={6}>
-                        <LinearProgressWithLabel value={
-                          numberOfGymNftsStaked ? 100 : 0
-                        } />
+                      <Grid xs={5}>
+                        <LinearProgressWithLabel value={isEligible ? 1 : 0} total={1}/>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -335,8 +368,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Grid>
                       <Grid item>
                         {numberOfSfitLegendNftsInWallet > 0 ?
-                          <BsCheckCircle size={20}/> :
-                          <BsHourglass size={20}/>
+                          <BsCheckCircle size={20} color='white'/> :
+                          <BsHourglass size={20} color='black' opacity={0.8}/>
                         }
                       </Grid>
                     </Grid>
@@ -348,8 +381,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Grid>
                       <Grid item>
                         {numberOfGymNftsStaked > 0 ?
-                          <BsCheckCircle size={20}/> :
-                          <BsHourglass size={20}/>
+                          <BsCheckCircle size={20} color='white'/> :
+                          <BsHourglass size={20} color='black' opacity={0.8}/>
                         }
                       </Grid>
                     </Grid>
@@ -361,8 +394,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Grid>
                       <Grid item>
                         {totalCompleted == tasks.length ?
-                          <BsCheckCircle size={20}/> :
-                          <BsHourglass size={20}/>
+                          <BsCheckCircle size={20} color='white'/> :
+                          <BsHourglass size={20} color='black' opacity={0.8}/>
                         }
                       </Grid>
                     </Grid>
@@ -417,11 +450,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                 <Grid container>
                   {/* <Grid container direction="row" justifyContent="space-between" alignItems="center"> */}
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         CLAIMABLE SFIT
                       </Typography>
                     </Grid>
-                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
                         {
                           formatBalance(
@@ -431,7 +464,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                             },
                             true
                           )
-                        }
+                        } SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -443,11 +476,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                     {/* </Grid> */}
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         SFIT EARNED SO FAR
                       </Typography>
                     </Grid>
-                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
                         {
                           formatBalance(
@@ -457,7 +490,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                             },
                             true
                           )
-                        }
+                        } SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -468,32 +501,34 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       />
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         GYM NFTS IN WALLET
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="right">
                         {numberOfGymNftsInWallet}
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         GYM NFTS STAKED
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="right">
                         {numberOfGymNftsStaked}
                       </Typography>
                     </Grid>
-                    <Grid xs={6}>
-                      <Typography color="common.white" align="center">
-                        OWNERSHIP PERCENTAGE
-                      </Typography>
-                    </Grid>
-                    <Grid xs={6}>
-                      <LinearProgressWithLabel value={numberOfGymNftsStaked / 10} />
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid xs={6}>
+                        <Typography color="common.white" align="left">
+                          OWNERSHIP PERCENTAGE
+                        </Typography>
+                      </Grid>
+                      <Grid xs={5}>
+                        <LinearProgressWithPercentage value={numberOfGymNftsStaked / 10} />
+                      </Grid>
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
@@ -501,7 +536,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <LinearProgressWithLabel value={activeTasks.length * 100 / tasks.length}/>
+                      <LinearProgressWithPercentage value={activeTasks.length * 100 / tasks.length}/>
                     </Grid>
                     <Grid xs={6}>
                       <Typography color="common.white" align="center">
@@ -509,7 +544,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <LinearProgressWithLabel value={totalCompleted * 100 / tasks.length}/>
+                      <LinearProgressWithPercentage value={totalCompleted * 100 / tasks.length}/>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -520,12 +555,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                   <Typography color="common.white" variant="h5" component="div" align="center">
                     OVERALL STATISTICS
                   </Typography>
-                  
                 </CardContent>  
                 <CardContent>
-                <Grid container spacing={2} >
+                <Grid container>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         NUMBER OF OWNERS
                       </Typography>
                     </Grid>
@@ -535,7 +569,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         NUMBER OF MEMBERS
                       </Typography>
                     </Grid>
@@ -545,7 +579,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         COMPLETE TASKS
                       </Typography>
                     </Grid>
@@ -555,7 +589,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         NEXT TASKS BATCH IN
                       </Typography>
                     </Grid>
@@ -565,13 +599,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         TOTAL SFIT GENERATED
                       </Typography>
                     </Grid>
-                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={0}>
                       <Typography color="common.white" align="center">
-                        1,557,465
+                        1,557,465 SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -582,13 +616,13 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                       />
                     </Grid>
                     <Grid xs={6}>
-                      <Typography color="common.white" align="center">
+                      <Typography color="common.white" align="left">
                         TOTAL SFIT LAST MONTH
                       </Typography>
                     </Grid>
-                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={1}>
+                    <Grid xs={6} container direction={"row"} justifyContent={"center"} gap={0}>
                       <Typography color="common.white" align="center">
-                        57,465
+                        57,465 SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -605,9 +639,9 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
           </Grid>
           <Grid xs={8} pl={5} justifyContent={"center"}>
             <Box className="titleBox" sx={{ mb: 5, border: '1px solid #fff', py: 3 }}>
-              <Typography variant="h4" color="common.white" align="center">
+              {/* <Typography variant="h4" color="common.white" align="center">
                 WELCOME TO YOUR GYM!
-              </Typography>
+              </Typography> */}
               <Typography variant="h2" color="common.black" align="center">
                 { gymName } METAVERSE GYM
               </Typography>
@@ -692,6 +726,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
       </Box>
     </Container>
     </SlideContext.Provider>
+  </ThemeProvider>
   )
 }
 
