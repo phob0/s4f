@@ -294,6 +294,14 @@ body {
   opacity: 1!important;
 }
 
+.notEligibleButton {
+  font-size: large!important;
+  border-radius: 20px!important;
+  width: 150px!important;
+  background-color: #ce0000!important;
+  opacity: 1!important;
+}
+
 .eligibleButtonHidden {
   font-size: large!important;
   border-radius: 20px!important;

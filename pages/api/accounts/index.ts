@@ -71,3 +71,15 @@ export const getUserToken = async ({
 
   return res.data;
 }
+
+export const getNrOfHolders = async ({
+  collection = undefined
+}) => {
+  try {
+    const res = await axiosLink.get(`/collections/${collection}`);
+
+    return res.data.holderCount || 0;
+  } catch (error) {
+    return 0;
+  }
+};

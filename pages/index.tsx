@@ -225,7 +225,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                 opacity: gym.status === "OPEN" ? 1 : 0.5
               }}>
                 {
-                  gym.status === "OPEN" && isLoggedIn ? (
+                  gym.status === "OPEN" && isLoggedIn && isEligible ? (
                     <Link 
                       prefetch={false}
                       style={{ textDecoration: 'none' }}
@@ -274,7 +274,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           </Typography>
                         </CardContent>
                         <Grid
-                          className={isEligible ? "eligibleButton" : "eligibleButtonHidden"}
+                          className={"eligibleButton"}
                           position={"absolute"}
                           top={775}>
                           <Typography fontSize={"14px"} color={"black"} align='center'>
@@ -324,11 +324,13 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         </Typography>}
                       </CardContent>
                       <Grid
-                        className={"eligibleButtonHidden"}
+                        className={
+                          gym.status === "OPEN" && isLoggedIn ? "notEligibleButton" : "eligibleButtonHidden"
+                        }
                         position={"absolute"}
-                        top={778}>
+                        top={775}>
                         <Typography fontSize={"14px"} color={"black"} align='center'>
-                          You are eligible
+                          You are not eligible
                         </Typography>
                       </Grid>
                     </Grid>
