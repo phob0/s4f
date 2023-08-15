@@ -124,7 +124,7 @@
   }
 
   .taskButton {
-    width: 80%!important;
+    /* width: 80%!important; */
     font-size: x-large!important;
     border-radius: 20px!important;
     border: 3px solid #fff!important;
@@ -138,7 +138,7 @@
   }
 
   .taskButtonAlert {
-    width: 70%!important;
+    /* width: 70%!important; */
     font-size: x-large!important;
     border-radius: 20px!important;
     border: 3px solid #fff!important;
@@ -147,5 +147,5 @@
   .taskButtonAlert > .MuiAlert-icon {
     font-size: xx-large!important;
     padding-top: 9px!important;
-    margin-left: 11%!important;
+    /* margin-left: 11%!important; */
   }

@@ -36,11 +36,6 @@ import { formatBalance } from '@/utils/functions/formatBalance';
 import { CssBaseline, FormControl, FormLabel, Input, TextField, ThemeProvider, Tooltip, createTheme } from '@mui/material';
 import useGetUserToken from '@/hooks/useGetUserToken';
 import NextImage from '@/components/NextImage/NextImage';
-
-import { FaCheckCircle, FaHourglass } from 'react-icons/fa';
-import { MdCheckCircle, MdHourglassEmpty } from 'react-icons/md';
-import { IoMdCheckmarkCircleOutline, IoMdCheckmarkCircle } from 'react-icons/io';
-import { AiOutlineCheckCircle, AiOutlineHourglass } from 'react-icons/ai';
 import { BsCheckCircle, BsHourglass } from 'react-icons/bs';
 import { adminAddresses } from '@/config/constants';
 import useGetNrOfHolders from '@/hooks/useGetNrOfHolders';
@@ -782,24 +777,45 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
   const changeSignal = (task: Task) => {
     slideContext?.setEventSignal(task)
   }
-
-  // console.log(signal)
-
-  const TaskButtonStatus = (props: Task) => {
-    const status = props.status
   
-    if (status === "NEW") {
-      return <Button variant="contained" className="taskButton" color="secondary" onClick={ () => { changeSignal(props) } }>
-              Start
-            </Button>
-    } else if (status === "STARTED") {
-      return <Button variant="contained" className="taskButton" color="error" onClick={ () => { changeSignal(props) } }>
-              End Task
-            </Button>
-    } else {
-      return  <Alert variant="filled" severity="success" className="taskButtonAlert">Task is done</Alert>
-    }
-  }
+  const TaskButtonStatus = (props: Task) => {
+    const status = props.status;
+  
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        {status === 'NEW' && (
+          <Button
+            variant="contained"
+            className="taskButton"
+            color="secondary"
+            onClick={() => {
+              changeSignal(props);
+            }}
+          >
+            Start
+          </Button>
+        )}
+        {status === 'STARTED' && (
+          <Button
+            variant="contained"
+            className="taskButton"
+            color="error"
+            onClick={() => {
+              changeSignal(props);
+            }}
+          >
+            End Task
+          </Button>
+        )}
+        {status !== 'NEW' && status !== 'STARTED' && (
+          <Alert variant="filled" severity="success" className="taskButtonAlert">
+            Task is done
+          </Alert>
+        )}
+      </div>
+    );
+  };
+  
 
   const { name, description, status } = data[dataIndex];
 
@@ -837,7 +853,7 @@ const Slide = memo(function (props: StackedCarouselSlideProps) {
               width: '100%',
               left: 0,
               mb: 4,
-              pl:"10%"
+              // pl:"10%"
             }}>
               {TaskButtonStatus(data[dataIndex])}
             </Box>
