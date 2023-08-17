@@ -298,7 +298,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         <Grid
                           className={"eligibleButton"}
                           position={"absolute"}
-                          top={798}>
+                          top={788}>
                           <Typography fontSize={"14px"} color={"black"} align='center'>
                             You are eligible
                           </Typography>
@@ -350,7 +350,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           gym.status === "OPEN" && isLoggedIn ? "notEligibleButton" : "eligibleButtonHidden"
                         }
                         position={"absolute"}
-                        top={798}>
+                        top={788}>
                         <Typography fontSize={"14px"} color={"black"} align='center'>
                           You are not eligible
                         </Typography>
