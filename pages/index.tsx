@@ -16,7 +16,7 @@ import { purple } from '@mui/material/colors';
 import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
 import { useGetAllowedGymNfts, useGetCanUserCompleteTasks, useGetTokensInfo, useGetTotalClaimed, useGetUnbondingDuration, useGetUserClaimable, useGetUserStakedInfo } from '@/utils/services/hooks';
 import { claim, completeTasks, stake, stakeMulti, unstake, unstakeMulti } from '@/utils/services/calls';
-import { Button } from '@mui/material';
+import { Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 // import { useGetTotalClaimed } from '@/utils/hooks/hooks';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -77,6 +77,26 @@ const splitNftName = (nftName: string) => {
   return [firstPart, secondPart];
 }
 
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Oswald, Roboto, sans-serif',
+  },
+});
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: '#48eeed',
+//     },
+//     secondary: {
+//       main: '#ff3f3f',
+//     },
+//     // ...other color properties
+//   },
+//   typography: {
+//     fontFamily: 'Oswald, Roboto, sans-serif',
+//   },
+//   // ...other theme properties
+// });
 const Home: NextPage<Gym> = ({ gyms }) =>  {
 
   const { isLoggedIn } = useGetLoginInfo();
@@ -184,7 +204,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     }
   }, [activeTab, gym1Nfts, gym1NftsLength, gymNfts, gymNftsLength, isLoadingGym1Nfts]);
 
-  const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
+  const handleTabChange = (_event: any, newValue: number) => {
     setActiveTab(newValue);
 
     if (newValue === 0) {
@@ -198,7 +218,9 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   };
 
   return (
-    <Container maxWidth="xl">
+    <ThemeProvider theme={theme}>
+      {/* <CssBaseline /> */}
+      <Container maxWidth="xl">
         <Box
           sx={{
             mt: 20
@@ -276,7 +298,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         <Grid
                           className={"eligibleButton"}
                           position={"absolute"}
-                          top={775}>
+                          top={798}>
                           <Typography fontSize={"14px"} color={"black"} align='center'>
                             You are eligible
                           </Typography>
@@ -328,7 +350,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           gym.status === "OPEN" && isLoggedIn ? "notEligibleButton" : "eligibleButtonHidden"
                         }
                         position={"absolute"}
-                        top={775}>
+                        top={798}>
                         <Typography fontSize={"14px"} color={"black"} align='center'>
                           You are not eligible
                         </Typography>
@@ -356,7 +378,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <Grid xs={4}>
               <Typography 
                 gutterBottom 
-                className="gymTitle"
+                className="sectionTitle"
                 align="center" 
                 component="div"
               >
@@ -377,7 +399,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 15
           }}
         >
-          <Accordion expanded={panel1} onChange={(e, expanded) => setPanel1(expanded)} className="nftAccordion">
+          <Accordion expanded={panel1} onChange={(_e, expanded) => setPanel1(expanded)} className="nftAccordion">
             <AccordionSummary
               expandIcon={<ExpandMoreIcon
                 sx={{ color:"common.white", fontSize: 50, fontStyle: "bold" }}
@@ -548,7 +570,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             <Grid xs={4}>
               <Typography 
                 gutterBottom 
-                className="gymTitle"
+                className="sectionTitle"
                 align="center" 
                 component="div"
               >
@@ -578,7 +600,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
             mt: 15
           }}
         >
-          <Accordion expanded={panel2} onChange={(e, expanded) => setPanel2(expanded)} className="nftAccordion">
+          <Accordion expanded={panel2} onChange={(_e, expanded) => setPanel2(expanded)} className="nftAccordion">
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color:"common.white", fontSize: 50, fontStyle: "bold" }} />}
               aria-controls="panel2a-content"
@@ -593,41 +615,29 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   justifyContent: 'space-between',
                 }}>
                   <Grid xs={3}>
-                    <Grid container style={{
-                      display: 'flex',
-                      justifyContent: 'left',
-                      alignContent: "center"
-                    }}>
-                      <Grid container justifyContent="center" alignItems="center" xs={4}>
-                        <NextImage
-                          src={gymPiperaImage}
-                          alt={"Pipera GYM"}
-                          width={150}
-                          height={150}
-                          className={"nftImage nftAccordionImage"}
-                        />
-                      </Grid>
-                      <Grid xs={6} className="vAlign">
-                        <Grid container>
-                          <Grid xs={12}>
-                            <Typography  
-                            className="gymTitle" 
-                            sx={{ color: 'common.white'}}
-                            >
-                              PIPERA
-                            </Typography>  
-                          </Grid>
-                          <Grid xs={12}>
-                            <Typography  
-                              variant="h6" 
-                              sx={{ color: 'common.white'}}
-                            >
-                              METAVERSE GYM
-                            </Typography> 
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                  <Grid container justifyContent="center" alignItems="center">
+                  <Grid container justifyContent="center" alignItems="center" xs={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  {/* Your image component */}
+  <NextImage
+    src={gymPiperaImage}
+    alt={"Pipera GYM"}
+    width={180}
+    height={180}
+    className={"nftImage nftAccordionImage"}
+  />
+  </Grid>
+  <Grid item xs={6} className="vAlign">
+    <Grid container flexDirection="column" justifyContent="center" alignItems="center">
+      <Typography className="gymTitle" sx={{ color: 'common.white' }}>
+        PIPERA
+      </Typography>
+      <Typography variant="h6" sx={{ color: 'common.white' }}>
+        METAVERSE GYM
+      </Typography>
+    </Grid>
+  </Grid>
+</Grid>
+
                   </Grid>
                   <Grid>
                   <Grid container flexDirection={"column"} px={5} className="vAlign" py={1}>
@@ -651,7 +661,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                     <Grid container>
                     {
                         gymNfts != undefined ?
-                        gymNfts.slice(0, 2).map((nft, key) => (
+                        gymNfts.slice(0, 2).map((_nft, key) => (
                           <Grid key={key} px={0.5}>
                             <NextImage
                               src={gymNfts?.[0].media[0].thumbnailUrl}
@@ -675,55 +685,60 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   </Grid>
                   <Grid xs={2} className="vAlign" gap={4}>
                     {activeTab == 0 ?
-                      <Tooltip
-                        title={gym1NftsLength > 0 ? null : "No NFTs available to stake."}
+                    <div className="tooltip-container">
+                      <Button
+                        variant="outlined"
+                        className={gymNftsLength > 0 ? "actionButton" : "actionButtonDisabled"}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (gymNftsLength > 0) {
+                            const nftIds = gymNfts.map((nft, _key) => {
+                              return nft.collection;
+                            });
+                            const nftNonces = gymNfts.map((nft, _key) => {
+                              return nft.nonce;
+                            });
+                            stakeMulti(connectedUserAddress, nftIds, nftNonces);
+                          }
+                        }}
                       >
-                        <Button
-                          variant="outlined"
-                          className={gymNftsLength > 0 ? "actionButton" : "actionButtonDisabled"}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (gymNftsLength > 0) {
-                              const nftIds = gymNfts.map((nft, key) => {
-                                return nft.collection
-                              });
-                              const nftNonces = gymNfts.map((nft, key) => {
-                                return nft.nonce
-                              });
-                              stakeMulti(connectedUserAddress, nftIds, nftNonces);
-                            }
-                          }}
-                        >
-                          Stake all
-                        </Button>
-                      </Tooltip>
-                    :
-                    <Tooltip
-                    title={canUnstakeAll ? null
-                      : (
-                        stakedGymNftsLength > 0 && maxNonZeroValue ?
-                        `${getTimeString(maxNonZeroValue, "left for unbonding.")}` :
-                        "No NFTs available to unstake."
+                        Stake all
+                      </Button>
+                      {gym1NftsLength === 0 && (
+                        <div className="tooltip-content">
+                          No NFTs available to stake.
+                        </div>
                       )}
-                    >
-                      <Button variant="outlined"
+                    </div>
+                    :
+                    <div className="tooltip-container">
+                      <Button
+                        variant="outlined"
                         className={canUnstakeAll ? "actionButton" : "actionButtonDisabled"}
                         onClick={(e) => {
                           e.stopPropagation();
                           if (canUnstakeAll) {
-                            const nftIds = stakedGymNfts.map((nft, key) => {
+                            const nftIds = stakedGymNfts.map((nft, _key) => {
                               return nft.token
                             });
-                            const nftNonces = stakedGymNfts.map((nft, key) => {
+                            const nftNonces = stakedGymNfts.map((nft, _key) => {
                               return nft.nonce
                             });
                             unstakeMulti(connectedUserAddress, nftIds[0], nftNonces);
                           }
                         }}
+                        sx={{ minWidth: '150px' }} // Set the minimum width for the button
                       >
                         Unstake all
                       </Button>
-                    </Tooltip>
+                      {canUnstakeAll ? null : (
+                        <div className="tooltip-content">
+                          {stakedGymNftsLength > 0 && maxNonZeroValue
+                            ? `${getTimeString(maxNonZeroValue, "left for unbonding.")}`
+                            : "No NFTs available to unstake."}
+                        </div>
+                      )}
+                    </div>
                     }
                     <a href="https://xoxno.com/collection/FVGYM1-94fff1" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
                       <Button variant="outlined" className="actionButton" onClick={(e) => e.stopPropagation()} sx={{ ml: 2 }}>Buy</Button>
@@ -757,34 +772,36 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                                 {splitNftName(nft.name)[1]}
                               </Typography>
                         </CardContent>
-                        <CardActions>
-                          {
-                            nft.unbondedInSeconds >= 0 ? 
-                            <Tooltip
-                            title={nft.unbondedInSeconds == 0 ? null
-                              : `${getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}`}
-                            >
-                              <Button
-                                variant="contained"
-                                style={{
-                                  opacity: 5
-                                }}
-                                size="medium"
-                                className={nft.unbondedInSeconds > 0 ? "nftCardButtonDisabled" : "nftCardButton"}
-                                onClick={() => {
-                                  if (nft.unbondedInSeconds == 0) {
-                                    unstake(connectedUserAddress, nft.collection, nft.nonce);
-                                  }
-                                }}
-                              >
-                              Unstake
-                            </Button>
-                          </Tooltip>
-                            :
-                            <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>Stake</Button>
-                          }
-                          
+                        <div className="tooltip-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <CardActions>
+                            {nft.unbondedInSeconds >= 0 ? (
+                              <>
+                                <Button
+                                  variant="contained"
+                                  size="medium"
+                                  className={nft.unbondedInSeconds > 0 ? "nftCardButtonDisabled" : "nftCardButton"}
+                                  onClick={() => {
+                                    if (nft.unbondedInSeconds === 0) {
+                                      unstake(connectedUserAddress, nft.collection, nft.nonce);
+                                    }
+                                  }}
+                                  sx={{ minWidth: '150px' }} // Set the minimum width for the button
+                                >
+                                  Unstake
+                                </Button>
+                                {nft.unbondedInSeconds != 0 ? null : (
+                                  <div className="tooltip-content">
+                                    {getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <Button variant="contained" size="medium" className="nftCardButton" onClick={() => { stake(connectedUserAddress, nft.collection, nft.nonce) }}>
+                                Stake
+                              </Button>
+                            )}
                         </CardActions>
+                      </div>
                       </Card>
                     </Grid>
                   )) : null
@@ -822,7 +839,8 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         </Typography>
       : null
       }
-    </Container>
+      </Container>
+    </ThemeProvider>
   )
 }
 

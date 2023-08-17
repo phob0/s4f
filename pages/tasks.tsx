@@ -330,7 +330,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const isEligible = numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsInWallet > 0 || numberOfGymNftsStaked > 0);
 
   return (
-    <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <CssBaseline />
     <SlideContext.Provider value={{eventSignal, setEventSignal}}>
     <Container maxWidth="xl">
@@ -683,6 +683,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
               </Typography>
             </Box>
             <Box className="sliderBox" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Box>
+                <Typography variant="h4" color="common.black" align="center">
+                  Available Tasks
+                </Typography>
+              </Box>
               <div className='twitch' style={{ width: '100%', position: 'relative'}}>
                   <ResponsiveContainer
                     carouselRef={ref}

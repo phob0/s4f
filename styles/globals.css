@@ -20,7 +20,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Oswald', 'Montserrat', 'Roboto', sans-serif;
+  /* font-family: 'Oswald', 'Montserrat', 'Roboto', sans-serif; */
   color: rgb(var(--foreground-rgb));
   background-color: rgba(186, 104, 200, 0.225);
   background: url("/s4f-bg.jpg") no-repeat center center fixed;
@@ -50,13 +50,26 @@ body {
   padding-bottom: 10px;
 }
 
-.gymTitle {
-  font-size: 38px!important;
+.sectionTitle {
+  font-size: 52px!important;
   font-weight: bold!important;
   background: -webkit-linear-gradient(#b380ff, #48efefa8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.gymTitle {
+  font-size: 46px!important;
+  font-weight: bold!important;
+  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
 .gymSubTitle {
@@ -189,7 +202,7 @@ body {
 
 .actionButton {
   margin: 0 auto !important;
-  width: 80%;
+  /* width: 80%; */
   box-shadow: 0px 0px 5px 1px #48EFEE !important;
   border-radius: 25px !important;
   border: 2px solid #48EFEE !important;
@@ -199,7 +212,7 @@ body {
 
 .actionButtonDisabled {
   margin: 0 auto !important;
-  width: 80%;
+  /* width: 80%; */
   /* box-shadow: 0px 0px 5px 1px #48EFEE !important; */
   border-radius: 25px !important;
   /* border: 2px solid #48EFEE !important; */
@@ -313,7 +326,7 @@ body {
 .stakeableStakedTabs {
   font-size: 22px!important;
   font-weight: bold!important;
-  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  background-color: #48ecec!important;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
@@ -323,4 +336,32 @@ body {
   font-size: large!important;
   border-radius: 20px!important;
   border: 3px solid #fff!important;
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-content {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px; /* Increase padding for wider tooltip */
+  border-radius: 4px;
+  font-size: 14px; /* Increase font size for better readability */
+  width: 240px; /* Set a wider width for the tooltip */
+  text-align: center; /* Center the text in the tooltip */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  white-space: nowrap; /* Prevent text wrapping in tooltip */
+}
+
+.tooltip-container:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
 }
