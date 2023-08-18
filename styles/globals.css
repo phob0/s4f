@@ -20,7 +20,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  /* font-family: 'Oswald', 'Montserrat', 'Roboto', sans-serif; */
+  font-family: 'Oswald', 'Montserrat', 'Roboto', sans-serif;
   color: rgb(var(--foreground-rgb));
   background-color: rgba(186, 104, 200, 0.225);
   background: url("/s4f-bg.jpg") no-repeat center center fixed;
@@ -330,7 +330,7 @@ body {
 }
 
 .stakeableStakedTabs {
-  font-size: 22px!important;
+  font-size: 28px!important;
   font-weight: bold!important;
   background-color: #48ecec!important;
   -webkit-background-clip: text;

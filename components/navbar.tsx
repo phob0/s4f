@@ -47,7 +47,7 @@ const NavBar = () => {
                 sx={{ 
                   height: 40,
                   marginY: 3,
-                  marginLeft: 25, 
+                  marginLeft: 21, 
                 }}
                 src="/s4f_white.png"
               />
