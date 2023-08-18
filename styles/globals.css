@@ -53,7 +53,7 @@ body {
 .sectionTitle {
   font-size: 52px!important;
   font-weight: bold!important;
-  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  background: -webkit-linear-gradient(#9f5dff, #48ecec);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
@@ -62,14 +62,14 @@ body {
 }
 
 .gymTitle {
-  font-size: 46px!important;
+  font-size: 40px!important;
   font-weight: bold!important;
-  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  background: -webkit-linear-gradient(#9f5dff, #48ecec);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 2px;
+  padding-left: 2px;
 }
 
 .gymSubTitle {
@@ -149,7 +149,7 @@ body {
 
 .breakLine {
   height: 3px;
-  background: -webkit-linear-gradient(#b380ff, #48efefa8);
+  background: -webkit-linear-gradient(#9f5dff, #48ecec);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -158,7 +158,7 @@ body {
 
 .footer {
   border-top: 1px solid;
-  border-image: linear-gradient(to right,#b380ff,#48efefa8) 1 0 0 0;
+  border-image: linear-gradient(to right,#9f5dff,#48ecec) 1 0 0 0;
 }
 
 .nftAccordion {
@@ -167,7 +167,13 @@ body {
 
 .nftImage {
   border-radius: 10px;
-  border: 3px solid #48efefa8;
+  border: 3px solid #48ecec;
+  box-shadow: 0px 0px 90px 1px #48EFEE!important;
+}
+
+.nftImageNoGlow {
+  border-radius: 10px;
+  border: 3px solid #48ecec;
 }
 
 .nftImageList {
@@ -186,7 +192,7 @@ body {
 
 .nftCardButton {
   margin: 0 auto!important;
-  width: 80%;
+  width: 202px;
   background: -webkit-linear-gradient(#6100EC, #5201C8)!important;
   box-shadow: 0px 0px 5px 1px #48EFEE!important;
   border-radius: 10px!important;

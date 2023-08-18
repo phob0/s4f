@@ -37,7 +37,7 @@ import { useAxiosInterceptorContext } from '@multiversx/sdk-dapp/wrappers/AxiosI
 import { useSelector } from '@multiversx/sdk-dapp/reduxStore/DappProviderContext';
 import { isLoggedInSelector, loginInfoSelector } from '@multiversx/sdk-dapp/reduxStore/selectors';
 
-const gymPiperaImage = '/demo_imgs/gym_nft.jpeg';
+const gymPiperaImage = '/demo_imgs/gym_nft_cut.jpeg';
 const sfitLegendImage = '/demo_imgs/sfitlegend.png';
 
 function TabPanel(props: { children: any; value: any; index: any; }) {
@@ -298,7 +298,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         <Grid
                           className={"eligibleButton"}
                           position={"absolute"}
-                          top={788}>
+                          top={778}>
                           <Typography fontSize={"14px"} color={"black"} align='center'>
                             You are eligible
                           </Typography>
@@ -350,7 +350,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           gym.status === "OPEN" && isLoggedIn ? "notEligibleButton" : "eligibleButtonHidden"
                         }
                         position={"absolute"}
-                        top={788}>
+                        top={778}>
                         <Typography fontSize={"14px"} color={"black"} align='center'>
                           You are not eligible
                         </Typography>
@@ -507,7 +507,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                         <CardMedia
                           sx={{ height: 200, width: 200 }}
                           image={nft.url}
-                          className="nftImage nftCardImage"
+                          className="nftImageNoGlow nftCardImage"
                         />
                         <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
                           <Typography  
@@ -555,43 +555,39 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         : null }
         { 
         isLoggedIn ? 
-        <Box sx={{ 
-            flexGrow: 1,
-            mt: 15
-          }}
-        >
-          <Grid container spacing={2} style={{
-            display: 'flex',
-            justifyContent: 'space-between',
+          <Box sx={{ 
+              flexGrow: 1,
+              mt: 15
           }}>
-            <Grid xs={4} sx={{ position: "relative" }}>
-              <div className="breakLine" />
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+              <Grid item xs={4} sx={{ position: "relative", textAlign: "center" }}>
+                <div className="breakLine" />
+              </Grid>
+              <Grid item xs={4} sx={{ textAlign: "center" }}>
+                <Typography 
+                  gutterBottom 
+                  className="sectionTitle"
+                  variant="h5"
+                  component="div"
+                >
+                  GYM NFTs
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ position: "relative", textAlign: "center" }}>
+                <div className="breakLine" />
+              </Grid>
             </Grid>
-            <Grid xs={4}>
-              <Typography 
-                gutterBottom 
-                className="sectionTitle"
-                align="center" 
-                component="div"
-              >
-                GYM NFTs
-              </Typography>
-            </Grid>
-            <Grid xs={4} sx={{ position: "relative" }}>
-              <div className="breakLine" />
-            </Grid>
-          </Grid>
-        </Box>
+          </Box>
         : null }
         { isLoggedIn ?
-          (<>
-          <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48eeed' } }}>
+          (<Grid  container justifyContent="center" alignItems="center">
+          <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48ecec' } }}>
           <Tab label="Stakeable" id="tab-0" className="stakeableStakedTabs" />
           <Tab label="Staked" id="tab-1" className="stakeableStakedTabs" />
           </Tabs><TabPanel value={activeTab} index={0}>
           </TabPanel><TabPanel value={activeTab} index={1}>
           </TabPanel>
-          </>) : null
+          </Grid>) : null
         }
         { 
         isLoggedIn ? 
@@ -615,49 +611,48 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                   justifyContent: 'space-between',
                 }}>
                   <Grid xs={3}>
-                  <Grid container justifyContent="center" alignItems="center">
-                  <Grid container justifyContent="center" alignItems="center" xs={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-  {/* Your image component */}
-  <NextImage
-    src={gymPiperaImage}
-    alt={"Pipera GYM"}
-    width={180}
-    height={180}
-    className={"nftImage nftAccordionImage"}
-  />
-  </Grid>
-  <Grid item xs={6} className="vAlign">
-    <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-      <Typography className="gymTitle" sx={{ color: 'common.white' }}>
-        PIPERA
-      </Typography>
-      <Typography variant="h6" sx={{ color: 'common.white' }}>
-        METAVERSE GYM
-      </Typography>
-    </Grid>
-  </Grid>
-</Grid>
-
+                    <Grid container justifyContent="left" alignItems="center">
+                      <Grid container justifyContent="center" alignItems="center" xs={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {/* Your image component */}
+                        <NextImage
+                          src={gymPiperaImage}
+                          alt={"Pipera GYM"}
+                          width={190}
+                          height={190}
+                          className={"nftImage nftAccordionImage"}
+                        />
+                      </Grid>
+                      <Grid item xs={6} className="vAlign">
+                        <Grid container flexDirection="column" justifyContent="center" alignItems="left">
+                          <Typography className="gymTitle" sx={{ color: 'common.white' }}>
+                            PIPERA
+                          </Typography>
+                          <Typography variant="h6" sx={{ color: 'common.white' }}>
+                            METAVERSE GYM
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid>
-                  <Grid container flexDirection={"column"} px={5} className="vAlign" py={1}>
-                    <Typography  
-                      variant="h4"
-                      align="center"
-                      sx={{ color: 'common.white', width: '100%'}}
-                    >
-                      Available
-                    </Typography>  
-                    <Typography  
-                      variant="h4"
-                      align="center"
-                      sx={{ color: 'common.white', width: '100%'}}
-                    >
-                      {gymNftsLength}
-                    </Typography>
+                    <Grid container flexDirection={"column"} px={5} className="vAlign" py={1}>
+                      <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        Available
+                      </Typography>  
+                      <Typography  
+                        variant="h4"
+                        align="center"
+                        sx={{ color: 'common.white', width: '100%'}}
+                      >
+                        {gymNftsLength}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  </Grid>
-                  <Grid px={5}>
+                  <Grid xs={2}>
                     <Grid container>
                     {
                         gymNfts != undefined ?
@@ -758,7 +753,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                           {nft.media && <CardMedia
                             sx={{ height: 200, width: 200 }}
                             image={nft.media[0].thumbnailUrl}
-                            className="nftImage nftCardImage"
+                            className="nftImageNoGlow nftCardImage"
                           />}
                         <CardContent sx={{ paddingTop: 3, display: 'flex', justifyContent: 'space-between', px: 4 }}>
                               <Typography  
@@ -789,7 +784,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
                                 >
                                   Unstake
                                 </Button>
-                                {nft.unbondedInSeconds != 0 ? null : (
+                                {nft.unbondedInSeconds === 0 ? null : (
                                   <div className="tooltip-content">
                                     {getTimeString(nft.unbondedInSeconds, "left for unbonding the NFT.")}
                                   </div>
