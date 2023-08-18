@@ -18,18 +18,19 @@ const NavBar = () => {
   const router = useRouter();
 
   const BackButton = () => {
-    return router.route !== "/" ? (
+    return (
       <IconButton sx={{ 
         color: 'white', 
         backgroundColor: '#ab47bc',
+        opacity: router.route !== "/" ? 1 : 0,
         "&:hover": { 
           color: "#ab47bc",
           backgroundColor: "white" 
-        } 
+        }
       }} onClick={() => router.back()}>
         <ArrowBackIcon />
       </IconButton>    
-    ) : ( null )
+    )
   }
 
   return (
@@ -45,7 +46,8 @@ const NavBar = () => {
                 component="img"
                 sx={{ 
                   height: 40,
-                  margin: 3 
+                  marginY: 3,
+                  marginLeft: 25, 
                 }}
                 src="/s4f_white.png"
               />
