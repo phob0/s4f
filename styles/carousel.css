@@ -114,8 +114,8 @@
   .sliderBox {
     border: 4px solid #48EFEE;
     border-radius: 20px;
-    background-color: rgba(72, 239, 238, 0.35);
-  }
+    background-color: rgba(62, 190, 211, 0.5); /* Set the opacity to 0.5 */
+  }  
 
   .titleBox {
     border: 4px solid #48EFEE;

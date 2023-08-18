@@ -18,7 +18,7 @@ import useUser from "../lib/useUser";
 
 import { withSessionSsr } from "../lib/session";
 
-import { useGetAccount } from '@multiversx/sdk-dapp/hooks';
+import { useGetAccount, useGetLoginInfo } from '@multiversx/sdk-dapp/hooks';
 import { useTrackTransactionStatus } from '@multiversx/sdk-dapp/hooks/transactions';
 import { getAccountBalance } from '@multiversx/sdk-dapp/utils/account';
 
@@ -40,6 +40,9 @@ import { BsCheckCircle, BsHourglass } from 'react-icons/bs';
 import { adminAddresses } from '@/config/constants';
 import useGetNrOfHolders from '@/hooks/useGetNrOfHolders';
 import CountdownTimer from '@/components/helpers/CountdownTimer';
+import LoginModalButton from '@/components/tools/LoginModal';
+import { gyms } from '@/prisma/gyms';
+import Link from 'next/link';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
@@ -84,6 +87,15 @@ interface GymID {
 
 interface GymName {
   gymName: string;
+}
+
+// Array interface
+interface Gym {
+  gyms: {
+    id: number
+    name: string
+    status: string
+  }[]
 }
 
 interface SlideProps extends StackedCarouselSlideProps {
@@ -191,9 +203,9 @@ const theme = createTheme({
   },
 });
 
-const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tasks, userReward }) => {
+const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymID, tasks, userReward, gyms }) => {
   const router = useRouter()
-  
+
   const refreshData = () => {
     router.replace(router.asPath)
   }
@@ -211,9 +223,14 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   const [eventSignal, setEventSignal] = useState<Task | null>(null);
   const [claimedRewards, setClaimedRewards] = useState<boolean>(false);
   const [completedTasks, setCompletedTasks] = useState<boolean>(false);
-  // const [depositAmount, setDepositAmount] = useState(0);
-
   const [depositAmount, setDepositAmount] = useState('');
+  // const [activeTaskIndex, setActiveTaskIndex] = useState(0);
+
+  // const handleSlideChange = (newIndex: number) => {
+  //   setActiveTaskIndex(newIndex);
+  // };
+
+  // const { isLoggedIn } = useGetLoginInfo();
 
   const handleDeposit = () => {
     if (depositAmount === '') {
@@ -270,7 +287,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
   }
 
   const activeTasks = tasks.filter(task => task.status === 'STARTED')
-  
+
   const updateTaskStatus = async (task:any) => {
       let currentTask;
 
@@ -683,16 +700,40 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
               </Typography>
             </Box>
             <Box className="sliderBox" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {/* <Box>
-                <Typography variant="h4" color="common.black" align="center">
-                  Available Tasks
-                </Typography>
+              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingY: '15px', paddingX: '75px'}}>
+                <Box>
+                  <Typography variant="h5" color="common.white">
+                    Available Tasks: {tasks.length}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="dashed-line">
+                    {Array.from({ length: tasks.length }, (_, index) => (
+                      <div className={index === tasks.length - 1 ? 'blue-dash' : 'white-dash'} key={index} />
+                    ))}
+                  </div>
+                </Box>
               </Box> */}
               <div className='twitch' style={{ width: '100%', position: 'relative'}}>
                   <ResponsiveContainer
                     carouselRef={ref}
                     render={(width, carouselRef) => {
                       return (
+                      <>
+                        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingY: '15px', paddingX: '75px' }}>
+                          <Box>
+                            <Typography variant="h5" color="common.white">
+                              Available Tasks: {tasks.length}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="dashed-line">
+                              {Array.from({ length: tasks.length }, (_, index) => (
+                                <div className={index === 1 ? 'colored-dash' : 'white-dash'} key={index} />
+                              ))}
+                            </div>
+                          </Box>
+                        </Box> */}
                         <StackedCarousel
                           ref={carouselRef}
                           slideComponent={Slide}
@@ -705,6 +746,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                           useGrabCursor={true}
                           height={700}
                         />
+                      </>
                       );
                     }}
                   />
@@ -719,6 +761,12 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                 Complete Tasks
               </Button>
             </Box>
+            <Box sx={{ 
+            flexGrow: 1,
+            mt: 15
+          }}
+        >
+        </Box>
             {adminAddresses.includes(connectedUserAddress) && (
               <Box
                 sx={{
@@ -924,12 +972,23 @@ export const getServerSideProps = withSessionSsr(
       }
     })
 
+    // READ all gyms from DB
+    const gyms = await prisma?.gym.findMany({
+      select: {
+        name: true,
+        address: true,
+        id: true,
+        status: true
+      }
+    })
+
     return {
       props: {
         gymName: gym?.name,
         gymID: Number(query.gym),
         tasks,
-        userReward: userReward
+        userReward: userReward,
+        gyms
       }
     }
   },
