@@ -4,8 +4,12 @@ import useUser from "../lib/useUser";
 
 const useGetNrOfHolders = (collection: string) => {
   const { data, error } = useSWR(
-    collection,
-    getNrOfHolders,
+    collection
+      ? {
+          collection: collection,
+        }
+      : null,
+      getNrOfHolders,
     {}
   );
 

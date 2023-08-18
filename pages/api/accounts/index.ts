@@ -73,7 +73,7 @@ export const getUserToken = async ({
 }
 
 export const getNrOfHolders = async ({
-  collection = undefined
+  collection = "",
 }) => {
   try {
     const res = await axiosLink.get(`/collections/${collection}`);

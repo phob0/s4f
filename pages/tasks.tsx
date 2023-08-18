@@ -99,7 +99,7 @@ interface CustomProgressBarProps {
 function CustomProgressBar({ value, total, showPercentage }: CustomProgressBarProps) {
   const roundedValue = Math.round(value * 100) / total;
 
-  const height = '16px';
+  const height = '15px';
 
   const sectionStyles = {
     height: `${height}`,
@@ -458,7 +458,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
                               "Claim" :
                               "Nothing to claim"
                           ) : (
-                            "You must complete all the the above conditions."
+                            "You must complete all of the above conditions."
                           )}
                         >
                           <span>
@@ -683,11 +683,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName> = ({ gymName, gymID, tas
               </Typography>
             </Box>
             <Box className="sliderBox" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Box>
+              {/* <Box>
                 <Typography variant="h4" color="common.black" align="center">
                   Available Tasks
                 </Typography>
-              </Box>
+              </Box> */}
               <div className='twitch' style={{ width: '100%', position: 'relative'}}>
                   <ResponsiveContainer
                     carouselRef={ref}
