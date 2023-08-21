@@ -207,23 +207,25 @@ body {
 }
 
 .actionButton {
+  font-size: large !important;
   margin: 0 auto !important;
   /* width: 80%; */
-  box-shadow: 0px 0px 5px 1px #48EFEE !important;
+  box-shadow: 0px 0px 20px 2px #48EFEE !important;
   border-radius: 25px !important;
   border: 2px solid #48EFEE !important;
   padding: 7px; /* Add the units (px) for padding values */
-  color: #ffffff; /* Set the text color to white */
+  color: #ffffff !important; /* Set the text color to white */
 }
 
 .actionButtonDisabled {
+  font-size: large !important;
   margin: 0 auto !important;
   /* width: 80%; */
   /* box-shadow: 0px 0px 5px 1px #48EFEE !important; */
   border-radius: 25px !important;
   /* border: 2px solid #48EFEE !important; */
   padding: 7px; /* Add the units (px) for padding values */
-  color: #ffffff; /* Set the text color to white */
+  color: #ffffff !important;  /* Set the text color to dark grey */
 }
 
 .disabledButton {

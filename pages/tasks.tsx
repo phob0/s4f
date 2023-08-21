@@ -691,7 +691,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
             </Stack>  
           </Grid>
           <Grid xs={8} pl={5} justifyContent={"center"}>
-            <Box className="titleBox" sx={{ mb: 5, border: '1px solid #fff', py: 3 }}>
+            <Box className="titleBox" sx={{ mb: 5, border: '1px solid #fff', py: 5 }}>
               {/* <Typography variant="h4" color="common.white" align="center">
                 WELCOME TO YOUR GYM!
               </Typography> */}
@@ -700,20 +700,20 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
               </Typography>
             </Box>
             <Box className="sliderBox" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingY: '15px', paddingX: '75px'}}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', paddingY: '15px', paddingX: '75px'}}>
                 <Box>
                   <Typography variant="h5" color="common.white">
                     Available Tasks: {tasks.length}
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <div className="dashed-line">
                     {Array.from({ length: tasks.length }, (_, index) => (
                       <div className={index === tasks.length - 1 ? 'blue-dash' : 'white-dash'} key={index} />
                     ))}
                   </div>
-                </Box>
-              </Box> */}
+                </Box> */}
+              </Box>
               <div className='twitch' style={{ width: '100%', position: 'relative'}}>
                   <ResponsiveContainer
                     carouselRef={ref}
