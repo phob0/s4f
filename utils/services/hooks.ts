@@ -1,6 +1,6 @@
-import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUnbondingDuration, IScUserClaimable, IScUserStakedInfo, OwnedSFIT } from "../types/sc.interface";
+import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUnbondingDuration, IScUserClaimable, IScUserEligibleStaked, IScUserStakedInfo, OwnedSFIT } from "../types/sc.interface";
 import useSwr from "swr";
-import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo } from "./queries";
+import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo, fetchUserEligibleStaked } from "./queries";
 
 
 export const useGetTotalClaimed = (address: string) => {
@@ -194,5 +194,28 @@ export const useGetUserStakedInfo = (address: string) => {
         userStakedInfo: userStakedInfo || [],
         isLoadingUserStakedInfo: isLoading,
         errorUserStakedInfo: error,
+    };
+};
+
+export const useGetUserEligibleStaked = (address: string) => {
+
+    const {
+        data: userEligibleStaked,
+        isLoading,
+        error,
+    } = useSwr<IScUserEligibleStaked[]>(
+        `claimWsp:getEligibleStaked:${address}`,
+        async () => {
+            return await fetchUserEligibleStaked(address);
+        },
+        {
+            fallbackData: [],
+        }
+    );
+
+    return {
+        userEligibleStaked: userEligibleStaked || [],
+        isLoadingUserEligibleStaked: isLoading,
+        errorUserEligibleStaked: error,
     };
 };

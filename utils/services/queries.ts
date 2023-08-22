@@ -4,7 +4,7 @@ import {
     BooleanValue
 } from "@multiversx/sdk-core/out";
 import { scQuery } from "../../pages/api/sc/queries/index";
-import { OwnedSFIT, IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable, IScUnbondingDuration, IScUserStakedInfo } from "../types/sc.interface";
+import { OwnedSFIT, IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable, IScUnbondingDuration, IScUserStakedInfo, IScUserEligibleStaked } from "../types/sc.interface";
 import BigNumber from "bignumber.js";
 
 export const fetchTotalClaimed = async (address: string): Promise<IScTotalClaimed> => {
@@ -153,6 +153,24 @@ export const fetchUserStakedInfo = async (address: string): Promise<IScUserStake
             token: item[0].valueOf().toString(),
             nonce: item[1].toNumber(),
             unbondingTimestamp: item[2].toNumber(),
+        };
+        return data;
+    });
+
+    return finalData;
+};
+
+export const fetchUserEligibleStaked = async (address: string): Promise<IScUserEligibleStaked[]> => {
+
+    const scRes = await scQuery("claimWsp", "getEligibleStaked", [
+        new AddressValue(new Address(address))
+    ]);
+
+    const data = scRes?.firstValue?.valueOf();
+
+    const finalData: IScUserEligibleStaked[] = data.map((item: any) => {
+        const data: IScUserEligibleStaked = {
+            nonce: item.toNumber(),
         };
         return data;
     });

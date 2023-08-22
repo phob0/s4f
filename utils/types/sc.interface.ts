@@ -30,6 +30,10 @@ export interface IScUserStakedInfo {
   unbondingTimestamp: number;
 }
 
+export interface IScUserEligibleStaked {
+  nonce: number;
+}
+
 export interface OwnedSFIT {
   token: string;
 }

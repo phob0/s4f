@@ -28,7 +28,7 @@ import {
     StackedCarouselSlideProps
   } from 'react-stacked-center-carousel';
 
-import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo } from '../utils/services/hooks'
+import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo, useGetUserEligibleStaked } from '../utils/services/hooks'
 import { completeTasks, claim, depositRewards } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
@@ -334,10 +334,12 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
   const {userToken: userSfitTokenInfo, isLoadingUserToken, isErrorUserToken} = useGetUserToken(connectedUserAddress, sfitIdentifier);
   const { nfts: sfitLegendNfts, isLoadingNfts: isLoadingSfitLegendsNfts, isErrorNfts: isErrorSfitLegendsNfts }  = useGetUserNfts(connectedUserAddress, tokensInfo?.[1]?.token);
   const { nrOfHolders: nrOfHolders, isLoadingNrOfHolders: isLoadingNrOfSfitHolders, isErrorNrOfHolders: isErrorNrOfSfitHolders } = useGetNrOfHolders(gymIdentifier);
+  const { userEligibleStaked, isLoadingUserEligibleStaked, errorUserEligibleStaked } = useGetUserEligibleStaked(connectedUserAddress);
 
   const numberOfGymNftsInWallet = gymNfts.length > 0 ? gymNfts.length : 0;
   const numberOfGymNftsStaked = stakedGymNfts ? stakedGymNfts?.length : 0;
   const numberOfSfitLegendNftsInWallet = sfitLegendNfts ? sfitLegendNfts.length : 0;
+  const numberOfUserEligibleStaked = userEligibleStaked ? userEligibleStaked.length : 0;
 
   const claimableAmount = userClaimable ? userClaimable?.amount : 0
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
@@ -583,6 +585,17 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                         {numberOfGymNftsStaked} / {numberOfGymNftsInWallet + numberOfGymNftsStaked}
                       </Typography>
                     </Grid>
+                    {numberOfGymNftsStaked > 0 && canCompleteTasks && <>
+                    <Grid xs={6} whiteSpace={'nowrap'}>
+                      <Typography color="common.white" align="left">
+                        ELIGIBLE NFTS FOR TASKS COMPLETION
+                      </Typography>
+                    </Grid><Grid xs={6}>
+                      <Typography color="common.white" align="right">
+                        {numberOfUserEligibleStaked} / {numberOfGymNftsStaked}
+                      </Typography>
+                    </Grid>
+                    </>}
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                       <Grid xs={6}>
                         <Typography color="common.white" align="left">
