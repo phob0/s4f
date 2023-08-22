@@ -56,6 +56,26 @@
             "outputs": []
         },
         {
+            "name": "getEligibleStaked",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                },
+                {
+                    "name": "period",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<u64>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "canUserCompleteTasks",
             "mutability": "readonly",
             "inputs": [
