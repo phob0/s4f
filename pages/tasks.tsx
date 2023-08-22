@@ -343,7 +343,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
   const totalClaimedAmount = totalClaimed ? totalClaimed?.amount : 0
   const userSfitBalance = userSfitTokenInfo.length > 0 ? userSfitTokenInfo[0].balance : 0;
 
-  const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && numberOfGymNftsStaked > 0;
+  const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsStaked > 0 || (totalCompleted == tasks.length && !canCompleteTasks?.canCompleteTasks));
   const isEligible = numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsInWallet > 0 || numberOfGymNftsStaked > 0);
 
   return (
@@ -439,11 +439,11 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                       <Grid item>
                         <Typography color="common.white" align="center">
-                          2. HAVE STAKED AT LEAST 1 GYM NFT
+                          2. HAVE STAKED GYM NFTs DURING THIS PERIOD
                         </Typography>
                       </Grid>
                       <Grid item>
-                        {numberOfGymNftsStaked > 0 ?
+                        {numberOfGymNftsStaked > 0 || (totalCompleted == tasks.length && !canCompleteTasks?.canCompleteTasks) ?
                           <BsCheckCircle size={20} color='white'/> :
                           <BsHourglass size={20} color='black' opacity={0.8}/>
                         }
@@ -473,7 +473,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                           title={canClickClaim ? (
                             claimableAmount > 0 ?
                               "Claim" :
-                              "Nothing to claim"
+                              "Nothing to claim yet."
                           ) : (
                             "You must complete all of the above conditions."
                           )}
@@ -492,7 +492,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                                 marginTop: 3
                               }}  
                             >
-                              Claim Reward
+                              Claim Rewards
                             </Button>
                           </span>
                         </Tooltip>
