@@ -76,9 +76,15 @@ export const getNrOfHolders = async ({
   collection = "",
 }) => {
   try {
-    const res = await axiosLink.get(`/collections/${collection}`);
+    const res = await axiosLink.get(`/collections/${collection}/accounts`);
 
-    return res.data.holderCount || 0;
+    const holdersList = res.data.map((item: any) => {
+      return item.address
+    });
+    
+    const nrOfUniqueHolders = new Set(holdersList).size;
+
+    return nrOfUniqueHolders || 0;
   } catch (error) {
     return 0;
   }
