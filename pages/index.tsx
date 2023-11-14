@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -36,6 +37,7 @@ import LoginModalButton from '@/components/tools/LoginModal';
 import { useAxiosInterceptorContext } from '@multiversx/sdk-dapp/wrappers/AxiosInterceptorContext';
 import { useSelector } from '@multiversx/sdk-dapp/reduxStore/DappProviderContext';
 import { isLoggedInSelector, loginInfoSelector } from '@multiversx/sdk-dapp/reduxStore/selectors';
+import { isMobile } from '@/utils/isMobile';
 
 const gymPiperaImage = '/demo_imgs/gym_nft_cut.jpeg';
 const sfitLegendImage = '/demo_imgs/sfitlegend.png';
@@ -217,9 +219,11 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
     }
   };
 
+  const isMobileDevice = isMobile();
+
   return (
     <ThemeProvider theme={theme}>
-      {/* <CssBaseline /> */}
+      {!isMobileDevice ?
       <Container maxWidth="xl">
         <Box
           sx={{
@@ -834,7 +838,26 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
         </Typography>
       : null
       }
-      </Container>
+      </Container> :
+      <Box
+        width={"full"}
+        height={"40vh"}
+        display="flex"
+        justifyContent="center"
+        py={10}
+        px={10}
+        fontSize={"20px"}
+        flexDirection={"column"}
+        gap={5}
+      >
+        <Box>
+          The mobile version of the website is currently under development.
+        </Box>
+        <Box>
+          Please visit the website from a desktop browser.
+        </Box>
+      </Box>
+      }
     </ThemeProvider>
   )
 }

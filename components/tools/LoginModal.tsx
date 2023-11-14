@@ -80,6 +80,7 @@ const WebWalletLoginButton: any = dynamic(
 ) as WebWalletLoginButtonPropsType;
 
 import useUser from "../../lib/useUser";
+import { isMobile } from '@/utils/isMobile';
 
 interface LoginModalButtonProps {
   onClose?: () => void;
@@ -167,99 +168,105 @@ interface LoginModalButtonProps {
       }
     };    
 
+    const isMobileDevice = isMobile();
+    
     return (
       <>
-        {showButton == "" ? (
-          loggedIn ? (
-            <Button
-              // variant="outlined"
-              onClick={handleLogout}
-              sx={{
-                color: 'white',
-                // borderColor: 'white',
-              }}
-              className='dappDisconnectButton'
-            >
-              Disconnect
-            </Button>
-          ) : (
-            <Button
-              // variant="outlined"
+      { !isMobileDevice &&
+        <>
+          {showButton == "" ? (
+            loggedIn ? (
+              <Button
+                // variant="outlined"
+                onClick={handleLogout}
+                sx={{
+                  color: 'white',
+                  // borderColor: 'white',
+                }}
+                className='dappDisconnectButton'
+              >
+                Disconnect
+              </Button>
+            ) : (
+              <Button
+                // variant="outlined"
+                onClick={open}
+                sx={{
+                  color: 'white',
+                  // borderColor: 'white',
+                }}
+                className='dappConnectButton'
+              >
+                Connect
+              </Button>
+            )
+          ) :
+            <Typography 
+              variant="h6" 
+              align="center" 
+              color="common.white"
               onClick={open}
               sx={{
-                color: 'white',
-                // borderColor: 'white',
+                fontWeight: 'bold',
+                width: '50%',
               }}
-              className='dappConnectButton'
+              className='gymStatus'
             >
-              Connect
-            </Button>
-          )
-        ) :
-          <Typography 
-            variant="h6" 
-            align="center" 
-            color="common.white"
-            onClick={open}
-            sx={{
-              fontWeight: 'bold',
-              width: '50%',
-            }}
-            className='gymStatus'
+              {showButton}
+            </Typography>
+          }
+          {!loggedIn &&
+          <DappModal
+            visible={opened}
+            onHide={close}
           >
-            {showButton}
-          </Typography>
-        }
-        {!loggedIn &&
-        <DappModal
-          visible={opened}
-          onHide={close}
-        >
-            <DappModalHeader
-              visible={false}
-              headerText="Connect Wallet"
-            />
-            <DappModalBody
-            >
-              <Stack 
-                sx = {{
-                  direction: "column",
-                  align: "center"
-                }}
-                >
-                 <ExtensionLoginButton
-                  className="dappLoginButton"
-                  loginButtonText='MultiversX Browser Extension'
-                  {...commonProps}
-                />
-                <WebWalletLoginButton
-                  className="dappLoginButton"
-                  callbackRoute="/"
-                  shouldRenderDefaultCss={false}
-                  loginButtonText="Web Wallet"
-                  nativeAuth
-                />
-                <LedgerLoginButton
-                  loginButtonText='Ledger'
-                  className='dappLoginButton'
-                  shouldRenderDefaultCss={false}
-                  {...commonProps}
-                />
-                <WalletConnectLoginButton
-                  className="dappLoginButton"
-                  loginButtonText='xPortal Mobile App'
-                  {...commonProps}
-                  {...(walletConnectV2ProjectId
-                    ? {
-                        isWalletConnectV2: true
-                      }
-                    : {})
-                  }
-                  nativeAuth
-                />
-              </Stack>
-            </DappModalBody>
-        </DappModal>}
+              <DappModalHeader
+                visible={false}
+                headerText="Connect Wallet"
+              />
+              <DappModalBody
+              >
+                <Stack 
+                  sx = {{
+                    direction: "column",
+                    align: "center"
+                  }}
+                  >
+                  <ExtensionLoginButton
+                    className="dappLoginButton"
+                    loginButtonText='MultiversX Browser Extension'
+                    {...commonProps}
+                  />
+                  <WebWalletLoginButton
+                    className="dappLoginButton"
+                    callbackRoute="/"
+                    shouldRenderDefaultCss={false}
+                    loginButtonText="Web Wallet"
+                    nativeAuth
+                  />
+                  <LedgerLoginButton
+                    loginButtonText='Ledger'
+                    className='dappLoginButton'
+                    shouldRenderDefaultCss={false}
+                    {...commonProps}
+                  />
+                  <WalletConnectLoginButton
+                    className="dappLoginButton"
+                    loginButtonText='xPortal Mobile App'
+                    {...commonProps}
+                    {...(walletConnectV2ProjectId
+                      ? {
+                          isWalletConnectV2: true
+                        }
+                      : {})
+                    }
+                    nativeAuth
+                  />
+                </Stack>
+              </DappModalBody>
+          </DappModal>}
+        </>
+      }
       </>
     );
   };
