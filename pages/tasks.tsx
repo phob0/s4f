@@ -317,9 +317,12 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
   const ref = useRef<StackedCarousel>();
 
   const accountInfo = useGetAccount();
-  
   const connectedUserAddress = accountInfo.address;
 
+  // CONSTANTS
+  const totalMembers = 84;
+  const totalGenerated = 0;
+  const totalLastMonth = 0;
 
   // QUERIES
   const { tokensInfo, isLoadingTokensInfo, errorTokensInfo} = useGetTokensInfo(); // GYM NFT, SFITLEGENDS NFT, & SFIT TOKEN
@@ -505,7 +508,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
               </Card>
               <Card className="statsWell">
                 <CardContent>
-                  <Typography color="common.white" variant="h5" component="div" align="center" px={5}>
+                  <Typography color="common.white" variant="h5" component="div" align="center" px={1}>
                     YOUR PARTICIPATION IN { gymName } GYM
                   </Typography>
                   
@@ -653,7 +656,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"}>
                       <Typography color="common.white" align="center">
-                        328
+                        {totalMembers}
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
@@ -671,7 +674,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
-                        1,557,465 SFIT
+                        {totalGenerated} SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -688,7 +691,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
-                        57,465 SFIT
+                        {totalLastMonth} SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
