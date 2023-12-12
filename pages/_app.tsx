@@ -48,7 +48,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         customNetworkConfig={{
           name: 'customConfig',
           apiTimeout: process.env.NEXT_PUBLIC_API_TIMEOUT,
-          walletConnectV2ProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID
+          walletConnectV2ProjectId: "1dfc2bc8f9ad07462c9eeef11fd560cf"//process.env.NEXT_PUBLIC_WC_PROJECT_ID
         }}
         dappConfig={{
           shouldUseWebViewProvider: true,
