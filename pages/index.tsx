@@ -588,9 +588,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
           <Tabs value={activeTab} onChange={handleTabChange} centered sx={{ "& .MuiTabs-indicator": { height: 4, backgroundColor: '#48ecec' } }}>
           <Tab label="Stakeable" id="tab-0" className="stakeableStakedTabs" />
           <Tab label="Staked" id="tab-1" className="stakeableStakedTabs" />
-          </Tabs><TabPanel value={activeTab} index={0}>
-          </TabPanel><TabPanel value={activeTab} index={1}>
-          </TabPanel>
+          </Tabs>
           </Grid>) : null
         }
         { 

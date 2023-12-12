@@ -101,10 +101,10 @@ interface LoginModalButtonProps {
     };
   };
   
-  type UserSession = {
-    isLoggedIn: boolean;
-    address: string;
-  };
+  // type UserSession = {
+  //   isLoggedIn: boolean;
+  //   address: string;
+  // };
   
   const LoginModalButton = ({
     // onClose,
@@ -117,7 +117,7 @@ interface LoginModalButtonProps {
     const { user, mutateUser } = useUser();
 
     const loggedIn = useGetIsLoggedIn();
-    const logginInfo = useGetLoginInfo();
+    // const logginInfo = useGetLoginInfo();
   
     const commonProps = {
         // callbackRoute: routeNames.dashboard,
@@ -160,7 +160,9 @@ interface LoginModalButtonProps {
     }
   
     const handleLogout = () => {
-      if (loggedIn && user?.isLoggedIn) {
+      if (loggedIn && !user?.isLoggedIn) {
+        logout('/');
+      } else if (loggedIn && user?.isLoggedIn) {
         logout('/').then(async () => {
           await fetch("/api/logout", { method: "POST" });
           router.push('/');
