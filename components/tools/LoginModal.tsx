@@ -115,8 +115,11 @@ interface LoginModalButtonProps {
     // all auth providers will return the signature, it will be saved in localstorage and global state
     // For the demo purposes here is a dummy token
     const { user, mutateUser } = useUser();
+    console.log("⚠️ ~ file: LoginModal.tsx:118 ~ mutateUser:", mutateUser)
+    console.log("⚠️ ~ file: LoginModal.tsx:118 ~ user:", user)
 
     const loggedIn = useGetIsLoggedIn();
+    console.log("⚠️ ~ file: LoginModal.tsx:120 ~ loggedIn:", loggedIn)
     // const logginInfo = useGetLoginInfo();
   
     const commonProps = {
@@ -158,6 +161,9 @@ interface LoginModalButtonProps {
         })
       })
     }
+    console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", loggedIn)
+    console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", user)
+    console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", user?.isLoggedIn)
   
     const handleLogout = () => {
       if (loggedIn && !user?.isLoggedIn) {
