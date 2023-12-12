@@ -138,11 +138,12 @@ interface LoginModalButtonProps {
     useEffect(() => {
       if (loggedIn && user?.isLoggedIn == false) {
         upsertAccount();
-        close();
+        // close();
       } else if(!loggedIn && user?.isLoggedIn == true) {
         handleLogout();
       }
-    });
+    }, [loggedIn, user]
+    );
   
     const upsertAccount = async () => {
       getAddress().then(async (address) => {
@@ -161,9 +162,7 @@ interface LoginModalButtonProps {
         })
       })
     }
-    console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", loggedIn)
     console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", user)
-    console.log("⚠️ ~ file: LoginModal.tsx:164 ~ loggedIn:", user?.isLoggedIn)
   
     const handleLogout = () => {
       if (loggedIn && !user?.isLoggedIn) {
