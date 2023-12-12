@@ -7,7 +7,7 @@ export const middleware = async (req: NextRequest) => {
   const res = NextResponse.next();
 
   const sessionOptions: IronSessionOptions = {
-    password: process.env.SECRET_COOKIE_PASSWORD as string,
+    password: process.env.SECRET_COOKIE_PASSWORD as string || "2gyZ3GDw3LHZQKDhPnPDL3sjREVRXPr7",
     cookieName: "iron-session/s4f",
     cookieOptions: {
        secure: false //process.env.NODE_ENV === "production", TODO: set to true when SSL
