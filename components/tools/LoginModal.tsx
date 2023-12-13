@@ -160,7 +160,7 @@ interface LoginModalButtonProps {
       })
     }
   
-    if (loggedIn) {
+    if (loggedIn && !user?.isLoggedIn) {
       upsertAccount();
     }
   
