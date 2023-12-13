@@ -133,13 +133,13 @@ interface LoginModalButtonProps {
     } = useModal();
   
     useEffect(() => {
-      if (loggedIn && user?.isLoggedIn == false) {
+      if (loggedIn && !user?.isLoggedIn) {
         upsertAccount();
         // close();
       } else if(!loggedIn && user?.isLoggedIn == true) {
         handleLogout();
       }
-    }, [loggedIn, user]
+    },
     );
   
     const upsertAccount = async () => {
@@ -158,6 +158,10 @@ interface LoginModalButtonProps {
           method: 'POST'
         })
       })
+    }
+  
+    if (loggedIn) {
+      upsertAccount();
     }
   
     const handleLogout = () => {
