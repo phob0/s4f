@@ -151,17 +151,13 @@ interface LoginModalButtonProps {
         }
         
         await fetch(`api/login`, {
-          body: JSON.stringify(payload),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          // body: JSON.stringify(payload),
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
           method: 'POST'
         })
       })
-    }
-  
-    if (loggedIn && !user?.isLoggedIn) {
-      upsertAccount();
     }
   
     const handleLogout = () => {
