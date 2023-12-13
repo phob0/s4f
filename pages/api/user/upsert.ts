@@ -28,12 +28,10 @@ export default async function handler(
         address: address
       },
       update: {
-        // signature: signature,
         expiresAt: expiresAt
       },
       create: {
         address: address,
-        // signature: signature,
         expiresAt: expiresAt
       }
     })

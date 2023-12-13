@@ -31,12 +31,10 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
           address: address
         },
         update: {
-          // signature: signature,
           expiresAt: expiresAt
         },
         create: {
           address: address,
-          // signature: signature,
           expiresAt: expiresAt
         }
       })
