@@ -117,7 +117,7 @@ interface LoginModalButtonProps {
     const { user, mutateUser } = useUser();
 
     const loggedIn = useGetIsLoggedIn();
-    // const logginInfo = useGetLoginInfo();
+    const logginInfo = useGetLoginInfo();
   
     const commonProps = {
         // callbackRoute: routeNames.dashboard,
@@ -146,15 +146,15 @@ interface LoginModalButtonProps {
       getAddress().then(async (address) => {
         const payload = {
           address: address,
-          // signature: logginInfo.tokenLogin?.loginToken,
+          signature: logginInfo.tokenLogin?.loginToken,
           expiresAt: new Date(new Date(Date.now()).getTime() + 60 * 60 * 24 * 1000).toISOString()
         }
         
         await fetch(`api/login`, {
-          // body: JSON.stringify(payload),
-          // headers: {
-          //   'Content-Type': 'application/json',
-          // },
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'application/json',
+          },
           method: 'POST'
         })
       })
