@@ -150,7 +150,7 @@ interface LoginModalButtonProps {
           expiresAt: new Date(new Date(Date.now()).getTime() + 60 * 60 * 24 * 1000).toISOString()
         }
         
-        await fetch(`api/login`, {
+        await fetch(`/api/login`, {
           body: JSON.stringify(payload),
           headers: {
             'Content-Type': 'application/json',
