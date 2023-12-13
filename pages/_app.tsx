@@ -47,7 +47,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         environment={EnvironmentsEnum.mainnet}
         customNetworkConfig={{
           name: 'customConfig',
-          apiTimeout: process.env.NEXT_PUBLIC_API_TIMEOUT,
+          apiTimeout: process.env.NEXT_PUBLIC_API_TIMEOUT || 60,
           walletConnectV2ProjectId: "1dfc2bc8f9ad07462c9eeef11fd560cf" //process.env.NEXT_PUBLIC_WC_PROJECT_ID
         }}
         dappConfig={{
