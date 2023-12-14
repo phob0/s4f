@@ -26,7 +26,7 @@ export const completeTasks = async (connectedUser: string) => {
         sender: connectedUser,
         funcName: "completeTasks",
         args: [],
-        gasLimit: 6_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
@@ -41,7 +41,7 @@ export const claim = async (connectedUser: string, nft_token: string, nft_nonce:
         token_identifier: nft_token,
         token_nonce: nft_nonce,
         args: [],
-        gasLimit: 8_000_000
+        gasLimit: 10_000_000
     });
 
     return res;
