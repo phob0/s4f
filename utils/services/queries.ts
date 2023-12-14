@@ -1,7 +1,9 @@
 import {
     Address,
     AddressValue,
-    BooleanValue
+    BooleanValue,
+    BytesValue,
+    BigUIntValue
 } from "@multiversx/sdk-core/out";
 import { scQuery } from "../../pages/api/sc/queries/index";
 import { OwnedSFIT, IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUserClaimable, IScUnbondingDuration, IScUserStakedInfo, IScUserEligibleStaked } from "../types/sc.interface";
@@ -176,4 +178,31 @@ export const fetchUserEligibleStaked = async (address: string): Promise<IScUserE
     });
 
     return finalData;
+};
+
+export const fetchTotalGeneratedAndLastMonth = async (): Promise<BigNumber[]> => {
+
+    let totalRewards = BigNumber(0);
+    let previousMonthRewards = BigNumber(0);
+    const firstPeriod = 7;
+
+    // current period
+    const scResPeriod = await scQuery("claimWsp", "period", []);
+    const dataPeriod = scResPeriod?.firstValue?.valueOf();
+    const currentPeriod = dataPeriod.toNumber();
+
+    // all periods sum and last month
+    for (let p = firstPeriod; p < currentPeriod; p++) {
+        const scResRewards = await scQuery("claimWsp", "rewards", [
+            new BigUIntValue(new BigNumber(p)),
+        ]);
+        const dataRewards = scResRewards?.firstValue?.valueOf();
+        totalRewards = BigNumber(dataRewards.valueOf()).plus(totalRewards);
+
+        if (p == currentPeriod - 1) {
+            previousMonthRewards = BigNumber(dataRewards.valueOf());
+        }
+    }
+
+    return [totalRewards, previousMonthRewards];
 };

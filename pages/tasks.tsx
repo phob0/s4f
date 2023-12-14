@@ -28,7 +28,7 @@ import {
     StackedCarouselSlideProps
   } from 'react-stacked-center-carousel';
 
-import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo, useGetUserEligibleStaked } from '../utils/services/hooks'
+import { useGetTokensInfo, useGetTotalClaimed, useGetCanUserCompleteTasks, useGetUserClaimable, useGetUserStakedInfo, useGetUserEligibleStaked, useGetTotalGeneratedAndLastMonth } from '../utils/services/hooks'
 import { completeTasks, claim, depositRewards } from '../utils/services/calls'
 import useGetUserNfts from '@/hooks/useGetUserNfts';
 import { IElrondNFT } from '@/utils/types/sc.interface';
@@ -351,6 +351,8 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
   const canClickClaim = totalCompleted == tasks.length && numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsStaked > 0 || (totalCompleted == tasks.length && !canCompleteTasks?.canCompleteTasks));
   const isEligible = numberOfSfitLegendNftsInWallet > 0 && (numberOfGymNftsInWallet > 0 || numberOfGymNftsStaked > 0);
 
+  const { totalGeneratedAndLastMonth} = useGetTotalGeneratedAndLastMonth();
+  
   return (
   <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -674,7 +676,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
-                        {totalGenerated} SFIT
+                        {
+                          formatBalance(
+                            {
+                              balance: Number(totalGeneratedAndLastMonth?.[0]),
+                              decimals: 18,
+                            },
+                            false
+                          )
+                        } SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}
@@ -691,7 +701,15 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
                     </Grid>
                     <Grid xs={6} container direction={"row"} justifyContent={"right"} gap={0}>
                       <Typography color="common.white" align="center">
-                        {totalLastMonth} SFIT
+                        {
+                          formatBalance(
+                            {
+                              balance: Number(totalGeneratedAndLastMonth?.[1]),
+                              decimals: 18,
+                            },
+                            false
+                          )
+                        } SFIT
                       </Typography>
                       <NextImage 
                         src={"/demo_imgs/sfit.png"}

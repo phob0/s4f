@@ -1,6 +1,7 @@
 import { IScCanUserCompleteTasks, IScTokensInfo, IScTotalClaimed, IScUnbondingDuration, IScUserClaimable, IScUserEligibleStaked, IScUserStakedInfo, OwnedSFIT } from "../types/sc.interface";
 import useSwr from "swr";
-import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo, fetchUserEligibleStaked } from "./queries";
+import { fetchCanUserCompleteTasks, fetchTokensInfo, fetchTotalClaimed, fetchUserClaimable, fetchAllowedGymNfts, fetchUnbondingDuration, fetchUserStakedInfo, fetchUserEligibleStaked, fetchTotalGeneratedAndLastMonth } from "./queries";
+import BigNumber from "bignumber.js";
 
 
 export const useGetTotalClaimed = (address: string) => {
@@ -217,5 +218,28 @@ export const useGetUserEligibleStaked = (address: string) => {
         userEligibleStaked: userEligibleStaked || [],
         isLoadingUserEligibleStaked: isLoading,
         errorUserEligibleStaked: error,
+    };
+};
+
+export const useGetTotalGeneratedAndLastMonth = () => {
+
+    const {
+        data: totalGeneratedAndLastMonth,
+        isLoading,
+        error,
+    } = useSwr<BigNumber[]>(
+        `claimWsp:getTotalGeneratedAndLastMonth`,
+        async () => {
+            return await fetchTotalGeneratedAndLastMonth();
+        },
+        {
+            fallbackData: [],
+        }
+    );
+
+    return {
+        totalGeneratedAndLastMonth: totalGeneratedAndLastMonth || [],
+        isLoadingtotalGeneratedAndLastMonth: isLoading,
+        errortotalGeneratedAndLastMonth: error,
     };
 };
