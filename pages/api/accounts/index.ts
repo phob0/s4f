@@ -76,7 +76,7 @@ export const getNrOfHolders = async ({
   collection = "",
 }) => {
   try {
-    const res = await axiosLink.get(`/collections/${collection}/accounts`);
+    const res = await axiosLink.get(`/collections/${collection}/accounts?size=1000`);
 
     const holdersList = res.data.map((item: any) => {
       return item.address
