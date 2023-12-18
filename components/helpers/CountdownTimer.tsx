@@ -14,7 +14,7 @@ const CountdownTimer = () => {
     const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-    const formattedTime = `${days} D: ${hours} H: ${minutes} M`;
+    const formattedTime = `${days}D : ${hours}H : ${minutes}M`;
     setRemainingTime(formattedTime);
 
     const timerInterval = setInterval(() => {
