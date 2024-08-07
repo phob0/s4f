@@ -253,11 +253,11 @@ interface LoginModalButtonProps {
                     {...commonProps}
                   />
                   <WalletConnectLoginButton
-                    callbackRoute="/"
+                    // callbackRoute="/"
                     className="dappLoginButton"
                     loginButtonText='xPortal Mobile App'
                     isWalletConnectV2={true}
-                    {...commonProps}
+                    // {...commonProps}
                     // nativeAuth
                   />
                 </Stack>
