@@ -160,7 +160,7 @@ const Home: NextPage<Gym> = ({ gyms }) =>  {
   let stakedGymNftsFinal = stakedGymNftsFullInfo;
   // After fetching stakedGymNftsFinal, add the desired attribute to its elements
   if (stakedGymNfts && stakedGymNftsFullInfo && !isLoading && !isLoadingStakedGymNfts) {
-    const updatedStakedGymNftsFull = stakedGymNftsFullInfo.map((nftFull) => {
+    const updatedStakedGymNftsFull = stakedGymNftsFullInfo.map((nftFull: { nonce: number; }) => {
       // Find the corresponding object in stakedGymNfts based on the shared identifier (e.g., nonce)
       const matchingStakedNft = stakedGymNfts.find((nft) => nft.nonce === nftFull.nonce);
 

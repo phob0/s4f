@@ -9,13 +9,13 @@ import BigNumber from "bignumber.js";
 
 const useGetNfts = (identifiers?: string) => {
   const { data, error, isLoading } = useSWR(
-    identifiers
-      ? {
-          identifiers,
-        }
-      : null,
-    getNFTs
-  );
+      identifiers
+        ? {
+            identifiers,
+          }
+        : null,
+      { fetcher: getNFTs }
+    );
 
   return {
     nfts: data,
