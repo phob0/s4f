@@ -253,13 +253,10 @@ interface LoginModalButtonProps {
                     {...commonProps}
                   />
                   <WalletConnectLoginButton
-                    disabled={true}
-                    // callbackRoute="/"
                     className="dappLoginButton"
-                    loginButtonText='xPortal Mobile App (temporarily disabled)'
+                    loginButtonText='xPortal Mobile App'
                     isWalletConnectV2={true}
-                    // {...commonProps}
-                    // nativeAuth
+                    {...commonProps}
                   />
                 </Stack>
               </DappModalBody>
