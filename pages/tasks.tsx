@@ -788,7 +788,7 @@ const Tasks: NextPage<Reward & Tasks & GymID & GymName & Gym> = ({ gymName, gymI
               <Button className="completeTasksButton" variant="contained" size="large"
                 disabled={!canCompleteTasks?.canCompleteTasks || !isComplete || completedTasks}
                 onClick={() => {
-                  completeTasks(connectedUserAddress);
+                  completeTasks(connectedUserAddress, 20_000_000 + 5_000_000 * numberOfGymNftsStaked);
                   setCompletedTasks(true);
                 }}
               >

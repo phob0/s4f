@@ -19,14 +19,14 @@ import { IScPayment } from "../types/sc.interface";
 import { ScCallwithESDTNFTTransfer, ScCallwithESDTTransfer, ScCallwithMultiESDTNFTTransfer, ScCallwithNoTransfer } from "../../pages/api/sc/calls/index";
 import BigNumber from "bignumber.js";
 
-export const completeTasks = async (connectedUser: string) => {
+export const completeTasks = async (connectedUser: string, gasLimit: number = 50_000_000) => {
 
     const res = await ScCallwithNoTransfer({
         workspace: "claimWsp",
         sender: connectedUser,
         funcName: "completeTasks",
         args: [],
-        gasLimit: 80_000_000
+        gasLimit: gasLimit
     });
 
     return res;
